@@ -1,0 +1,23 @@
+@font-face {
+    font-family: gojali;
+    src: url(../fontes/gojali/TTF/Gojali-Regular.ttf);
+}
+
+@font-face {
+    font-family: rosemask;
+    src: url(../fontes/rose_mask/RoseMask_Font/RoseMask-TTF-OTF-WOFF-WOFF2/RoseMask.ttf);
+}
+
+.gojali-regular {
+    font-family: "gojali", system-ui;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.rosemask-regular {
+    font-family: "rosemask", system-ui;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
