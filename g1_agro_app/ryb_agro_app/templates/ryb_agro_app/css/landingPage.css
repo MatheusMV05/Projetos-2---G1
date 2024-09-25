@@ -95,12 +95,7 @@ main {
     flex-direction: row;
     margin-top: 50px;
 }
-h2 {
-    font-size: 56px;
-    line-height: 40px;
-    margin: 2rem 0rem;
-    margin-top: -10px;
-}
+
 span {
     color: #f28500;
     font-family: "rosemask", system-ui;
@@ -109,14 +104,21 @@ P {
     line-height: 20px;
     max-width: 500px;
 }
-article.logo img {
-    margin-top: 8rem;
+.logo {
+    margin-bottom: 8rem;
 }
-img {
-    width: 620px;
-    height: auto;
-    position: relative;
-    top: -100px;
+.foto {
+    width: 10px;
+    
+}
+aside {
+    margin-right: 40px;
+}
+h2 {
+    font-size: 56px;
+    line-height: 40px;
+    margin: 20px;
+    margin-top: -10px;
 }
 button {
     border: 2px;
