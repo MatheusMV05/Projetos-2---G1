@@ -6,6 +6,7 @@
 
 body {
     background-color: #1b4a3f;
+    height: 100%;
 }
 
 .horizontal {
@@ -13,7 +14,7 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-top: 15vh;
+    margin-top: 3vh;
 }
 
 .header-container {
@@ -27,7 +28,7 @@ body {
 .header-container h1 {
     color: #ffffff;
     font-size: 4rem;
-    margin: 2rem 8rem;
+    margin: 2rem 4rem;
 }
 
 .header-container img {
@@ -59,10 +60,19 @@ form h2 {
     margin-bottom: 40px;
 }
 
+form p {
+    font-size: x-small;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+form p a{
+    color: #ffffff;
+}
+
 input[type="email"],
 input[type="password"] {
     padding: 10px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 10px;
     width: 100%;
@@ -75,7 +85,7 @@ input[type="submit"] {
     background-color: #ffb930;
     color: #fff;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 input[type="submit"]:hover {
@@ -85,15 +95,43 @@ input[type="submit"]:hover {
 
 /* Responsive Styles */
 @media only screen and (max-width: 600px) {
+
+    .horizontal {
+        flex-direction: column;
+
+    }
     .container {
         margin: 20px auto;
         padding: 10px;
     }
+
+    .header-container {
+        margin-bottom: 1rem;
+    }
+
+    .header-container h1 {
+        font-size: 2.75rem;
+        margin: 0rem 0rem;
+    }
+
+    .header-container img {
+        display: none;
+    }
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 440px) {
     .container {
         margin: 10px auto;
         padding: 5px;
+    }
+
+    .header-container {
+        width: 80vw;
+        margin-left: 0;
+        margin-bottom: 5rem;
+    }
+
+    .header-container h1 {
+        font-size: 2rem;
     }
 }
