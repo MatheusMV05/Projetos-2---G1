@@ -73,6 +73,7 @@ nav.mobile a:hover {
 nav.menu-desktop li {
     display: inline-block;
     margin: 30px;
+    margin-bottom: 8rem;
     background-color: #dddddd;
     padding: 10px 20px;
     border-radius: 25px;
@@ -97,7 +98,8 @@ main {
 h2 {
     font-size: 56px;
     line-height: 40px;
-    margin-top: 20px;
+    margin: 2rem 0rem;
+    margin-top: -10px;
 }
 span {
     color: #f28500;
@@ -107,9 +109,8 @@ P {
     line-height: 20px;
     max-width: 500px;
 }
-article.logo {
-    width: 10px;
-    
+article.logo img {
+    margin-top: 8rem;
 }
 img {
     width: 620px;
