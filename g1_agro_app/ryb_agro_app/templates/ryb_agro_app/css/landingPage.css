@@ -107,6 +107,10 @@ P {
     line-height: 20px;
     max-width: 500px;
 }
+article.logo {
+    width: 10px;
+    
+}
 img {
     width: 620px;
     height: auto;
