@@ -4,12 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/login.css">
-    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <title>Login - Cultiva Fácil</title>
 </head>
 
 <body class="gojali-regular">
+
+    <div class="horizontal">
+        <div class="header-container">
+            <h1>Bem vindo de volta!</h1>
+            <img src="{% static 'img/undraw_login_re_4vu2 (3).svg' %}" alt="">
+        </div>
+
+        <div class="container">
+            <form>
+                <h2>Login</h2>
+                <input type="email" id="email" name="email" placeholder="Email" required><br><br>
+                <input type="password" id="password" name="password" placeholder="Senha" required><br><br>
+                <p>Ainda não tem uma conta? <a href="cadastro.html">Clique aqui</a></p>
+                <input type="submit" value="Entrar">
+            </form>
+        </div>
+    </div>
 
 </body>
 
