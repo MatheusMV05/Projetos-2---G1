@@ -89,41 +89,6 @@ nav.menu-desktop a:hover {
     color: #ffffff;
     transition: 0.3s;
 }
-.toggle {
-    display: none;
-}
-.toggle + label {
-    width: 40px;
-    height: 20px;
-    background: #dddddd;
-    display: block;
-    position: relative;
-    border-radius: 20px;
-    padding: 2px;
-    transition: 200ms;
-    cursor: pointer;
-}
-.toggle + label::before {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: #ffffff;
-    display: block;
-    border-radius: 50%;
-    right: unset;
-    left: 2px;
-    top: 2px;
-    transition: 200ms;
-}
-.toggle:checked + label {
-    background: #f28500;
-}
-.toggle:checked + label::before {
-    content: '';
-    left: calc(100% - 22px);
-    box-shadow: 0 4px 4px rgb(0 0 0 / 10%);
-} 
 main {
     display: flex;
     flex-direction: row;
