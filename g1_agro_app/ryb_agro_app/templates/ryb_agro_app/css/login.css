@@ -38,13 +38,13 @@ body {
  
 /* Container Styles */
 .container {
-    max-width: 300px;
     margin: 20px auto;
     padding: 2rem;
     background-color: #1C6D4F;
     border: 0.1rem solid #ffffffd4;
     box-shadow: 1rem 1rem 1rem #00000036;
     border-radius: 10px;
+    width: 25rem;
 }
 
 /* Form Styles */
