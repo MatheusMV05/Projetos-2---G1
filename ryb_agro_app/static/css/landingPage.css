@@ -1,0 +1,191 @@
+body {
+    background-color: #1b4a3f;
+    color: #fff;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+    overflow: hidden;
+}
+
+header {
+    display: flex;
+    height: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-abrir {
+    cursor: pointer;
+}
+
+.btn-abrir i {
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.btn-abrir i:hover {
+    color: #f28500;
+    transition: 0.5s;
+}
+
+.menu-mobile {
+    background-color: #000000da;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 99999;
+    width: 0%;
+    overflow: hidden;
+    transition: .2s;
+}
+
+.menu-mobile.abrir-menu {
+    width: 70%;
+}
+
+nav.mobile ul {
+    text-align: right;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+nav.mobile a {
+    color: #1b4a3f;
+    padding: 30px 8%;
+    list-style-type: none;
+    text-decoration: none;
+}
+
+nav.mobile a:hover {
+    color: #dddddd;
+    transform: 0.3s;
+    text-decoration: underline;
+}
+
+.btn-fechar {
+    padding: 20px;
+}
+
+.btn-fechar i {
+    font-size: 30px;
+    color: #fff;
+}
+
+.btn-fechar i:hover {
+    cursor: pointer;
+    color: #f28500;
+    transition: 0.5s;
+}
+
+#title {
+    flex-direction: column;
+}
+
+nav.menu-desktop li {
+    display: inline-block;
+    margin: 30px;
+    margin-bottom: 8rem;
+    background-color: #dddddd;
+    padding: 10px 20px;
+    border-radius: 25px;
+}
+
+nav.menu-desktop li:hover {
+    background-color: #0c2b23;
+    transition: 0.3s;
+}
+
+nav.menu-desktop a {
+    color: #0c2b23;
+    font-size: 20px;
+}
+
+nav.menu-desktop a:hover {
+    color: #ffffff;
+    transition: 0.3s;
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+}
+
+span {
+    color: #f28500;
+    font-family: "rosemask", system-ui;
+}
+
+P {
+    line-height: 20px;
+    max-width: 500px;
+}
+
+.logo {
+    margin-bottom: 8rem;
+}
+
+.foto {
+    width: 10px;
+
+}
+
+aside {
+    margin-right: 40px;
+}
+
+h2 {
+    font-size: 56px;
+    line-height: 40px;
+    margin: 20px;
+    margin-top: -10px;
+}
+
+button {
+    border: 2px;
+    border-radius: 30px;
+    color: #1b4a3f;
+    background-color: #dddddd;
+    font-family: "gojali", system-ui;
+    width: 40%;
+    margin: 10px;
+    margin-top: 30px;
+    height: 50px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #0c2b23;
+    color: #ffffff;
+    transition: 0.5s all;
+}
+
+footer {
+    padding: 40px;
+}
+
+@media screen and (max-width: 1067px) {
+    .menu-desktop {
+        display: none;
+    }
+
+    main {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    img {
+        display: none;
+    }
+}
+
+@media (min-width: 1064px) {
+    .btn-abrir {
+        display: none;
+    }
+}

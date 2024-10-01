@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css '%}">
+    <link rel="stylesheet" href="{% static 'css/landingPage.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
+    <title>Cultiva facil</title>
+</head>
+<body class="gojali-regular">
+    <header>
+        <div id="title">
+            <article class="logo">
+                <img src="{% static 'img/Camada_1.svg' %}" alt="">
+            </article>
+        </div>
+        <nav class="menu-desktop">
+            <ul>
+                <a href="#"><li>Inicio</li></a>
+                <a href="#"><li>Sobre</li></a>
+                <a href="#"><li>Contatos</li></a>
+            </ul>
+        </nav>
+        <div class="btn-abrir" id="btn-abrir">
+            <i class="ri-menu-line"></i>
+        </div>
+        <div class="menu-mobile" id="menu-mobile">
+            <div class="btn-fechar">
+                <i class="ri-close-large-line"></i>
+            </div>
+        <nav class="mobile">
+            <ul>
+                <a href="#"><li>Home</li></a>
+                <a href="#"><li>Sobre Nos</li></a>
+                <a href="#"><li>Contatos</li></a>
+            </ul>
+        </nav>
+        </div>
+    </header>
+    <main>
+        <aside>
+            <h2>A Sua Plataforma</h2>
+            <h2>de Gerenciamento</h2>
+            <h2>de <span>p</span>lantio e <span>c</span>olheita</h2>
+            <h2></h2>
+            <button onclick="window.location.href='/login'">Entrar</button>
+        </aside>
+    
+    </main>
+    <script src="{% static 'js/landingPage.js' %}"></script>
+</body>
+</html>
