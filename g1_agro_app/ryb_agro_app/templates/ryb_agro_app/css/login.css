@@ -1,5 +1,5 @@
 body {
-    background-color: #2c8d6690;
+    background-color: #f9f9f9;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,7 +9,7 @@ body {
 }
 
 .container {
-    width: 70vw;
+    width: 30vw;
     text-align: center;
     padding: 20px;
 }

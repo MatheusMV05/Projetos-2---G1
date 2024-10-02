@@ -1,5 +1,5 @@
 body {
-    background-color: #2c8d6690;
+    background-color: #f9f9f9;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,6 +15,7 @@ body {
 }
 
 .logo {
+    margin-top: 1.3rem;
     margin-bottom: 6rem;
     /* Reduced margin to move the image upwards */
 }
@@ -54,15 +55,8 @@ input::placeholder {
     color: #999999;
 }
 
-.recuperar {
-    font-size: 0.875rem;
-    font-weight: bolder;
-    margin-bottom: 1.5rem;
-    color: #1b4a3f;
-}
-
 .submit {
-    width: 60%;
+    width: 25%;
     margin: 0 auto;
 }
 
@@ -112,7 +106,7 @@ button:hover {
 }
 
 @media only screen and (max-width: 500px) {
-    
+
     body {
         overflow-y: scroll;
         min-height: fit-content;
@@ -128,10 +122,8 @@ button:hover {
         width: 109%;
     }
 
-    .recuperar {
-        font-size: smaller;
-        margin-top: -1rem;
-        margin-bottom: 1.5rem;
+    .submit {
+        width: 75%;
     }
 
     .register-link {
