@@ -62,7 +62,7 @@ input::placeholder {
 }
 
 .submit {
-    width: 50%;
+    width: 60%;
     margin: 0 auto;
 }
 
@@ -112,6 +112,12 @@ button:hover {
 }
 
 @media only screen and (max-width: 500px) {
+    
+    body {
+        overflow-y: scroll;
+        min-height: fit-content;
+    }
+
     .container {
         width: 75%;
         display: grid;
@@ -133,6 +139,6 @@ button:hover {
     }
 
     .logo {
-        margin-bottom: 3rem;
+        margin-bottom: 1.5rem;
     }
 }
