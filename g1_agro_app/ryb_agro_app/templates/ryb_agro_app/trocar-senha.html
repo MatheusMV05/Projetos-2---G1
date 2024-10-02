@@ -5,16 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/redefine-senha.css">
-    <title>Redefinir senha - Cultiva Fácil</title>
+    <link rel="stylesheet" href="css/trocar-senha.css">
+    <title>Trocar senha - Cultiva Fácil</title>
 </head>
 
 <body class="gojali-regular">
     <header>
-        <h1>Redefinir senha</h1>
+        <h1>Trocar senha</h1>
     </header>
     <main>
         <form id="redefine-password-form">
+            <div class="senha-atual">
+                <label for="current-password">Senha atual:</label>
+                <input type="password" id="current-password" name="current-password" required>
+            </div>
             <div class="nova-senha">
                 <label for="new-password">Nova senha:</label>
                 <input type="password" id="new-password" name="new-password" required>
@@ -31,7 +35,7 @@
         <p>&copy; 2024 Cultiva Fácil</p>
     </footer>
 
-    <script src="js/redefine-senha.js"></script>
+    <script src="js/trocar-senha.js"></script>
 </body>
 
 </html>

@@ -80,7 +80,7 @@ button[type="submit"]:hover {
 }
 
 #error-message {
-    color: #ff0000;
+    color: #f00;
     margin-top: 10px;
 }
 
