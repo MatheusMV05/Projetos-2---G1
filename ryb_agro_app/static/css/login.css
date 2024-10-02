@@ -1,137 +1,117 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body {
-    background-color: #1b4a3f;
-    height: 100%;
-}
-
-.horizontal {
+    background-color: #f9f9f9;
     display: flex;
-    flex-direction: row;
-    align-items: center;
     justify-content: center;
-    margin-top: 3vh;
-}
-
-.header-container {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    width: 40vw;
-    margin-left: 5vw;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
 }
 
-.header-container h1 {
-    color: #ffffff;
-    font-size: 4rem;
-    margin: 2rem 4rem;
-}
-
-.header-container img {
-    margin-top: 5vh;
-    width: 75%;
-}
- 
-/* Container Styles */
 .container {
-    max-width: 300px;
-    margin: 20px auto;
-    padding: 2rem;
-    background-color: #1C6D4F;
-    border: 0.1rem solid #ffffffd4;
-    box-shadow: 1rem 1rem 1rem #00000036;
-    border-radius: 10px;
-}
-
-/* Form Styles */
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 30vw;
+    text-align: center;
     padding: 20px;
 }
 
-form h2 {
-    color: #fff;
-    margin-bottom: 40px;
+.logo {
+    margin-bottom: 7rem;
+    /* Reduced margin to move the image upwards */
 }
 
-form p {
-    font-size: x-small;
-    margin-bottom: 1rem;
-    color: #ffffff;
+.logo img {
+    width: 150px;
 }
 
-form p a{
-    color: #ffffff;
+h1 {
+    font-size: 2.25rem;
+    font-weight: bold;
+    margin-bottom: 80px;
+    color: #1b4a3f;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-size: 1.125rem;
+    font-weight: bolder;
+    color: #1b4a3f;
 }
 
 input[type="email"],
 input[type="password"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
     width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #1b4a3f;
+    border-radius: 5px;
+    font-size: 1.125rem;
 }
 
-input[type="submit"] {
-    padding: 10px 20px;
+input::placeholder {
+    color: #999999;
+}
+
+.recuperar {
+    font-size: 0.875rem;
+    font-weight: bolder;
+    margin-bottom: 1.5rem;
+    color: #1b4a3f;
+}
+
+.submit {
+    width: 50%;
+    /* or any specific width */
+    margin: 0 auto;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #1b4a3f;
+    color: white;
     border: none;
     border-radius: 5px;
-    background-color: #ffb930;
-    color: #fff;
+    font-size: 1.125rem;
+    font-weight: bolder;
     cursor: pointer;
-    font-weight: 700;
 }
 
-input[type="submit"]:hover {
+button:hover {
     background-color: #d9d9d9;
     color: #1b4a3f;
 }
 
-/* Responsive Styles */
-@media only screen and (max-width: 600px) {
-
-    .horizontal {
-        flex-direction: column;
-
-    }
-    .container {
-        margin: 20px auto;
-        padding: 10px;
-    }
-
-    .header-container {
-        margin-bottom: 1rem;
-    }
-
-    .header-container h1 {
-        font-size: 2.75rem;
-        margin: 0rem 0rem;
-    }
-
-    .header-container img {
-        display: none;
-    }
+.register-link {
+    margin-top: 20px;
+    font-size: 0.875rem;
+    font-weight: bolder;
+    color: #1b4a3f;
 }
 
-@media only screen and (max-width: 440px) {
+@media only screen and (max-width: 500px) {
     .container {
-        margin: 10px auto;
-        padding: 5px;
+        width: 75%;
+        display: grid;
+        place-items: center;
     }
 
-    .header-container {
-        width: 80vw;
-        margin-left: 0;
-        margin-bottom: 5rem;
+    button {
+        width: 109%;
     }
 
-    .header-container h1 {
-        font-size: 2rem;
+    .recuperar {
+        font-size: smaller;
+        margin-top: -1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .register-link {
+        font-size: smaller;
+    }
+
+    .logo {
+        margin-bottom: 3rem;
     }
 }

@@ -4,30 +4,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'css/cadastro.css' %}">
-    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/cadastro.css">
     <title>Cadastro - Cultiva Fácil</title>
 </head>
 
 <body class="gojali-regular">
 
-    <div class="horizontal">
-        <div class="header-container">
-            <h1>Cadastre-se conosco!</h1>
-            <img src="{% static 'img/undraw_farm_girl_dnpe (3).svg' %}" alt="">
+    <div class="container">
+        <div class="logo">
+            <a href="landingPage.html"><img src="img/Logomarca Horizontal.svg" alt=""></a>
         </div>
+        <h1>
+            Cadastro
+        </h1>
+        <form>
 
-        <div class="container">
-            <form>
-                <h2>Cadastro</h2>
-                <input type="text" id="username" name="username" placeholder="Nome completo" required><br><br>
-                <input type="email" id="email" name="email" placeholder="Email" required><br><br>
-                <input type="password" id="password" name="password" placeholder="Senha" required><br><br>
-                <p>Já está cadastrado? <a href="{% url 'login' %}">Clique aqui</a></p>
-                <input type="submit" value="Inscrever-se">
-            </form>
+            <div class="form_grid">
+
+                <div>
+                    <label for="name">
+                        Nome completo
+                    </label>
+                    <input id="name" name="name" type="text" placeholder="Digite seu nome" />
+                </div>
+
+                <div>
+                    <label for="numero">
+                        Número de telefone
+                    </label>
+                    <input id="numero" name="numero" type="text" placeholder="Digite seu número de telefone" />
+                </div>
+
+                <div>
+                    <label for="email">
+                        E-mail
+                    </label>
+                    <input id="email" name="email" type="email" placeholder="Digite seu E-mail" />
+                </div>
+
+                <div>
+                    <label for="email">
+                        Confirme seu e-mail
+                    </label>
+                    <input id="email" name="email" type="email" placeholder="Digite seu E-mail novamente" />
+                </div>
+
+                <div>
+                    <label for="password">
+                        Senha
+                    </label>
+                    <input id="password" name="password" type="password" placeholder="Digite sua senha" />
+                </div>
+
+                <div>
+                    <label for="password">
+                        Confirme sua senha
+                    </label>
+                    <input id="password" name="password" type="password" placeholder="Digite sua senha novamente" />
+                </div>
+            </div>
+
+            <button type="submit" class="submit">
+                Cadastrar-se
+            </button>
+        </form>
+        <div class="register-link">
+            Já tem uma conta?
+            <a href="login.html">
+                Clique aqui
+            </a>
         </div>
     </div>
 
