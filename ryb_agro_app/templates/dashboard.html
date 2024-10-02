@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
     <title>Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <script src="{% static 'js/dashboard.js' %}"></script>
 </head>
 <body>
     <header>
@@ -35,6 +38,5 @@
         </nav>
         </div>
     </header>
-    <script src="js/dashboard.js"></script>
 </body>
 </html>
