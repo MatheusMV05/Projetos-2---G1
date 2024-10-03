@@ -1,11 +1,11 @@
 from django.shortcuts import render
 
 # Create your views here.
-def landinPage(request):
-    return render(request, 'ryb_agro_app/landingPage.html')
+def landingPage(request):
+    return render(request, 'landingPage.html')
 
 def login(request):
-    return render(request, 'ryb_agro_app/login.html')
+    return render(request, 'login.html')
 
 def cadastro(request):
-    return render(request, 'ryb_agro_app/cadastro.html')
+    return render(request, 'cadastro.html')
