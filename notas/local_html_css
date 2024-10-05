@@ -1,0 +1,9 @@
+Os HTML's serão alocados dentro da pasta de templates
+dentro da pasta ryb_agro_app que esta está dentro
+de outra pasta de mesmo nome.
+
+Arquivos CSS estão na pasta static, dentro da pasta 
+css. 
+
+Na pasta static também ficam os arquivos JS, imagens.
+

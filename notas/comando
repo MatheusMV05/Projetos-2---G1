@@ -1,0 +1,3 @@
+Comando de inicialização do projeto é:
+
+python manage.py runserver
