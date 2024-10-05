@@ -15,7 +15,7 @@
 
     <div class="container">
         <div class="logo">
-            <a href="landingPage.html"><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt=""></a>
+            <a href="{% url 'landingPage' %}"><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt=""></a>
             </div>
         <h1>
             Login
@@ -32,7 +32,7 @@
             
             <div class="recuperar">
                 Esqueceu sua senha?
-                <a href="recuperar-senha.html">
+                <a href="{% url 'recuperar-senha' %}">
                     Clique aqui</a>
             </div>
 
@@ -42,7 +42,7 @@
         </form>
         <div class="register-link">
             Ainda não possui uma conta?
-            <a href="cadastro.html">
+            <a href="{% url 'cadastro' %}">
                 Clique aqui
             </a>
         </div>

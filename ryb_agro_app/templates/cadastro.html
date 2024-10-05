@@ -16,7 +16,7 @@
 
     <div class="container">
         <div class="logo">
-            <a href="landingPage.html"><img src="img/Logomarca Horizontal.svg" alt=""></a>
+            <a href="{% url 'landingPage' %}"><img src="img/Logomarca Horizontal.svg" alt=""></a>
         </div>
         <h1>
             Cadastro
@@ -74,7 +74,7 @@
         </form>
         <div class="register-link">
             Já tem uma conta?
-            <a href="login.html">
+            <a href="{% url 'login' %}">
                 Clique aqui
             </a>
         </div>
