@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Login - Cultiva Fácil</title>
+    
+</head>
+
+<body class="gojali-regular">
+
+    <div class="container">
+        <div class="logo">
+            <a href="{% url 'landingPage' %}"><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt=""></a>
+            </div>
+        <h1>
+            Login
+        </h1>
+        <form>
+            <label for="email">
+                E-mail
+            </label>
+            <input id="email" name="email" type="email" placeholder="Digite seu E-mail" />
+            <label for="password">
+                Senha
+            </label>
+            <input id="password" name="password" type="password" placeholder="Digite sua senha" />
+            
+            <div class="recuperar">
+                Esqueceu sua senha?
+                <a href="{% url 'recuperar-senha' %}">
+                    Clique aqui</a>
+            </div>
+
+            <button type="submit" class="submit">
+                Entrar
+            </button>
+        </form>
+        <div class="register-link">
+            Ainda não possui uma conta?
+            <a href="{% url 'cadastro' %}">
+                Clique aqui
+            </a>
+        </div>
+    </div>
+
+</body>
+
+</html>
