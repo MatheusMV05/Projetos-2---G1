@@ -80,3 +80,24 @@ nav.mobile a:hover {
 .user img {
     width: 35px;
 }
+
+h1 {
+    font-family: "gojali", system-ui;
+    color: #005230ec;
+    margin-left: 28px;
+    margin-top: 50px;
+}
+
+h3 {
+    font-family: "gojali", system-ui;
+    font-weight: normal;
+    color: #005230ec;
+    margin-left: 37px;
+}
+
+h2 {
+    font-family: "gojali", system-ui;
+    color: #005230ec;
+    margin-left: 37px;
+    margin-top: 30px;
+}
