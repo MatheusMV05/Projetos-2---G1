@@ -1,9 +1,7 @@
-from django.shortcuts import render, redirect 
+from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login as auth_login  # Evita conflito com o nome da função
 from .models import Usuario
-from django.contrib.auth.models import User
-
 
 def landingPage(request):
     return render(request, 'landingPage.html')
@@ -25,6 +23,11 @@ def cadastro(request):
             messages.error(request, 'As senhas não coincidem.')
             return redirect('cadastro')
 
+        # Verifica se já existe um usuário com esse email
+        if Usuario.objects.filter(email=email).exists():
+            messages.error(request, 'O email já está em uso.')
+            return redirect('cadastro')
+
         # Criação do usuário usando o manager
         usuario = Usuario.objects.create_user(email=email, celular=celular, password=password)
         
@@ -36,15 +39,16 @@ def cadastro(request):
 def dashboard(request):
     return render(request, 'dashboard.html')
 
-def login_view(request):
+def login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
 
+        # O campo de username no authenticate é o email, pois o modelo Usuario usa email como USERNAME_FIELD
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
-            login(request, user)
+            auth_login(request, user)  # Usa auth_login para evitar conflito de nome da função
             return redirect('dashboard')
         else:
             messages.error(request, 'Email ou senha incorretos.')
@@ -57,6 +61,7 @@ def recuperar_senha(request):
 def redefine_senha(request):
     if request.method == 'POST':
         email = request.POST.get('email')
+        # Aqui você pode adicionar a lógica para enviar um email de redefinição de senha
         messages.success(request, f'Link de redefinição enviado para {email}.')
         return redirect('login')
     return render(request, 'redefine-senha.html')
