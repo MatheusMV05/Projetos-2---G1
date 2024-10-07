@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .models import usuario
+from .models import Usuario
 from django.contrib.auth.models import User
 
 
@@ -13,7 +13,7 @@ def cadastro(request):
         nome = request.POST.get('nome')
         email = request.POST.get('email')
         confirmar_email = request.POST.get('confirmar_email')
-        telefone = request.POST.get('telefone')
+        celular = request.POST.get('celular')
         password = request.POST.get('password')
         confirmar_senha = request.POST.get('confirmar_senha')
 
@@ -21,24 +21,22 @@ def cadastro(request):
             messages.error(request, 'Os emails não coincidem.')
             return redirect('cadastro')
 
-     
         if password != confirmar_senha:
             messages.error(request, 'As senhas não coincidem.')
             return redirect('cadastro')
 
+        # Criação do usuário usando o manager
+        usuario = Usuario.objects.create_user(email=email, celular=celular, password=password)
         
-        user = User.objects.create_user(username=email, email=email, password=password)
-        usuario = usuario(user=user, nome_completo=nome, telefone=telefone)
-        usuario.save()
-
         messages.success(request, 'Cadastro realizado com sucesso. Agora você pode fazer login.')
         return redirect('login')
+    
     return render(request, 'cadastro.html')
 
 def dashboard(request):
     return render(request, 'dashboard.html')
 
-def login(request):
+def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -53,7 +51,6 @@ def login(request):
             return redirect('login')
     return render(request, 'login.html')
 
-
 def recuperar_senha(request):
     return render(request, 'recuperar-senha.html')
 
@@ -63,7 +60,6 @@ def redefine_senha(request):
         messages.success(request, f'Link de redefinição enviado para {email}.')
         return redirect('login')
     return render(request, 'redefine-senha.html')
-
 
 def trocar_senha(request):
     if request.method == 'POST':

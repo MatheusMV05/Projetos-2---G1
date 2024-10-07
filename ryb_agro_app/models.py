@@ -6,14 +6,13 @@ class UsuarioManager(BaseUserManager):
         if not email:
             raise ValueError("O usuário deve ter um email")
         usuario = self.model(email=self.normalize_email(email), celular=celular)
-        usuario.set_password(password)
+        usuario.set_password(password)  # Define a senha de forma segura
         usuario.save(using=self._db)
         return usuario
 
 class Usuario(AbstractBaseUser):
     celular = models.CharField(max_length=15)
     email = models.EmailField(unique=True)
-    senha = models.CharField(max_length=100)
 
     objects = UsuarioManager()
 
