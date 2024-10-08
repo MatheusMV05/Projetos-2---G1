@@ -12,9 +12,6 @@ header {
     margin-top: 20px;
 } 
 
-.user i {
-    font-size: 30px;
-}
 .menu-abrir {
     cursor: pointer;
 }
@@ -84,7 +81,7 @@ nav.mobile a:hover {
 h1 {
     font-family: "gojali", system-ui;
     color: #005230ec;
-    margin-left: 28px;
+    margin-left: 50px;
     margin-top: 50px;
 }
 
@@ -92,20 +89,20 @@ h3 {
     font-family: "gojali", system-ui;
     font-weight: normal;
     color: #005230ec;
-    margin-left: 37px;
+    margin-left: 55px;
 }
 
 h2 {
     font-family: "gojali", system-ui;
     color: #005230ec;
-    margin-left: 37px;
+    margin-left: 55px;
     margin-top: 30px;
 }
 
 label {
     display: block;
     text-align: left;
-    margin-left: 37px;
+    margin-left: 55px;
     margin-bottom: 5px;
     font-family: "gojali", system-ui;
     font-size: 23px;
@@ -114,11 +111,68 @@ label {
 }
 
 input[type="text"] {
-    margin-left: 37px;
-    width: 100%;
+    margin-left: 55px;
+    width: 90%;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #1b4a3f;
     border-radius: 5px;
     font-size: 1.125rem;
+}
+
+#plantas {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+  
+#suggestions {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    display: none;
+}
+  
+.suggestion {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+  
+.suggestion:hover {
+    background-color: #f0f0f0;
+}
+
+.tut {
+    text-align: center;
+}
+
+.submit {
+    width: 200px;
+}
+
+.submit:hover {
+    background-color: #d9d9d9;
+    color: #1b4a3f;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #1b4a3f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.125rem;
+    font-weight: bolder;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 720px) {
+    
+    .form-info {
+        width: 70%;
+    }
+       
 }

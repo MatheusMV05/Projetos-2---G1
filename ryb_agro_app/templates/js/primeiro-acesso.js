@@ -52,3 +52,39 @@ function getCidadesDoEstado(estado) {
     };
     return cidades[estado];
 }
+
+const input = document.getElementById('plantas');
+const suggestions = document.getElementById('suggestions');
+
+input.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.trim();
+    if (searchTerm.length > 2) {
+        fetch(`https://api.example.com/plantas?q=${searchTerm}`)
+            .then(response => response.json())
+            .then(data => {
+                const suggestionsList = data.map(plant => {
+                    return `<div class="suggestion">${plant.name}</div>`;
+                }).join('');
+                suggestions.innerHTML = suggestionsList;
+                suggestions.style.display = 'block';
+            });
+    } else {
+        suggestions.style.display = 'none';
+    }
+});
+
+input.addEventListener('focus', () => {
+    suggestions.style.display = 'block';
+});
+
+input.addEventListener('blur', () => {
+    suggestions.style.display = 'none';
+});
+
+suggestions.addEventListener('click', (e) => {
+    const target = e.target;
+    if (target.classList.contains('suggestion')) {
+        input.value = target.textContent;
+        suggestions.style.display = 'none';
+  }
+});

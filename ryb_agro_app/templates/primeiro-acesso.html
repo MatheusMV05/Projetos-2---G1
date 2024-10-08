@@ -47,19 +47,25 @@
         <h2>Localização</h2>
         <form>
             <div class="form-info">
-                <label for="pais">País</label>
-                <input type="text" id="pais" name="pais" list="paises" placeholder="Digite seu pais">
-                <datalist id="paises">
-                    <option value="Brasil">Brasil</option>
-                </datalist>
-                <label for="estado">Estado</label>
-                <input type="text" id="estado" name="estado" list="estados" placeholder="Digite seu estado">
-                <datalist id="estados"></datalist>
+                <div class="input-container">
+                    <label for="pais">País</label>
+                    <input type="text" id="pais" name="pais" list="paises" placeholder="Digite seu pais">
+                    <datalist id="paises">
+                        <option value="Brasil">Brasil</option>
+                    </datalist>
+                    <label for="estado">Estado</label>
+                    <input type="text" id="estado" name="estado" list="estados" placeholder="Digite seu estado">
+                    <datalist id="estados"></datalist>
+                </div>
                 <label for="cidade">Cidade</label>
                 <input type="text" id="cidade" name="cidade" list="cidades" placeholder="Digite sua cidade">
                 <datalist id="cidades"></datalist>
                 <label for="planta">O que você planta hoje?</label>
-                <input type="text" id="plantas" placeholder="Pesquisar plantas"
+                <input type="text" id="plantas" placeholder="Pesquisar plantas">
+                <div id="suggestions"></div>
+            </div>
+            <div class="tut">
+                <button type="submit" class="submit">Tutorial</button>
             </div>
         </form>
     </main>
