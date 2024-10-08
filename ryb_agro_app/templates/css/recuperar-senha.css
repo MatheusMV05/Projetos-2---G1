@@ -12,26 +12,35 @@ html, body {
     color: #1b4a3f;
     background-color: #f9f9f9;
     max-width: 100vw;
-    height: 100vh;
+    max-height: 100vh;
     overflow-x: hidden;
+    overflow-y: hidden;
 }
 
-header {
-    background-color: #1c6d4f;
-    color: #f9f9f0;
-    padding: 20px;
-    text-align: center;
-}
-
-header h1 {
-    margin: 0 auto;
+.logo {
+    width: 150px;
+    margin-top: 90px;
+    margin-left: 50%;
+    transform: translateX(-50%);
 }
 
 main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px;
+}
+
+h1 {
+    font-size: 2.25rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+p {
+    font-size: 1.125rem;
+    margin-bottom: -75px;
+    text-align: center; 
 }
 
 form {
