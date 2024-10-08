@@ -1,0 +1,182 @@
+body {
+    background-color: #f9f9f9;
+}
+header {
+    display: flex;
+    height: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 20px;
+} 
+
+.menu-abrir {
+    cursor: pointer;
+}
+.menu-abrir i {
+    color: #005230ec;
+    font-size: 30px;
+    padding-left: 8px;
+}
+.menu-abrir i:hover {
+    color: #00bb6dec;
+    transition: 0.5s;
+}
+.menu-mobile {
+    background-color: #005230ec;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+    width: 0%;
+    overflow: hidden;
+    transition: .5s;
+}
+.menu-mobile.abrir-menu {
+    width: 100%;
+}
+
+nav.mobile ul {
+    text-align: center;  
+    font-family: sans-serif;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+nav.mobile a {
+    color: #ead8fc;
+    padding: 30px 8%;
+    list-style-type: none;
+    text-decoration: none;
+}
+nav.mobile a:hover {
+    color: #ff9100;
+    transition: 0.3s;
+}
+.menu-fechar {
+    padding: 20px;
+}
+.menu-fechar i {
+    font-size: 30px;
+    color: #fff;
+}
+.menu-fechar i:hover {
+    cursor: pointer;
+    color: #ff9900;
+    transition: 0.5s;
+}
+
+.logo img {
+    width: 150px;
+}
+
+.user img {
+    width: 35px;
+}
+
+h1 {
+    font-family: "gojali", system-ui;
+    color: #005230ec;
+    margin-left: 50px;
+    margin-top: 50px;
+}
+
+h3 {
+    font-family: "gojali", system-ui;
+    font-weight: normal;
+    color: #005230ec;
+    margin-left: 55px;
+}
+
+h2 {
+    font-family: "gojali", system-ui;
+    color: #005230ec;
+    margin-left: 55px;
+    margin-top: 30px;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin-left: 55px;
+    margin-bottom: 5px;
+    font-family: "gojali", system-ui;
+    font-size: 23px;
+    font-weight: bolder;
+    color: #1b4a3f;
+}
+
+input[type="text"] {
+    margin-left: 55px;
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #1b4a3f;
+    border-radius: 5px;
+    font-size: 1.125rem;
+}
+
+#plantas {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+  
+#suggestions {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    display: none;
+}
+  
+.suggestion {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+  
+.suggestion:hover {
+    background-color: #f0f0f0;
+}
+
+.tut {
+    text-align: center;
+}
+
+.submit {
+    width: 200px;
+}
+
+.submit:hover {
+    background-color: #d9d9d9;
+    color: #1b4a3f;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #1b4a3f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.125rem;
+    font-weight: bolder;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 720px) {
+    
+    .form-info {
+        width: 70%;
+    }
+
+    #plantas {
+        width: 90%;
+    }
+       
+}
