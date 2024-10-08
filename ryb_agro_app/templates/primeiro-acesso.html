@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/primeiro-acesso.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/primeiro-acesso' %}">
+    <script src="{% static 'js/primeiro-acesso.js' %}"
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
     <title>Primeiro acesso - Cultiva Fácil</title>
 </head>
@@ -69,6 +71,6 @@
             </div>
         </form>
     </main>
-    <script src="js/primeiro-acesso.js"></script>
+    <script src="{% static 'js/primeiro-acesso.js' %}"></script>
 </body>
 </html>
