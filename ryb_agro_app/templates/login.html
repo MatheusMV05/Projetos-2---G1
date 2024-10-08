@@ -14,7 +14,7 @@
 
     <div class="container">
         <div class="logo">
-            <a href="landingPage.html"><img src="img/Logomarca Horizontal.svg" alt=""></a>
+            <a href="{% url 'aplicacao:landingPage' %}"><img src="img/Logomarca Horizontal.svg" alt=""></a>
         </div>
         <h1>
             Login
@@ -30,7 +30,7 @@
             <input id="password" name="password" type="password" placeholder="Digite sua senha" />
             
             <div class="recuperar">
-                <a href="recuperar-senha.html">
+                <a href="{% url 'aplicacao:recuperar-senha' %}">
                     Esqueci senha</a>
             </div>
 
@@ -40,7 +40,7 @@
         </form>
         <div class="register-link">
             Ainda não possui uma conta?
-            <a href="cadastro.html">
+            <a href="{% url 'aplicacao:cadastro' %}">
                 Clique aqui
             </a>
         </div>
