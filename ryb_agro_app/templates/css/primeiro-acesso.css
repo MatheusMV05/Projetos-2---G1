@@ -174,5 +174,9 @@ button {
     .form-info {
         width: 70%;
     }
+
+    #plantas {
+        width: 90%;
+    }
        
 }
