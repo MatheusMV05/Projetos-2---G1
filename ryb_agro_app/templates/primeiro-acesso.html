@@ -45,6 +45,21 @@
         <h1>Conhecendo sua realidade</h1>
         <h3>Preencha com os dados do seu plantio</h3>
         <h2>Localização</h2>
+        <form>
+            <div class="form-info">
+                <label for="pais">País</label>
+                <input type="text" id="pais" name="pais" list="paises" placeholder="Digite seu pais">
+                <datalist id="paises">
+                    <option value="Brasil">Brasil</option>
+                </datalist>
+                <label for="estado">Estado</label>
+                <input type="text" id="estado" name="estado" list="estados" placeholder="Digite seu estado">
+                <datalist id="estados"></datalist>
+                <label for="cidade">Cidade</label>
+                <input type="text" id="cidade" name="cidade" list="cidades" placeholder="Digite sua cidade">
+                <datalist id="cidades"></datalist>
+            </div>
+        </form>
     </main>
     <script src="js/primeiro-acesso.js"></script>
 </body>

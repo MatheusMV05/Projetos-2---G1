@@ -101,3 +101,24 @@ h2 {
     margin-left: 37px;
     margin-top: 30px;
 }
+
+label {
+    display: block;
+    text-align: left;
+    margin-left: 37px;
+    margin-bottom: 5px;
+    font-family: "gojali", system-ui;
+    font-size: 23px;
+    font-weight: bolder;
+    color: #1b4a3f;
+}
+
+input[type="text"] {
+    margin-left: 37px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #1b4a3f;
+    border-radius: 5px;
+    font-size: 1.125rem;
+}
