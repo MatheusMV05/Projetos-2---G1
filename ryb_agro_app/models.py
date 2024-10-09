@@ -21,3 +21,10 @@ class Usuario(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+    
+class Terreno(models.Model):
+    pais = models.CharField(max_length=60)
+    estado = models.CharField(max_length=60)
+    cidade = models.CharField(max_length=60)
+    plantas = models.CharField(max_length=60)
+
