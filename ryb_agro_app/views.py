@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login  # Evita conflito com o nome da função
-from .models import Usuario
+from .models import Usuario, Terreno
 
 def landingPage(request):
     return render(request, 'landingPage.html')
@@ -94,3 +94,13 @@ def cadastrar_terreno(self, request):
     estado = request.POST.get("estado")
     cidade = request.POST.get("cidade")
     plantas = request.POST.get("plantas")
+
+    terreno = Terreno(
+        pais = pais,
+        estado = estado,
+        cidade = cidade,
+        plantas = plantas,
+    )
+
+    terreno.save()
+    
