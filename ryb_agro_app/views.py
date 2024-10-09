@@ -88,3 +88,9 @@ def trocar_senha(request):
         return redirect('login')
 
     return render(request, 'trocar-senha.html')
+
+def cadastrar_terreno(self, request):
+    pais = request.POST.get("pais")
+    estado = request.POST.get("estado")
+    cidade = request.POST.get("cidade")
+    plantas = request.POST.get("plantas")
