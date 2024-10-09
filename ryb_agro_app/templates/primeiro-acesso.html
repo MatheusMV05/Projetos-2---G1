@@ -47,7 +47,8 @@
         <h1>Conhecendo sua realidade</h1>
         <h3>Preencha com os dados do seu plantio</h3>
         <h2>Localização</h2>
-        <form>
+        <form method="post">
+            {% csrf_token %}
             <div class="form-info">
                 <div class="input-container">
                     <label for="pais">País</label>
