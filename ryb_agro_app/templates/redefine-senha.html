@@ -6,16 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redefinir senha - Cultiva Fácil</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/redefinir-senha.css' %}">
+    <link rel="stylesheet" href="{% static 'css/redefine-senha.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <script src="{% static 'js/redefine-senha.js' %}"></script>
 </head>
 
 <body class="gojali-regular">
-    <header>
-        <h1>Redefinir senha</h1>
-    </header>
+    <div class="logo">
+        <a href="{% url 'landingPage' %}"><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt=""></a>
+    </div>
     <main>
+        <h1>
+            Redefinir Senha
+        </h1>
         <form id="redefine-password-form">
             <div class="nova-senha">
                 <label for="new-password">Nova senha:</label>

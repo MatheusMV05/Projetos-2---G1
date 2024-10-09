@@ -8,14 +8,17 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/trocar-senha.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <script src="{% static 'js/trocar-senha.js' %}"></script>
+    <script src="{% static 'js/trocar-senhajs' %}"></script>
 </head>
 
 <body class="gojali-regular">
-    <header>
-        <h1>Trocar senha</h1>
-    </header>
+    <div class="logo">
+        <a href="{% url 'landingPage' %}"><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt=""></a>
+    </div>
     <main>
+        <h1>
+            Trocar Senha
+        </h1>
         <form id="redefine-password-form">
             <div class="senha-atual">
                 <label for="current-password">Senha atual:</label>
@@ -37,6 +40,7 @@
         <p>&copy; 2024 Cultiva Fácil</p>
     </footer>
 
+    
 </body>
 
 </html>

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'css/primeiro-acesso' %}">
-    <script src="{% static 'js/primeiro-acesso.js' %}"
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'css/primeiro-acesso.css' %}">
+    <script src="{% static 'js/primeiro-acesso.js' %}"></script>
+
     <title>Primeiro acesso - Cultiva Fácil</title>
 </head>
 <body>
@@ -31,14 +31,14 @@
         <nav class="nav-logo">
             <div class="logo">
                 <article>
-                    <img src="img/Logomarca Horizontal.svg">
+                    <img src="{% static 'img/Logomarca Horizontal.svg' %}">
                 </article>
             </div>
         </nav>
         <nav class="nav-user">
             <div class="user">
                 <article>
-                    <img src="img/user.svg">
+                    <img src="{% static 'img/user.svg' %}">
                 </article>
             </div>
         </nav>
@@ -71,6 +71,5 @@
             </div>
         </form>
     </main>
-    <script src="{% static 'js/primeiro-acesso.js' %}"></script>
 </body>
 </html>
