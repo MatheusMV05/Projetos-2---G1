@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as auth_login  # Evita conflito com o nome da função
+from django.contrib.auth import authenticate, login as auth_login  
 from .models import Usuario, Terreno
 
 def landingPage(request):
@@ -89,18 +89,23 @@ def trocar_senha(request):
 
     return render(request, 'trocar-senha.html')
 
-def cadastrar_terreno(self, request):
-    pais = request.POST.get("pais")
-    estado = request.POST.get("estado")
-    cidade = request.POST.get("cidade")
-    plantas = request.POST.get("plantas")
+def cadastrar_terreno(request):
+    if request.method == "POST":
+        pais = request.POST.get("pais")
+        estado = request.POST.get("estado")
+        cidade = request.POST.get("cidade")
+        plantas = request.POST.get("plantas")
 
-    terreno = Terreno(
-        pais = pais,
-        estado = estado,
-        cidade = cidade,
-        plantas = plantas,
-    )
+        terreno = Terreno(
+            pais=pais,
+            estado=estado,
+            cidade=cidade,
+            plantas=plantas,
+        )
 
-    terreno.save()
+        terreno.save()
+        messages.success(request, 'Terreno cadastrado com sucesso.')
+        return redirect('alguma_view_de_sucesso')  # Substitua 'alguma_view_de_sucesso' pela view correta
+
+    return render(request, 'primeiro-acesso.html')
     
