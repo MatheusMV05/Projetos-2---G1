@@ -91,12 +91,10 @@ def cadastrar_terreno(request):
     if request.method == "POST":
         estado = request.POST.get("estado")
         tamanho = request.POST.get("tamanho")
-        plantas = request.POST.get("plantas")
 
         terreno = Terreno(
             estado = estado,
             tamanho = tamanho,
-            plantas = plantas,
         )
 
         terreno.save()
