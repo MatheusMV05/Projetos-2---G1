@@ -1,6 +1,7 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #FFF5F5;
+    background-color: #F9f9f9;
+    color: #1b4a3f;
     margin: 0;
     padding: 0;
 }
@@ -94,6 +95,7 @@ nav.mobile a:hover {
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
+    margin-top: 30px;
     padding: 20px;
     box-sizing: border-box;
 }
@@ -138,4 +140,37 @@ nav.mobile a:hover {
 .search-bar i {
     margin-right: 10px;
     font-size: 18px;
+    position: relative;
+}
+
+/* Add some basic styling to make it look nice */
+#search-input {
+    width: 200px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#search-results {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    position: absolute;
+    width: 100%px;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 100;
+}
+
+#search-results li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: white;
+}
+
+#search-results li:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
 }

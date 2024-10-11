@@ -7,8 +7,6 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/add-planta.css' %}">
-    <script src="{% static 'js/add-planta.js' %}"></script>
-
     <title>Cadastro de culturas</title>
 </head>
 
@@ -64,9 +62,11 @@
         </div>
         <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Adicione uma planta">
+            <input type="search" id="search-input" placeholder="Adicione uma planta">
+            <ul id="search-results"></ul>
         </div>
     </div>
+    <script src="{% static 'js/add-planta.js' %}"></script>
 </body>
 
 </html>
