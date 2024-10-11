@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
+    
     <title>Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/dashboard.js' %}"></script>
 </head>
 <body>
     <header>
@@ -15,7 +17,7 @@
         </div>
          <div class="logo"></div>
             <article>
-                <img src="img/Logomarca Horizontal.png">
+                <img src="{% static 'img/Logomarca Horizontal.svg' %}">
             </article>
         </div>
         <div class="menu-abrir" id="menu-abrir">
@@ -34,6 +36,5 @@
         </nav>
         </div>
     </header>
-    <script src="js/dashboard.js"></script>
 </body>
 </html>

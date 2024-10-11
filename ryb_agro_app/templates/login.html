@@ -7,15 +7,17 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/login.js' %}"></script>
     <title>Login - Cultiva Fácil</title>
+    
 </head>
 
 <body class="gojali-regular">
 
     <div class="container">
         <div class="logo">
-            <a href="{% url 'aplicacao:landingPage' %}"><img src="img/Logomarca Horizontal.svg" alt=""></a>
-        </div>
+            <a href="{% url 'landingPage' %}"><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt=""></a>
+            </div>
         <h1>
             Login
         </h1>
@@ -30,8 +32,9 @@
             <input id="password" name="password" type="password" placeholder="Digite sua senha" />
             
             <div class="recuperar">
-                <a href="{% url 'aplicacao:recuperar-senha' %}">
-                    Esqueci senha</a>
+                Esqueceu sua senha?
+                <a href="{% url 'recuperar-senha' %}">
+                    Clique aqui</a>
             </div>
 
             <button type="submit" class="submit">
@@ -40,7 +43,7 @@
         </form>
         <div class="register-link">
             Ainda não possui uma conta?
-            <a href="{% url 'aplicacao:cadastro' %}">
+            <a href="{% url 'cadastro' %}">
                 Clique aqui
             </a>
         </div>

@@ -4,15 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/recuperar-senha.css">
     <title>Recuperar senha - Cultiva Fácil</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/recuperar-senha.css' %}">
+    <script src="{% static 'js/recuperar-senha.js' %}"></script>
 </head>
 
 <body class="gojali-regular">
 
     <div class="logo">
-        <a href="landingPage.html"><img src="img/Logomarca Horizontal.svg" alt=""></a>
+        <a href="{% url 'landingPage' %}"><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt=""></a>
     </div>
     <main>
         <h1>
@@ -35,7 +37,6 @@
         <p>&copy; 2024 Cultiva Fácil</p>
     </footer>
 
-    <script src="js/recuperar-senha.js"></script>
 </body>
 
 </html>
