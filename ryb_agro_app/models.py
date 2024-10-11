@@ -25,7 +25,6 @@ class Usuario(AbstractBaseUser):
 class Terreno(models.Model):
     estado = models.CharField(max_length=60)
     cidade = models.CharField(max_length=60)
-    plantas = models.CharField(max_length=60)
 
 class Planta(models.Model):
     nome = models.CharField(max_length=60)
