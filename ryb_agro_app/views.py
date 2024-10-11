@@ -89,12 +89,14 @@ def trocar_senha(request):
 
 def cadastrar_terreno(request):
     if request.method == "POST":
+        estado = request.POST.get("estado")
         tamanho = request.POST.get("tamanho")
         plantas = request.POST.get("plantas")
 
         terreno = Terreno(
-            tamanho=tamanho,
-            plantas=plantas,
+            estado = estado,
+            tamanho = tamanho,
+            plantas = plantas,
         )
 
         terreno.save()
