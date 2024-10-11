@@ -15,7 +15,7 @@ class Usuario(AbstractBaseUser):
     email = models.EmailField(unique=True)
     estado = models.CharField(max_length=60)
     cidade = models.CharField(max_length=60)
-    tamanho = models.CharFieldField(max_length=100)
+    tamanho = models.CharField(max_length=100)
 
     objects = UsuarioManager()
 
