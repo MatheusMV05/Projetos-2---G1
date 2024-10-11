@@ -108,4 +108,7 @@ def cadastrar_terreno(request):
         return redirect('alguma_view_de_sucesso')  # Substitua 'alguma_view_de_sucesso' pela view correta
 
     return render(request, 'primeiro-acesso.html')
+
+def planta(request):
+    return render(request, 'add-planta.html')
     

@@ -12,4 +12,5 @@ urlpatterns = [
     path('redefine-senha/', views.redefine_senha, name='redefine-senha'),
     path('trocar-senha/', views.trocar_senha, name='trocar-senha'),# URL raiz para a página inicial
     path('primeiro-acesso/', views.cadastrar_terreno, name='primeiro-acesso'),
+    path('planta/', views.planta, name='planta'),
 ]
