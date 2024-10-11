@@ -13,6 +13,9 @@ class UsuarioManager(BaseUserManager):
 class Usuario(AbstractBaseUser):
     celular = models.CharField(max_length=15)
     email = models.EmailField(unique=True)
+    estado = models.CharField(max_length=60)
+    cidade = models.CharField(max_length=60)
+    tamanho = models.CharFieldField(max_length=100)
 
     objects = UsuarioManager()
 
@@ -22,9 +25,7 @@ class Usuario(AbstractBaseUser):
     def __str__(self):
         return self.email
     
-class Terreno(models.Model):
-    estado = models.CharField(max_length=60)
-    cidade = models.CharField(max_length=60)
+
 
 class Planta(models.Model):
     nome = models.CharField(max_length=60)
