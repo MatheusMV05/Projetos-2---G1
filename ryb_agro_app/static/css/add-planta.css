@@ -127,6 +127,7 @@ nav.mobile a:hover {
     border: 1px solid #000;
     padding: 5px;
     border-radius: 5px;
+    position: relative;
 }
 
 .search-bar input {
@@ -140,7 +141,10 @@ nav.mobile a:hover {
 .search-bar i {
     margin-right: 10px;
     font-size: 18px;
-    position: relative;
+}
+
+.search-bar:focus-within #search-results {
+    display: block;
 }
 
 /* Add some basic styling to make it look nice */
@@ -152,10 +156,12 @@ nav.mobile a:hover {
 
 #search-results {
     list-style: none;
-    padding: 0;
+    padding: 10px;
+    display: none;
     margin: 0;
     border: 1px solid #ccc;
     position: absolute;
+    top: 100%;
     width: 100%px;
     max-height: 200px;
     overflow-y: auto;
