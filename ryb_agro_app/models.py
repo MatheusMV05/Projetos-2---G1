@@ -28,3 +28,9 @@ class Terreno(models.Model):
     cidade = models.CharField(max_length=60)
     plantas = models.CharField(max_length=60)
 
+class Planta(models.Model):
+    nome = models.CharField(max_length=60)
+    tipo = models.CharField(max_length=60)
+
+    def __str__(self):
+        return self.nome

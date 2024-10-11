@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login  
-from .models import Usuario, Terreno
+from .models import Usuario, Terreno, Planta
 
 def landingPage(request):
     return render(request, 'landingPage.html')
@@ -44,11 +44,10 @@ def login(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        # O campo de username no authenticate é o email, pois o modelo Usuario usa email como USERNAME_FIELD
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
-            auth_login(request, user)  # Usa auth_login para evitar conflito de nome da função
+            auth_login(request, user)  
             return redirect('dashboard')
         else:
             messages.error(request, 'Email ou senha incorretos.')
@@ -61,7 +60,6 @@ def recuperar_senha(request):
 def redefine_senha(request):
     if request.method == 'POST':
         email = request.POST.get('email')
-        # Aqui você pode adicionar a lógica para enviar um email de redefinição de senha
         messages.success(request, f'Link de redefinição enviado para {email}.')
         return redirect('login')
     return render(request, 'redefine-senha.html')
@@ -91,21 +89,33 @@ def trocar_senha(request):
 
 def cadastrar_terreno(request):
     if request.method == "POST":
-        pais = request.POST.get("pais")
-        estado = request.POST.get("estado")
-        cidade = request.POST.get("cidade")
+        tamanho = request.POST.get("tamanho")
         plantas = request.POST.get("plantas")
 
         terreno = Terreno(
-            pais=pais,
-            estado=estado,
-            cidade=cidade,
+            tamanho=tamanho,
             plantas=plantas,
         )
 
         terreno.save()
         messages.success(request, 'Terreno cadastrado com sucesso.')
-        return redirect('alguma_view_de_sucesso')  # Substitua 'alguma_view_de_sucesso' pela view correta
+        return redirect('alguma_view_de_sucesso')  
 
     return render(request, 'primeiro-acesso.html')
-    
+
+
+
+def adicionar_planta(request, terreno_id):
+    if request.method == "POST":
+        planta_id = request.POST.get('planta_id')
+        terreno = Terreno.objects.get(id=terreno_id)
+        planta = Planta.objects.get(id=planta_id)
+
+        # Adicionando a planta ao terreno
+        terreno.plantas.add(planta)
+
+        messages.success(request, f'{planta.nome} adicionada com sucesso ao terreno.')
+        return redirect('detalhes_terreno', terreno_id=terreno.id)
+
+    plantas = Planta.objects.all()
+    return render(request, 'adicionar_planta.html', {'plantas': plantas, 'terreno_id': terreno_id})
