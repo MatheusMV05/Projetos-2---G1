@@ -93,7 +93,7 @@ def cadastrar_terreno(request):
         estado = request.POST.get("estado")
         tamanho = request.POST.get("tamanho")
 
-        terreno = Terreno(
+        terreno = Usuario(
             cidade = cidade,
             estado = estado,
             tamanho = tamanho,
