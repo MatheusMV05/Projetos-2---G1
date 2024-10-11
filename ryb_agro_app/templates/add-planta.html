@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/add-planta.css' %}">
+    <script src="{% static 'js/add-planta.js' %}"></script>
+
+    <title>Cadastro de culturas</title>
+</head>
+
+<body>
+    <header>
+        <div class="menu-abrir" id="menu-abrir">
+            <i class="ri-menu-line"></i>
+        </div>
+        <div class="menu-mobile" id="menu-mobile">
+            <div class="menu-fechar">
+                <i class="ri-close-large-line"></i>
+            </div>
+            <nav class="mobile">
+                <ul>
+                    <a href="#">
+                        <li>ABA1</li>
+                    </a>
+                    <a href="#">
+                        <li>ABA2</li>
+                    </a>
+                    <a href="#">
+                        <li>ABA3</li>
+                    </a>
+                    <a href="#">
+                        <li>ABA4</li>
+                    </a>
+                </ul>
+            </nav>
+        </div>
+        <nav class="nav-logo">
+            <div class="logo">
+                <article>
+                    <img src="{% static 'img/Logomarca Horizontal.svg' %}">
+                </article>
+            </div>
+        </nav>
+        <nav class="nav-user">
+            <div class="user">
+                <article>
+                    <img src="{% static 'img/user.svg' %}">
+                </article>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Meu Plantio</h1>
+                <p>Plantas para cultivar</p>
+            </div>
+            <i class="fas fa-filter"></i>
+        </div>
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Adicione uma planta">
+        </div>
+    </div>
+</body>
+
+</html>
