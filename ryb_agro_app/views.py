@@ -32,7 +32,7 @@ def cadastro(request):
         usuario = Usuario.objects.create_user(email=email, celular=celular, password=password)
         
         messages.success(request, 'Cadastro realizado com sucesso. Agora você pode fazer login.')
-        return redirect('login')
+        return redirect('primeiro-acesso')
     
     return render(request, 'cadastro.html')
 
