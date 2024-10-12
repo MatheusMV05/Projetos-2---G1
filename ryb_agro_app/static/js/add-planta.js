@@ -14,13 +14,13 @@ const data = [
         title: "Abóbora"
     },
     {
-        title: "Feijão de corda"
+        title: "Batata doce"
+    },
+    {
+        title: "Cenoura"
     },
     {
         title: "Inhame"
-    },
-    {
-        title: "Jaca"
     },
     {
         title: "Milho"
