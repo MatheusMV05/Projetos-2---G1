@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -100,9 +100,10 @@ nav.mobile a:hover {
     display: flex;
     align-items: center;
     border: 1px solid #ccc;
-    background-color: #000;
-    width: 400px;
-    margin: 20 px auto;
+    background-color: #eee;
+    width: 80%;
+    margin: 20px auto;
+    margin-top: 80px;
     border-radius: 20px;
     padding: 5px 10 px;
     color: #4b4b4b;
@@ -116,11 +117,11 @@ nav.mobile a:hover {
     outline: none;
 }
 
-.search label{
+.search label {
     height: 20px;
 }
 
-.card-container{
+.card-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
