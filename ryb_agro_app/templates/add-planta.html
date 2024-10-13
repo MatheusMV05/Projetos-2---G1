@@ -65,6 +65,37 @@
             <p>descricao</p>
         </div>
     </div>
+    <div class="section">
+        <div class="profile">
+            <div class="submit" id="tomate-submit">
+                <button>Tomate</button>
+            </div>
+        </div>
+        <div class="popup-outer">
+            <div class="popup-box">
+                <div class="close" id="close">
+                    <img src="{% static 'img/close-large-line.svg' %}">
+                </div>
+                <div class="profile-text">
+                    <img src="{% static 'img/user-circle_.png' %}">
+                    <div class="text">
+                        <h2>Tomate</h2>
+                        <span class="quanto">Quanto:</span>
+                        <input type="text" id="quantidade" placeholder="Digite quanto">
+                    </div>
+                </div>
+                <form>
+                    <div class="calendario">
+                        <span class="quando">Para quando:</span>
+                    </div>
+                    <textarea placeholder="API DO CALENDARIO"></textarea>
+                    <div class="submit">
+                        <button class="add">Adicionar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <script src="{% static 'js/add-planta.js' %}"></script>
 </body>
 
