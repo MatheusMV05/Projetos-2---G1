@@ -192,12 +192,11 @@ nav.mobile a:hover {
     opacity: 0;
     pointer-events: none;
     transform: scale(1.2);
-    transition: opacity 0.2s 0s ease-in-out,
-        transform 0.2s 0s ease-in-out;
+    transition: opacity 0.2s 0s ease-in-out, transform 0.2s 0s ease-in-out;
 }
 
 .section.show .popup-outer {
-    opacity: 10;
+    opacity: 1;
     pointer-events: auto;
     transform: scale(1);
 }
