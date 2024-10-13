@@ -47,3 +47,17 @@ searchInput.addEventListener("keyup", (e) => {
 })
 
 window.addEventListener("load", displayData.bind(null,data))
+
+const section = document.querySelector("section"),
+hireBtn = section.querySelector("#hire-btn"),
+closeBtn = section.querySelectorAll("#close");
+ 
+hireBtn.addEventListener("click" , () =>{
+    section.classList.add("show");
+});
+
+closeBtn.forEach(cBtn => {
+    cBtn.addEventListener("click" , ()=>{
+        section.classList.remove("show");
+    })
+});

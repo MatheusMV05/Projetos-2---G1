@@ -28,14 +28,8 @@ header {
 }
 
 .menu-abrir img {
-    color: #005230ec;
-    font-size: 35px;
-    padding-left: 8px;
-}
-
-.menu-abrir img:hover {
-    color: #00bb6dec;
-    transition: 0.5s;
+    width: 30px;
+    margin-left: 10px;
 }
 
 .menu-mobile {
@@ -79,14 +73,9 @@ nav.mobile a:hover {
 }
 
 .menu-fechar img {
-    font-size: 35px;
-    color: #fff;
-}
-
-.menu-fechar img:hover {
+    width: 30px;
+    margin-top: 10px;
     cursor: pointer;
-    color: #ff9900;
-    transition: 0.5s;
 }
 
 .logo img {
@@ -136,5 +125,154 @@ nav.mobile a:hover {
     margin: 10px;
     padding: 15px 20px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.section {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.section .profile {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.section.show .profile {
+    display: none;
+}
+
+.profile .button {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    background: #00793c;
+    margin-top: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile .button:hover {
+    background: #004120;
+}
+
+.profile .button button {
+    background: none;
+    outline: none;
+    border: none;
+    font-size: 20px;
+    color: #fff;
+    pointer-events: none;
+}
+
+.section .popup-outer {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background: #0000009a;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.2);
+    transition: opacity 0.2s 0s ease-in-out,
+                transform 0.2s 0s ease-in-out;
+}
+
+.section.show .popup-outer {
+    opacity: 10;
+    pointer-events: auto;
+    transform: scale(1);
+}
+
+.section .popup-box {
+    position: relative;
+    padding: 30px;
+    max-width: 300px;
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+}
+
+.popup-box .close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 20px;
+    cursor: pointer;
+}
+
+.section .popup-box .profile-text {
+    display: flex;
+    align-items: center;
+}
+
+.profile-text img {
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+}
+
+.profile-text .text {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.profile-text .text .quanto {
+    font-size: 18px;
+    font-weight: 400;
+    margin-left: 4px;
+}
+
+input {
+    border: 1px solid #000;
+    height: 30px;
+    width: 8rem;
+    background-color: #f3f3f3;
+}
+
+.calendario {
+    margin-top: 30px;
+}
+
+.section .popup-box textarea {
+    resize: none;
+    min-height: 140px;
+    width: 100%;
+    margin-top: 20px;
+    outline: none;
+    border: 1px solid #000000;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 400;
+    background: #f3f3f3;
+}
+
+.section .popup-box .button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    margin-right: 75px;
+    align-items: center;
+}
+
+.popup-box .button button{
+    outline: none;
+    border: 1px solid #000;
+    padding: 6px 12px;
+    background: #D9D9D9;
+    margin-left: 8px;
+    color: #000000;
+    font-size: 14px;
     cursor: pointer;
 }
