@@ -149,7 +149,7 @@ nav.mobile a:hover {
     display: none;
 }
 
-.profile .button {
+.profile .submit {
     display: flex;
     align-items: center;
     padding: 12px 20px;
@@ -160,11 +160,11 @@ nav.mobile a:hover {
     transition: all 0.3s ease;
 }
 
-.profile .button:hover {
+.profile .submit:hover {
     background: #004120;
 }
 
-.profile .button button {
+.profile .submit button {
     background: none;
     outline: none;
     border: none;
@@ -199,8 +199,8 @@ nav.mobile a:hover {
     padding: 30px;
     max-width: 300px;
     width: 100%;
-    background: #fff;
-    border-radius: 12px;
+    background: #D9D9D9;
+    border: 2px solid #000;
 }
 
 .popup-box .close {
@@ -232,6 +232,7 @@ nav.mobile a:hover {
     font-size: 18px;
     font-weight: 400;
     margin-left: 4px;
+    margin-bottom: 4px;
 }
 
 input {
@@ -258,7 +259,7 @@ input {
     background: #f3f3f3;
 }
 
-.section .popup-box .button {
+.section .popup-box .submit {
     display: flex;
     justify-content: flex-end;
     margin-top: 15px;
@@ -266,7 +267,7 @@ input {
     align-items: center;
 }
 
-.popup-box .button button{
+.popup-box .submit button{
     outline: none;
     border: 1px solid #000;
     padding: 6px 12px;

@@ -49,15 +49,15 @@ searchInput.addEventListener("keyup", (e) => {
 window.addEventListener("load", displayData.bind(null,data))
 
 const section = document.querySelector(".section"),
-hireBtn = section.querySelector("#hire-btn"),
-closeBtn = section.querySelectorAll("#close");
+SumbitPop = section.querySelector("#submit"),
+closeSubmit = section.querySelectorAll("#close");
  
-hireBtn.addEventListener("click" , () =>{
+SumbitPop.addEventListener("click" , () =>{
     section.classList.add("show");
 });
 
-closeBtn.forEach(cBtn => {
-    cBtn.addEventListener("click" , ()=>{
+closeSubmit.forEach(cSbmt => {
+    cSbmt.addEventListener("click" , ()=>{
         section.classList.remove("show");
     })
 });
