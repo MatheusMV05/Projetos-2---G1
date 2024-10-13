@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultiva facil</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/landingPage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/landingPage.js' %}"></script>
+</head>
+
+<body class="gojali-regular">
+    <div class="container">
+        <img src="{% static 'img/Logomarca Vertical.svg' %}" alt="">
+        <a href="{% url 'login' %}">
+            <button class="button">
+                Login
+            </button>
+        </a>
+    </div>
+</body>
+
+</html>

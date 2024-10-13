@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/primeiro-acesso.css' %}">
+    <script src="{% static 'js/primeiro-acesso.js' %}"></script>
+
+    <title>Primeiro acesso - Cultiva Fácil</title>
+</head>
+<body>
+    <header>
+        <div class="menu-abrir" id="menu-abrir">
+            <i class="ri-menu-line"></i>
+        </div>
+        <div class="menu-mobile" id="menu-mobile">
+            <div class="menu-fechar">
+                <i class="ri-close-large-line"></i>
+            </div>
+        <nav class="mobile">
+            <ul>
+                <a href="#"><li>ABA1</li></a>
+                <a href="#"><li>ABA2</li></a>
+                <a href="#"><li>ABA3</li></a>
+                <a href="#"><li>ABA4</li></a>
+            </ul>
+        </nav>
+        </div>
+        <nav class="nav-logo">
+            <div class="logo">
+                <article>
+                    <img src="{% static 'img/Logomarca Horizontal.svg' %}">
+                </article>
+            </div>
+        </nav>
+        <nav class="nav-user">
+            <div class="user">
+                <article>
+                    <img src="{% static 'img/user.svg' %}">
+                </article>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <h1>Conhecendo sua realidade</h1>
+        <h3>Preencha com os dados do seu plantio</h3>
+        <h2>Localização</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-info">
+                <div class="input-container">
+                    <!-- <label for="pais">País</label>
+                    <input type="text" id="pais" name="pais" list="paises" placeholder="Selecione seu país">
+                    <datalist id="paises">
+                        <option value="Brasil">Brasil</option>
+                    </datalist> -->
+                    <label for="estado">Estado</label>
+                    <input type="text" id="estado" name="estado" list="estados" placeholder="Selecione seu estado">
+                    <datalist id="estados"></datalist>
+                </div>
+                <label for="cidade">Cidade</label>
+                <input type="text" id="cidade" name="cidade" list="cidades" placeholder="Selecione sua cidade">
+                <datalist id="cidades"></datalist>
+                <!-- <label for="planta">O que você planta hoje?</label>
+                <input type="text" id="plantas" name="plantas" placeholder="Pesquisar plantas">
+                <div id="suggestions"></div> -->
+                <label for="tamanho">
+                    Qual o tamanho do seu terreno?
+                    <select name="tamanho" id="tamanho">
+                        <option value="pequeno">Pequeno</option>
+                        <option value="médio">Médio</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                </label>
+            </div>
+            <div class="tut">
+                <button type="submit" class="submit">Finalizar</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

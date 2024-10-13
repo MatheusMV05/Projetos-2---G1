@@ -1,0 +1,9 @@
+/.venv
+venv/
+/db.sqlite3
+
+# Ignorar arquivos .pyc
+*.pyc
+
+# Ignorar diretórios __pycache__
+__pycache__/

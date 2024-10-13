@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Cultiva Fácil</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/cadastro.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/cadastro.js' %}"></script>
+</head>
+
+<body class="gojali-regular">
+
+    <div class="container">
+        <div class="logo">
+            <a href="{% url 'landingPage' %}"><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt=""></a>
+        </div>
+        <h1>
+            Cadastro
+        </h1>
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form_grid">
+
+                <div>
+                    <label for="nome">
+                        Nome completo
+                    </label>
+                    <input id="nome" name="nome" type="text" placeholder="Digite seu nome" />
+                </div>
+
+                <div>
+                    <label for="celular">
+                        Número de telefone
+                    </label>
+                    <input id="celular" name="celular" type="text" placeholder="Digite seu número de telefone" />
+                </div>
+
+                <div>
+                    <label for="email">
+                        E-mail
+                    </label>
+                    <input id="email" name="email" type="email" placeholder="Digite seu E-mail" />
+                </div>
+
+                <div>
+                    <label for="confirmar_email">
+                        Confirme seu e-mail
+                    </label>
+                    <input id="confirmar_email" name="confirmar_email" type="email" placeholder="Digite seu E-mail novamente" />
+                </div>
+
+                <div>
+                    <label for="password">
+                        Senha
+                    </label>
+                    <input id="password" name="password" type="password" placeholder="Digite sua senha" />
+                </div>
+
+                <div>
+                    <label for="confirmar_senha">
+                        Confirme sua senha
+                    </label>
+                    <input id="confirmar_senha" name="confirmar_senha" type="password" placeholder="Digite sua senha novamente" />
+                </div>
+            </div>
+
+            <button type="submit" class="submit">
+                Cadastrar-se
+            </button>
+        </form>
+        <div class="register-link">
+            Já tem uma conta?
+            <a href="{% url 'login' %}">
+                Clique aqui
+            </a>
+        </div>
+    </div>
+
+</body>
+
+</html>

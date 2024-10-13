@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/dashboard.js' %}"></script>
+</head>
+<body>
+    <header>
+        <div class="user">
+            <i class="ri-user-fill"></i>
+        </div>
+         <div class="logo"></div>
+            <article>
+                <img src="{% static 'img/Logomarca Horizontal.svg' %}">
+            </article>
+        </div>
+        <div class="menu-abrir" id="menu-abrir">
+            <i class="ri-menu-line"></i>
+        </div>
+        <div class="menu-mobile" id="menu-mobile">
+            <div class="menu-fechar">
+                <i class="ri-close-large-line"></i>
+            </div>
+        <nav class="mobile">
+            <ul>
+                <a href="#"><li>ABA1</li></a>
+                <a href="#"><li>ABA2</li></a>
+                <a href="#"><li>ABA3</li></a>
+            </ul>
+        </nav>
+        </div>
+    </header>
+</body>
+</html>
