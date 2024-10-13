@@ -27,13 +27,13 @@ header {
     cursor: pointer;
 }
 
-.menu-abrir i {
+.menu-abrir img {
     color: #005230ec;
-    font-size: 30px;
+    font-size: 35px;
     padding-left: 8px;
 }
 
-.menu-abrir i:hover {
+.menu-abrir img:hover {
     color: #00bb6dec;
     transition: 0.5s;
 }
@@ -78,12 +78,12 @@ nav.mobile a:hover {
     padding: 20px;
 }
 
-.menu-fechar i {
-    font-size: 30px;
+.menu-fechar img {
+    font-size: 35px;
     color: #fff;
 }
 
-.menu-fechar i:hover {
+.menu-fechar img:hover {
     cursor: pointer;
     color: #ff9900;
     transition: 0.5s;
