@@ -59,44 +59,19 @@
         <input type="search" id="searchInput" placeholder="Pesquisar">
     </div>
 
-    <div class="card-container"
-        data-abobora-img="{% static 'img/abobora.png' %}"
-        data-batata-img="{% static 'img/batata-doce.png' %}" 
-        data-cenoura-img="{% static 'img/cenoura.png' %}"
-        data-inhame-img="{% static 'img/inhame.png' %}"
-        data-milho-img="{% static 'img/milho.png' %}">
+    <div class="card-container" data-abobora-img="{% static 'img/abobora.png' %}"
+        data-batata-img="{% static 'img/batata-doce.png' %}" data-cenoura-img="{% static 'img/cenoura.png' %}"
+        data-inhame-img="{% static 'img/inhame.png' %}" data-milho-img="{% static 'img/milho.png' %}">
     </div>
-    <div class="section">
-        <!--<div class="profile">
-            <div class="submit" id="submit">
-                <button>Tomate</button>
-            </div>
-        </div>-->
-        <div class="popup-outer">
-            <div class="popup-box">
-                <div class="close" id="close">
-                    <img src="{% static 'img/close-large-line.svg' %}">
-                </div>
-                <div class="profile-text">
-                    <img src="" id="popup-img">
-                    <div class="text">
-                        <h2 id="popup-title">Titulo da Planta</h2>
-                        <span class="quanto">Quanto:</span>
-                        <input type="text" id="quantidade" placeholder="Digite quanto">
-                    </div>
-                </div>
-                <form>
-                    <div class="calendario">
-                        <span class="quando">Para quando:</span>
-                    </div>
-                    <textarea placeholder="API DO CALENDARIO"></textarea>
-                    <div class="submit">
-                        <button class="add">Adicionar</button>
-                    </div>
-                </form>
-            </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <img id="modalImage" src="" alt="">
         </div>
     </div>
+
     <script src="{% static 'js/add-planta.js' %}"></script>
 </body>
 
