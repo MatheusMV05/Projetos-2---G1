@@ -1,19 +1,22 @@
-let SubmitMenu = document.getElementById('menu-abrir')
-let menu = document.getElementById('menu-mobile')
+let SubmitMenu = document.getElementById('menu-abrir');
+let menu = document.getElementById('menu-mobile');
 
 SubmitMenu.addEventListener('click', () => {
-    menu.classList.add('abrir-menu')
-})
+    menu.classList.add('abrir-menu');
+});
 
 menu.addEventListener('click', () => {
-    menu.classList.remove('abrir-menu')
-})
+    menu.classList.remove('abrir-menu');
+});
 
 const cardContainer = document.querySelector(".card-container");
 const modal = document.getElementById('modal');
 const modalTitle = document.getElementById('modalTitle');
 const modalImage = document.getElementById('modalImage');
 const closeModal = document.querySelector('.close');
+const harvestAmountInput = document.getElementById('harvestAmount');
+const harvestFrequencySelect = document.getElementById('harvestFrequency');
+const addPlantButton = document.getElementById('addPlantButton');
 
 const data = [
     {
@@ -61,6 +64,10 @@ const displayData = data => {
             modalTitle.textContent = title;
             modalImage.src = image;
 
+            // Reset the input fields when opening the modal
+            harvestAmountInput.value = '';
+            harvestFrequencySelect.value = 'daily';
+
             // Show the modal
             modal.style.display = "block";
         });
@@ -77,6 +84,26 @@ window.addEventListener('click', (event) => {
     if (event.target === modal) {
         modal.style.display = "none";
     }
+});
+
+// Add plant button click event
+addPlantButton.addEventListener('click', () => {
+    const harvestAmount = harvestAmountInput.value;
+    const harvestFrequency = harvestFrequencySelect.value;
+    const selectedPlant = modalTitle.textContent;
+
+    if (!harvestAmount) {
+        alert('Please enter a valid harvest amount.');
+        return;
+    }
+
+    // Perform desired action here (e.g., add plant to a list, send data to a server)
+    console.log(`Added plant: ${selectedPlant}`);
+    console.log(`Harvest Amount: ${harvestAmount} kg`);
+    console.log(`Harvest Frequency: ${harvestFrequency}`);
+
+    // Close the modal after adding the plant
+    modal.style.display = "none";
 });
 
 searchInput.addEventListener("keyup", (e) => {

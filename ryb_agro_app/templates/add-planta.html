@@ -69,18 +69,24 @@
             <span class="close">&times;</span>
             <h3 id="modalTitle"></h3>
             <img id="modalImage" src="" alt="">
-            <label for="quantidade">Quantidade (Kg)</label>
-            <input type="number">
-            <label for="data">Frequência de colheita</label>
-            <select name="frequencia" id="frequencia">
-                <option value="7">Semanal</option>
-                <option value="15">Quinzenal</option>
-                <option value="30">Mensal</option>
-                <option value="60">Bimestral</option>
-                <option value="90">Trimestral</option>
-            </select>
-            <button id="addPlanta">Adicionar</button>
 
+            <!-- Number input for harvest amount -->
+            <label for="harvestAmount">Quantidade (kg):</label>
+            <input type="number" id="harvestAmount" min="0" step="0.1" placeholder="Digite o valor em kg">
+
+            <!-- Select box for harvest frequency -->
+            <label for="harvestFrequency">Frequência da colheita:</label>
+            <select id="harvestFrequency">
+                <option value="1">Uma vez</option>
+                <option value="7">Semanalmente</option>
+                <option value="15">Quinzenalmente</option>
+                <option value="30">Mensalmente</option>
+                <option value="60">Bimestralmente</option>
+                <option value="90">Trimestralmente</option>
+            </select>
+
+            <!-- Button to add plant -->
+            <button id="addPlantButton">Adicionar planta</button>
         </div>
     </div>
 
