@@ -51,11 +51,6 @@
             {% csrf_token %}
             <div class="form-info">
                 <div class="input-container">
-                    <!-- <label for="pais">País</label>
-                    <input type="text" id="pais" name="pais" list="paises" placeholder="Selecione seu país">
-                    <datalist id="paises">
-                        <option value="Brasil">Brasil</option>
-                    </datalist> -->
                     <label for="estado">Estado</label>
                     <input type="text" id="estado" name="estado" list="estados" placeholder="Selecione seu estado">
                     <datalist id="estados"></datalist>
@@ -63,15 +58,12 @@
                 <label for="cidade">Cidade</label>
                 <input type="text" id="cidade" name="cidade" list="cidades" placeholder="Selecione sua cidade">
                 <datalist id="cidades"></datalist>
-                <!-- <label for="planta">O que você planta hoje?</label>
-                <input type="text" id="plantas" name="plantas" placeholder="Pesquisar plantas">
-                <div id="suggestions"></div> -->
                 <label for="tamanho">
                     Qual o tamanho do seu terreno?
                     <select name="tamanho" id="tamanho">
-                        <option value="pequeno">Pequeno</option>
-                        <option value="médio">Médio</option>
-                        <option value="grande">Grande</option>
+                        <option value="pequeno">Até 1 hectare</option>
+                        <option value="médio">Até 5 hectares</option>
+                        <option value="grande">Mais de 5 hectares</option>
                     </select>
                 </label>
             </div>
