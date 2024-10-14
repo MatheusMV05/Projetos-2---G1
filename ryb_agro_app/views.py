@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as auth_login  
+from django.contrib.auth import authenticate, login   
 from .models import Usuario, Planta
+from django.contrib.auth.decorators import login_required
+
 
 def landingPage(request):
     return render(request, 'landingPage.html')
@@ -23,31 +25,35 @@ def cadastro(request):
             messages.error(request, 'As senhas não coincidem.')
             return redirect('cadastro')
 
-        # Verifica se já existe um usuário com esse email
         if Usuario.objects.filter(email=email).exists():
             messages.error(request, 'O email já está em uso.')
             return redirect('cadastro')
 
-        # Criação do usuário usando o manager
-        usuario = Usuario.objects.create_user(email=email, celular=celular, password=password)
-        
-        messages.success(request, 'Cadastro realizado com sucesso. Agora você pode fazer login.')
-        return redirect('primeiro-acesso')
-    
+        # Criação do usuário
+        usuario = Usuario.objects.create_user( nome=nome ,email=email, celular=celular, password=password)
+
+        # Autentica o usuário automaticamente
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)  # Autentica o usuário
+
+        messages.success(request, 'Cadastro realizado com sucesso. Agora preencha as informações do terreno.')
+        return redirect('primeiro-acesso')  # Redireciona para o primeiro acesso
+
     return render(request, 'cadastro.html')
 
 def dashboard(request):
     return render(request, 'dashboard.html')
 
-def login(request):
+def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, email=email, password=password)
 
         if user is not None:
-            auth_login(request, user)  
+            login(request, user)  
             return redirect('dashboard')
         else:
             messages.error(request, 'Email ou senha incorretos.')
@@ -87,21 +93,22 @@ def trocar_senha(request):
 
     return render(request, 'trocar-senha.html')
 
+
+
 def cadastrar_terreno(request):
     if request.method == "POST":
         cidade = request.POST.get("cidade")
         estado = request.POST.get("estado")
         tamanho = request.POST.get("tamanho")
 
-        terreno = Usuario(
-            cidade = cidade,
-            estado = estado,
-            tamanho = tamanho,
-        )
+        usuario = request.user  # O usuário logado
+        usuario.cidade = cidade
+        usuario.estado = estado
+        usuario.tamanho = tamanho
+        usuario.save()
 
-        terreno.save()
         messages.success(request, 'Terreno cadastrado com sucesso.')
-        return redirect('alguma_view_de_sucesso')  
+        return redirect('dashboard')  # Ou outra página após o primeiro acesso
 
     return render(request, 'primeiro-acesso.html')
 

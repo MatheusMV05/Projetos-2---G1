@@ -2,15 +2,17 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
 class UsuarioManager(BaseUserManager):
-    def create_user(self, email, celular, password=None):
+    def create_user(self, email, nome=None, celular=None, password=None):
         if not email:
             raise ValueError("O usuário deve ter um email")
-        usuario = self.model(email=self.normalize_email(email), celular=celular)
+        usuario = self.model(email=self.normalize_email(email), nome=nome, celular=celular)
         usuario.set_password(password)  # Define a senha de forma segura
         usuario.save(using=self._db)
         return usuario
 
+
 class Usuario(AbstractBaseUser):
+    nome = models.CharField(max_length=255)
     celular = models.CharField(max_length=15)
     email = models.EmailField(unique=True)
     estado = models.CharField(max_length=60)
