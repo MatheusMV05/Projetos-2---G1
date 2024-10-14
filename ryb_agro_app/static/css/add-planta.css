@@ -115,6 +115,9 @@ nav.mobile a:hover {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    width: 85%;
+    margin: 0 auto;
+    margin-top: 20px;
 }
 
 .card {
@@ -126,6 +129,14 @@ nav.mobile a:hover {
     padding: 15px 20px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+}
+
+.card-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
 .section {
@@ -184,12 +195,11 @@ nav.mobile a:hover {
     opacity: 0;
     pointer-events: none;
     transform: scale(1.2);
-    transition: opacity 0.2s 0s ease-in-out,
-                transform 0.2s 0s ease-in-out;
+    transition: opacity 0.2s 0s ease-in-out, transform 0.2s 0s ease-in-out;
 }
 
 .section.show .popup-outer {
-    opacity: 10;
+    opacity: 1;
     pointer-events: auto;
     transform: scale(1);
 }
@@ -267,7 +277,7 @@ input {
     align-items: center;
 }
 
-.popup-box .submit button{
+.popup-box .submit button {
     outline: none;
     border: 1px solid #000;
     padding: 6px 12px;
@@ -276,4 +286,146 @@ input {
     color: #000000;
     font-size: 14px;
     cursor: pointer;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Black background with transparency */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.modal-content img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    cursor: pointer;
+}
+
+/* Input and Select styles */
+.modal-content label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.modal-content input,
+.modal-content select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    background-color: #1b4a3f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.modal-content button:hover {
+    background-color: #1b4a3f8a;
+}
+
+/* Plant List Styles */
+#plantListContainer {
+    margin: 20px auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+#plantListContainer h2 {
+    margin-bottom: 10px;
+    text-align: center;
+    color: #1b4a3f;
+}
+
+#plantList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#plantList li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    font-size: 18px;
+}
+
+#plantList li:last-child {
+    border-bottom: none;
+}
+
+/* Remove Button Styles */
+.remove-plant {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.remove-plant:hover {
+    background-color: #c0392b;
+}
+
+/* Save and Continue Button Styles */
+.save-button {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #1b4a3f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.save-button:hover {
+    background-color: #1b4a3f8a;
 }
