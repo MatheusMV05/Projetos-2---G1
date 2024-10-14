@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,7 +50,8 @@
                     <label for="confirmar_email">
                         Confirme seu e-mail
                     </label>
-                    <input id="confirmar_email" name="confirmar_email" type="email" placeholder="Digite seu E-mail novamente" />
+                    <input id="confirmar_email" name="confirmar_email" type="email"
+                        placeholder="Digite seu E-mail novamente" />
                 </div>
 
                 <div>
@@ -63,13 +65,16 @@
                     <label for="confirmar_senha">
                         Confirme sua senha
                     </label>
-                    <input id="confirmar_senha" name="confirmar_senha" type="password" placeholder="Digite sua senha novamente" />
+                    <input id="confirmar_senha" name="confirmar_senha" type="password"
+                        placeholder="Digite sua senha novamente" />
                 </div>
             </div>
 
-            <button type="submit" class="submit">
-                Cadastrar-se
-            </button>
+            <a href="{% url 'primeiro-acesso' %}">
+                <button type="submit" class="submit">
+                    Cadastrar-se
+                </button>
+            </a>
         </form>
         <div class="register-link">
             Já tem uma conta?

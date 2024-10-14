@@ -1,0 +1,431 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+body {
+    background-color: #F9f9f9;
+    color: #1b4a3f;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: flex;
+    height: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 20px;
+}
+
+.menu-abrir {
+    cursor: pointer;
+}
+
+.menu-abrir img {
+    width: 30px;
+    margin-left: 10px;
+}
+
+.menu-mobile {
+    background-color: #005230ec;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+    width: 0%;
+    overflow: hidden;
+    transition: .5s;
+}
+
+.menu-mobile.abrir-menu {
+    width: 100%;
+}
+
+nav.mobile ul {
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+nav.mobile a {
+    color: #ead8fc;
+    padding: 30px 8%;
+    list-style-type: none;
+    text-decoration: none;
+}
+
+nav.mobile a:hover {
+    color: #ff9100;
+    transition: 0.3s;
+}
+
+.menu-fechar {
+    padding: 20px;
+}
+
+.menu-fechar img {
+    width: 30px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.logo img {
+    width: 150px;
+}
+
+.user img {
+    width: 35px;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    width: 80%;
+    margin: 20px auto;
+    margin-top: 80px;
+    border-radius: 20px;
+    padding: 5px 10 px;
+    color: #4b4b4b;
+}
+
+#searchInput {
+    padding: 8px;
+    border: none;
+    background-color: transparent;
+    width: 100%;
+    outline: none;
+}
+
+.search label {
+    height: 20px;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 85%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.card {
+    width: 350px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.card-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.section {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.section .profile {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.section.show .profile {
+    display: none;
+}
+
+.profile .submit {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    background: #00793c;
+    margin-top: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile .submit:hover {
+    background: #004120;
+}
+
+.profile .submit button {
+    background: none;
+    outline: none;
+    border: none;
+    font-size: 20px;
+    color: #fff;
+    pointer-events: none;
+}
+
+.section .popup-outer {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background: #0000009a;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.2);
+    transition: opacity 0.2s 0s ease-in-out, transform 0.2s 0s ease-in-out;
+}
+
+.section.show .popup-outer {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
+
+.section .popup-box {
+    position: relative;
+    padding: 30px;
+    max-width: 300px;
+    width: 100%;
+    background: #D9D9D9;
+    border: 2px solid #000;
+}
+
+.popup-box .close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 20px;
+    cursor: pointer;
+}
+
+.section .popup-box .profile-text {
+    display: flex;
+    align-items: center;
+}
+
+.profile-text img {
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+}
+
+.profile-text .text {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.profile-text .text .quanto {
+    font-size: 18px;
+    font-weight: 400;
+    margin-left: 4px;
+    margin-bottom: 4px;
+}
+
+input {
+    border: 1px solid #000;
+    height: 30px;
+    width: 8rem;
+    background-color: #f3f3f3;
+}
+
+.calendario {
+    margin-top: 30px;
+}
+
+.section .popup-box textarea {
+    resize: none;
+    min-height: 140px;
+    width: 100%;
+    margin-top: 20px;
+    outline: none;
+    border: 1px solid #000000;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 400;
+    background: #f3f3f3;
+}
+
+.section .popup-box .submit {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    margin-right: 75px;
+    align-items: center;
+}
+
+.popup-box .submit button {
+    outline: none;
+    border: 1px solid #000;
+    padding: 6px 12px;
+    background: #D9D9D9;
+    margin-left: 8px;
+    color: #000000;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Black background with transparency */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.modal-content img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    cursor: pointer;
+}
+
+/* Input and Select styles */
+.modal-content label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.modal-content input,
+.modal-content select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    background-color: #1b4a3f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.modal-content button:hover {
+    background-color: #1b4a3f8a;
+}
+
+/* Plant List Styles */
+#plantListContainer {
+    margin: 20px auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+#plantListContainer h2 {
+    margin-bottom: 10px;
+    text-align: center;
+    color: #1b4a3f;
+}
+
+#plantList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#plantList li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    font-size: 18px;
+}
+
+#plantList li:last-child {
+    border-bottom: none;
+}
+
+/* Remove Button Styles */
+.remove-plant {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.remove-plant:hover {
+    background-color: #c0392b;
+}
+
+/* Save and Continue Button Styles */
+.save-button {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #1b4a3f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.save-button:hover {
+    background-color: #1b4a3f8a;
+}
