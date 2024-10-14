@@ -97,7 +97,7 @@ addPlantButton.addEventListener('click', () => {
     const selectedPlant = modalTitle.textContent;
 
     if (!harvestAmount) {
-        alert('Please enter a valid harvest amount.');
+        alert('Por favor, insira uma quantia de colheita válida.');
         return;
     }
 
@@ -124,7 +124,7 @@ const updatePlantList = () => {
         const plantItem = document.createElement('li');
         plantItem.innerHTML = `
             ${plant.name} - ${plant.amount} kg, ${plant.frequency}
-            <button class="remove-plant" data-index="${index}">X</button>
+            <button class="remove-plant" data-index="${index}"> X </button>
         `;
         plantListContainer.appendChild(plantItem);
     });
@@ -143,6 +143,21 @@ const removePlant = (index) => {
     savedPlants.splice(index, 1); // Remove plant from the list
     updatePlantList(); // Update the displayed list
 }
+
+// Save and Continue button event listener
+const saveAndContinueButton = document.getElementById('saveAndContinueButton');
+saveAndContinueButton.addEventListener('click', () => {
+    if (savedPlants.length === 0) {
+        alert('Nenhuma planta foi registrada!');
+        return;
+    }
+
+    // Example: Send saved plants to a backend or process them further
+    console.log('Saved Plants:', savedPlants);
+
+    // Redirect to the next step
+    window.location.href = '/dashboard.html';  // Change this URL to your next step page
+});
 
 searchInput.addEventListener("keyup", (e) => {
     const search = data.filter(i => i.title.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase()));

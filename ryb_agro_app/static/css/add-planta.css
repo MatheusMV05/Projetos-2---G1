@@ -411,3 +411,21 @@ input {
 .remove-plant:hover {
     background-color: #c0392b;
 }
+
+/* Save and Continue Button Styles */
+.save-button {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #1b4a3f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.save-button:hover {
+    background-color: #1b4a3f8a;
+}
