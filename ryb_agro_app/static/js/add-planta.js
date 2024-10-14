@@ -18,6 +18,10 @@ const harvestAmountInput = document.getElementById('harvestAmount');
 const harvestFrequencySelect = document.getElementById('harvestFrequency');
 const addPlantButton = document.getElementById('addPlantButton');
 
+// Plant list container
+const plantListContainer = document.getElementById('plantList');
+let savedPlants = [];
+
 const data = [
     {
         title: "Abóbora",
@@ -97,14 +101,48 @@ addPlantButton.addEventListener('click', () => {
         return;
     }
 
-    // Perform desired action here (e.g., add plant to a list, send data to a server)
-    console.log(`Added plant: ${selectedPlant}`);
-    console.log(`Harvest Amount: ${harvestAmount} kg`);
-    console.log(`Harvest Frequency: ${harvestFrequency}`);
+    // Add the plant to the saved plants list
+    const plant = {
+        name: selectedPlant,
+        amount: harvestAmount,
+        frequency: harvestFrequency
+    };
+    savedPlants.push(plant);
+
+    // Update the displayed list of plants
+    updatePlantList();
 
     // Close the modal after adding the plant
     modal.style.display = "none";
 });
+
+// Function to update the displayed list of saved plants
+const updatePlantList = () => {
+    plantListContainer.innerHTML = ""; // Clear the current list
+
+    savedPlants.forEach((plant, index) => {
+        const plantItem = document.createElement('li');
+        plantItem.innerHTML = `
+            ${plant.name} - ${plant.amount} kg, ${plant.frequency}
+            <button class="remove-plant" data-index="${index}">X</button>
+        `;
+        plantListContainer.appendChild(plantItem);
+    });
+
+    // Attach the remove button event listener
+    document.querySelectorAll('.remove-plant').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const index = event.currentTarget.dataset.index;
+            removePlant(index);
+        });
+    });
+}
+
+// Function to remove a plant by index
+const removePlant = (index) => {
+    savedPlants.splice(index, 1); // Remove plant from the list
+    updatePlantList(); // Update the displayed list
+}
 
 searchInput.addEventListener("keyup", (e) => {
     const search = data.filter(i => i.title.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase()));

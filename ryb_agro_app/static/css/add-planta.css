@@ -115,6 +115,9 @@ nav.mobile a:hover {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    width: 85%;
+    margin: 0 auto;
+    margin-top: 20px;
 }
 
 .card {
@@ -358,4 +361,53 @@ input {
 
 .modal-content button:hover {
     background-color: #1b4a3f8a;
+}
+
+/* Plant List Styles */
+#plantListContainer {
+    margin: 20px auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+#plantListContainer h2 {
+    margin-bottom: 10px;
+    text-align: center;
+    color: #1b4a3f;
+}
+
+#plantList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#plantList li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    font-size: 18px;
+}
+
+#plantList li:last-child {
+    border-bottom: none;
+}
+
+/* Remove Button Styles */
+.remove-plant {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.remove-plant:hover {
+    background-color: #c0392b;
 }

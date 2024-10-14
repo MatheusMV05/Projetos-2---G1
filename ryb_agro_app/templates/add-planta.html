@@ -59,6 +59,13 @@
         <input type="search" id="searchInput" placeholder="Pesquisar">
     </div>
 
+    <!-- Plant List Display Section -->
+    <div id="plantListContainer">
+        <h3>Plantas adicionadas:</h3>
+        <ul id="plantList"></ul> <!-- This will display the saved plants -->
+    </div>
+
+
     <div class="card-container" data-abobora-img="{% static 'img/abobora.png' %}"
         data-batata-img="{% static 'img/batata-doce.png' %}" data-cenoura-img="{% static 'img/cenoura.png' %}"
         data-inhame-img="{% static 'img/inhame.png' %}" data-milho-img="{% static 'img/milho.png' %}">
@@ -77,12 +84,12 @@
             <!-- Select box for harvest frequency -->
             <label for="harvestFrequency">Frequência da colheita:</label>
             <select id="harvestFrequency">
-                <option value="1">Uma vez</option>
-                <option value="7">Semanalmente</option>
-                <option value="15">Quinzenalmente</option>
-                <option value="30">Mensalmente</option>
-                <option value="60">Bimestralmente</option>
-                <option value="90">Trimestralmente</option>
+                <option value="uma vez">Uma vez</option>
+                <option value="semanalmente">Semanalmente</option>
+                <option value="quinzenalmente">Quinzenalmente</option>
+                <option value="mensalmente">Mensalmente</option>
+                <option value="bimestralmente">Bimestralmente</option>
+                <option value="trimestralmente">Trimestralmente</option>
             </select>
 
             <!-- Button to add plant -->
