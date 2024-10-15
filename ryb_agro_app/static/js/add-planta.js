@@ -17,36 +17,19 @@ const closeModal = document.querySelector('.close');
 const harvestAmountInput = document.getElementById('harvestAmount');
 const harvestFrequencySelect = document.getElementById('harvestFrequency');
 const addPlantButton = document.getElementById('addPlantButton');
-
-// Plant list container
 const plantListContainer = document.getElementById('plantList');
 let savedPlants = [];
 
+// Dados das plantas para exibição
 const data = [
-    {
-        title: "Abóbora",
-        image: cardContainer.dataset.aboboraImg
-    },
-    {
-        title: "Batata doce",
-        image: cardContainer.dataset.batataImg
-    },
-    {
-        title: "Cenoura",
-        image: cardContainer.dataset.cenouraImg
-    },
-    {
-        title: "Inhame",
-        image: cardContainer.dataset.inhameImg
-    },
-    {
-        title: "Milho",
-        image: cardContainer.dataset.milhoImg
-    },
+    { title: "Abóbora", image: cardContainer.dataset.aboboraImg },
+    { title: "Batata doce", image: cardContainer.dataset.batataImg },
+    { title: "Cenoura", image: cardContainer.dataset.cenouraImg },
+    { title: "Inhame", image: cardContainer.dataset.inhameImg },
+    { title: "Milho", image: cardContainer.dataset.milhoImg },
 ];
 
-const searchInput = document.querySelector("#searchInput");
-
+// Função para exibir os cards das plantas
 const displayData = data => {
     cardContainer.innerHTML = "";
     data.forEach(e => {
@@ -59,7 +42,7 @@ const displayData = data => {
         cardContainer.innerHTML += cardHTML;
     });
 
-    // Attach click event for each card to show the modal
+    // Evento de clique nos cards para abrir o modal
     document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('click', (event) => {
             const title = event.currentTarget.dataset.title;
@@ -68,58 +51,53 @@ const displayData = data => {
             modalTitle.textContent = title;
             modalImage.src = image;
 
-            // Reset the input fields when opening the modal
+            // Limpa os campos do modal
             harvestAmountInput.value = '';
-            harvestFrequencySelect.value = 'daily';
+            harvestFrequencySelect.value = 'uma vez';
 
-            // Show the modal
+            // Exibe o modal
             modal.style.display = "block";
         });
     });
 }
 
-// Close the modal when the user clicks on (x)
+// Fecha o modal quando clicar no botão de fechar
 closeModal.addEventListener('click', () => {
     modal.style.display = "none";
 });
 
-// Also close modal when clicking outside of modal-content
+// Fecha o modal quando clicar fora do modal
 window.addEventListener('click', (event) => {
     if (event.target === modal) {
         modal.style.display = "none";
     }
 });
 
-// Add plant button click event
+// Evento para adicionar a planta na lista
 addPlantButton.addEventListener('click', () => {
     const harvestAmount = harvestAmountInput.value;
     const harvestFrequency = harvestFrequencySelect.value;
     const selectedPlant = modalTitle.textContent;
 
     if (!harvestAmount) {
-        alert('Por favor, insira uma quantia de colheita válida.');
+        alert('Por favor, insira uma quantidade válida.');
         return;
     }
 
-    // Add the plant to the saved plants list
-    const plant = {
-        name: selectedPlant,
-        amount: harvestAmount,
-        frequency: harvestFrequency
-    };
+    // Adiciona a planta na lista
+    const plant = { name: selectedPlant, amount: harvestAmount, frequency: harvestFrequency };
     savedPlants.push(plant);
 
-    // Update the displayed list of plants
+    // Atualiza a lista de plantas exibida
     updatePlantList();
 
-    // Close the modal after adding the plant
+    // Fecha o modal
     modal.style.display = "none";
 });
 
-// Function to update the displayed list of saved plants
+// Atualiza a lista de plantas exibida
 const updatePlantList = () => {
-    plantListContainer.innerHTML = ""; // Clear the current list
-
+    plantListContainer.innerHTML = "";
     savedPlants.forEach((plant, index) => {
         const plantItem = document.createElement('li');
         plantItem.innerHTML = `
@@ -129,7 +107,7 @@ const updatePlantList = () => {
         plantListContainer.appendChild(plantItem);
     });
 
-    // Attach the remove button event listener
+    // Adiciona evento de remover planta
     document.querySelectorAll('.remove-plant').forEach(button => {
         button.addEventListener('click', (event) => {
             const index = event.currentTarget.dataset.index;
@@ -138,13 +116,13 @@ const updatePlantList = () => {
     });
 }
 
-// Function to remove a plant by index
+// Remove a planta da lista
 const removePlant = (index) => {
-    savedPlants.splice(index, 1); // Remove plant from the list
-    updatePlantList(); // Update the displayed list
+    savedPlants.splice(index, 1);
+    updatePlantList();
 }
 
-// Save and Continue button event listener
+// Evento para salvar e continuar
 const saveAndContinueButton = document.getElementById('saveAndContinueButton');
 saveAndContinueButton.addEventListener('click', () => {
     if (savedPlants.length === 0) {
@@ -152,13 +130,43 @@ saveAndContinueButton.addEventListener('click', () => {
         return;
     }
 
-    // Example: Send saved plants to a backend or process them further
-    console.log('Saved Plants:', savedPlants);
-
-    // Redirect to the next step
-    window.location.href = '/dashboard.html';  // Change this URL to your next step page
+    sendDataToBackend(savedPlants);  // Envia a lista de plantas para o backend
 });
 
+// Função para enviar os dados ao backend
+const sendDataToBackend = async (plantas) => {
+    try {
+        const response = await fetch('/planta/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()  // Adiciona o CSRF token
+            },
+            body: JSON.stringify({ plantas })
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao salvar os dados!');
+        }
+
+        alert('Plantas salvas com sucesso!');
+        window.location.href = '/dashboard/';
+    } catch (error) {
+        console.error(error);
+        alert('Erro ao tentar salvar as plantas.');
+    }
+};
+
+// Função para pegar o CSRF token
+function getCSRFToken() {
+    const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('csrftoken'))
+        ?.split('=')[1];
+    return cookieValue;
+}
+
+// Exibe as plantas no carregamento da página
 searchInput.addEventListener("keyup", (e) => {
     const search = data.filter(i => i.title.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase()));
     displayData(search);

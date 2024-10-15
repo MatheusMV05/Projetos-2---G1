@@ -4,84 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'css/add-planta.css' %}">
-    <title>Cadastro de culturas</title>
+    {% load static %} <!-- Tag do Django para carregar arquivos estáticos -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Carrega o CSS principal -->
+    <link rel="stylesheet" href="{% static 'css/add-planta.css' %}"> <!-- Carrega o CSS específico da página -->
+    <title>Cadastro de Plantas</title>
 </head>
 
 <body>
+    <!-- Cabeçalho com logo e ícones -->
     <header>
         <div class="menu-abrir" id="menu-abrir">
-            <img src="{% static 'img/menu-line.svg' %}">
+            <img src="{% static 'img/menu-line.svg' %}" alt="Abrir menu">
         </div>
         <div class="menu-mobile" id="menu-mobile">
             <div class="menu-fechar">
-                <img src="{% static 'img/close-large-line.svg' %}">
+                <img src="{% static 'img/close-large-line.svg' %}" alt="Fechar menu">
             </div>
             <nav class="mobile">
                 <ul>
-                    <a href="#">
-                        <li>ABA1</li>
-                    </a>
-                    <a href="#">
-                        <li>ABA2</li>
-                    </a>
-                    <a href="#">
-                        <li>ABA3</li>
-                    </a>
-                    <a href="#">
-                        <li>ABA4</li>
-                    </a>
+                    <li><a href="#">ABA1</a></li>
+                    <li><a href="#">ABA2</a></li>
+                    <li><a href="#">ABA3</a></li>
+                    <li><a href="#">ABA4</a></li>
                 </ul>
             </nav>
         </div>
         <nav class="nav-logo">
             <div class="logo">
-                <article>
-                    <img src="{% static 'img/Logomarca Horizontal.svg' %}">
-                </article>
+                <img src="{% static 'img/Logomarca Horizontal.svg' %}" alt="Logomarca">
             </div>
         </nav>
         <nav class="nav-user">
             <div class="user">
-                <article>
-                    <img src="{% static 'img/user.svg' %}">
-                </article>
+                <img src="{% static 'img/user.svg' %}" alt="Usuário">
             </div>
         </nav>
     </header>
 
+    <!-- Seção de pesquisa -->
     <div class="search">
         <label for="searchInput">
-            <span class="material-symbols-outlined"><img src="{% static 'img/search.svg' %}" alt=""></span>
+            <span><img src="{% static 'img/search.svg' %}" alt="Pesquisar"></span>
         </label>
         <input type="search" id="searchInput" placeholder="Pesquisar">
     </div>
 
-    <!-- Plant List Display Section -->
+    <!-- Exibição das plantas adicionadas -->
     <div id="plantListContainer">
         <h3>Plantas adicionadas:</h3>
-        <ul id="plantList"></ul> <!-- This will display the saved plants -->
+        <ul id="plantList"></ul> <!-- Onde as plantas salvas aparecerão -->
     </div>
 
-
+    <!-- Card Container para as opções de plantas -->
     <div class="card-container" data-abobora-img="{% static 'img/abobora.png' %}"
         data-batata-img="{% static 'img/batata-doce.png' %}" data-cenoura-img="{% static 'img/cenoura.png' %}"
         data-inhame-img="{% static 'img/inhame.png' %}" data-milho-img="{% static 'img/milho.png' %}">
     </div>
 
+    <!-- Modal para adicionar a planta -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h3 id="modalTitle"></h3>
-            <img id="modalImage" src="" alt="">
-
-            <!-- Number input for harvest amount -->
+            <img id="modalImage" src="" alt="Imagem da Planta">
+            
+            <!-- Campo para a quantidade de colheita -->
             <label for="harvestAmount">Quantidade (kg):</label>
             <input type="number" id="harvestAmount" min="0" step="0.1" placeholder="Digite o valor em kg">
 
-            <!-- Select box for harvest frequency -->
+            <!-- Campo para a frequência da colheita -->
             <label for="harvestFrequency">Frequência da colheita:</label>
             <select id="harvestFrequency">
                 <option value="uma vez">Uma vez</option>
@@ -92,14 +83,15 @@
                 <option value="trimestralmente">Trimestralmente</option>
             </select>
 
-            <!-- Button to add plant -->
+            <!-- Botão para adicionar planta -->
             <button id="addPlantButton">Adicionar planta</button>
         </div>
     </div>
 
-    <!-- Final Save and Continue Button -->
+    <!-- Botão de salvar e continuar -->
     <button id="saveAndContinueButton" class="save-button">Salvar</button>
 
+    <!-- Script do JavaScript que faz a interação -->
     <script src="{% static 'js/add-planta.js' %}"></script>
 </body>
 

@@ -12,5 +12,5 @@ urlpatterns = [
     path('redefine-senha/', views.redefine_senha, name='redefine-senha'),
     path('trocar-senha/', views.trocar_senha, name='trocar-senha'),
     path('primeiro-acesso/', views.cadastrar_terreno, name='primeiro-acesso'),
-    path('planta/', views.adicionar_planta, name='planta'),
+    path('planta/', views.add_planta, name='planta'),
 ]

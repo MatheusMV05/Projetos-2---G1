@@ -30,8 +30,9 @@ class Usuario(AbstractBaseUser):
 
 
 class Planta(models.Model):
-    nome = models.CharField(max_length=60)
-    tipo = models.CharField(max_length=60)
+    nome = models.CharField(max_length=255)
+    quantidade = models.FloatField()
+    frequencia = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.nome
+        return f'{self.nome} - {self.quantidade} kg ({self.frequencia})'
