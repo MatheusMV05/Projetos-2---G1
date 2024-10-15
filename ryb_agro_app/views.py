@@ -117,13 +117,15 @@ def cadastrar_terreno(request):
 def adicionar_planta(request):
     if request.method == "POST":
         nome_planta = request.POST.get('nome')
+        qtd_planta = request.POST.get('quantidade')
+        frequencia = request.POST.get("frequencia")
 
         # Este cria uma nova planta 
-        planta = Planta.objects.create(nome=nome_planta)
+        planta = Planta.objects.create(nome=nome_planta, tipo=qtd_planta, frquencia=frequencia)
 
         messages.success(request, f'{planta.nome} adicionada com sucesso.')
         # Redirecionamento para url planta
-        return redirect('planta')  
+        return redirect('add-planta')  
 
-    return render(request, 'adicionar_planta.html')
+    return render(request, 'add-planta.html')
 

@@ -31,7 +31,8 @@ class Usuario(AbstractBaseUser):
 
 class Planta(models.Model):
     nome = models.CharField(max_length=60)
-    tipo = models.CharField(max_length=60)
+    qtd = models.PositiveIntegerField()
+    frequencia = models.CharField(max_length=60)
 
     def __str__(self):
         return self.nome
