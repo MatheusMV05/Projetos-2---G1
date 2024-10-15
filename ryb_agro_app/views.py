@@ -118,30 +118,31 @@ def cadastrar_terreno(request):
 
 
 # View para renderizar e processar dados
+@login_required  # Garante que o usuário esteja logado para acessar essa view
 @csrf_exempt  # Apenas para testes, remova em produção
 def add_planta(request):
-    if request.method == 'GET':  # Renderiza o template quando acessado via GET
-        return render(request, 'add-planta.html')  # Carrega o template HTML para o cadastro de plantas
+    if request.method == 'GET':
+        return render(request, 'add-planta.html')
 
-    elif request.method == 'POST':  # Lida com o envio de dados via POST
+    elif request.method == 'POST':
         try:
-            data = json.loads(request.body)  # Lê o corpo da requisição como JSON
-            plantas = data.get('plantas', [])  # Extrai a lista de plantas
+            data = json.loads(request.body)
+            plantas = data.get('plantas', [])
 
-            # Salva cada planta no banco de dados
+            # Salvar as plantas com o usuário associado
             for planta in plantas:
                 Planta.objects.create(
                     nome=planta['name'],
                     quantidade=planta['amount'],
-                    frequencia=planta['frequency']
+                    frequencia=planta['frequency'],
+                    user=request.user  # Associa o usuário logado
                 )
 
-            return JsonResponse({'status': 'success'})  # Retorna sucesso se os dados forem salvos corretamente
+            return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-    
-    else:
-        return JsonResponse({'status': 'invalid method'}, status=405)  # Caso não seja POST ou GET, retorna erro
+
+    return JsonResponse({'status': 'invalid method'}, status=405)
     
     
     
