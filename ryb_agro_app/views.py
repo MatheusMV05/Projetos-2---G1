@@ -108,7 +108,7 @@ def cadastrar_terreno(request):
         usuario.save()
 
         messages.success(request, 'Terreno cadastrado com sucesso.')
-        return redirect('planta') 
+        return redirect('dashboard') 
 
     return render(request, 'primeiro-acesso.html')
 
