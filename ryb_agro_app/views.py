@@ -3,6 +3,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login   
 from .models import Usuario, Planta
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
 def landingPage(request):
@@ -108,24 +111,37 @@ def cadastrar_terreno(request):
         usuario.save()
 
         messages.success(request, 'Terreno cadastrado com sucesso.')
-        return redirect('dashboard') 
+        return redirect('planta') 
 
     return render(request, 'primeiro-acesso.html')
 
 
 
-def adicionar_planta(request):
-    if request.method == "POST":
-        nome_planta = request.POST.get('nome')
-        qtd_planta = request.POST.get('quantidade')
-        frequencia = request.POST.get("frequencia")
+# View para renderizar e processar dados
+@csrf_exempt  # Apenas para testes, remova em produção
+def add_planta(request):
+    if request.method == 'GET':  # Renderiza o template quando acessado via GET
+        return render(request, 'add-planta.html')  # Carrega o template HTML para o cadastro de plantas
 
-        # Este cria uma nova planta 
-        planta = Planta.objects.create(nome=nome_planta, tipo=qtd_planta, frquencia=frequencia)
+    elif request.method == 'POST':  # Lida com o envio de dados via POST
+        try:
+            data = json.loads(request.body)  # Lê o corpo da requisição como JSON
+            plantas = data.get('plantas', [])  # Extrai a lista de plantas
 
-        messages.success(request, f'{planta.nome} adicionada com sucesso.')
-        # Redirecionamento para url planta
-        return redirect('add-planta')  
+            # Salva cada planta no banco de dados
+            for planta in plantas:
+                Planta.objects.create(
+                    nome=planta['name'],
+                    quantidade=planta['amount'],
+                    frequencia=planta['frequency']
+                )
 
-    return render(request, 'add-planta.html')
-
+            return JsonResponse({'status': 'success'})  # Retorna sucesso se os dados forem salvos corretamente
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+    else:
+        return JsonResponse({'status': 'invalid method'}, status=405)  # Caso não seja POST ou GET, retorna erro
+    
+    
+    
