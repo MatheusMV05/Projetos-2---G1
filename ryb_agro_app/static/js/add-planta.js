@@ -73,6 +73,36 @@ window.addEventListener('click', (event) => {
     }
 });
 
+// Dados das plantas que não devem ser plantadas juntas
+const conflictingPlants = {
+    "Abóbora": ["Cenoura"],
+    "Batata doce": ["Abóbora"],
+    "Cenoura": ["Abóbora"],
+    "Inhame": [],
+    "Milho": []
+};
+
+// Função para verificar se há conflito entre plantas e retornar as plantas conflitantes
+const checkConflictingPlants = (newPlant) => {
+    let conflictingList = new Set();  // Usamos um Set para evitar duplicatas
+
+    for (let i = 0; i < savedPlants.length; i++) {
+        const savedPlant = savedPlants[i].name;
+
+        // Verifica se a nova planta é conflitante com as plantas já salvas
+        if (conflictingPlants[newPlant].includes(savedPlant)) {
+            conflictingList.add(savedPlant);  // Adiciona ao Set, que não permite duplicatas
+        }
+
+        // Verifica se as plantas já salvas são conflitantes com a nova planta
+        if (conflictingPlants[savedPlant].includes(newPlant)) {
+            conflictingList.add(savedPlant);  // Adiciona ao Set
+        }
+    }
+
+    return Array.from(conflictingList);  // Converte o Set de volta para array
+};
+
 // Evento para adicionar a planta na lista
 addPlantButton.addEventListener('click', () => {
     const harvestAmount = harvestAmountInput.value;
@@ -84,7 +114,13 @@ addPlantButton.addEventListener('click', () => {
         return;
     }
 
-    // Adiciona a planta na lista
+    // Verifica se há plantas conflitantes e exibe aviso, mas permite adicionar
+    const conflicts = checkConflictingPlants(selectedPlant);
+    if (conflicts.length > 0) {
+        alert(`Atenção: A planta ${selectedPlant} pode entrar em conflito com as seguintes plantas já selecionadas: ${conflicts.join(', ')}.`);
+    }
+
+    // Adiciona a planta na lista, independentemente do aviso
     const plant = { name: selectedPlant, amount: harvestAmount, frequency: harvestFrequency };
     savedPlants.push(plant);
 
@@ -94,6 +130,7 @@ addPlantButton.addEventListener('click', () => {
     // Fecha o modal
     modal.style.display = "none";
 });
+
 
 // Atualiza a lista de plantas exibida
 const updatePlantList = () => {
