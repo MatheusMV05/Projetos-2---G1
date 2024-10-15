@@ -114,17 +114,16 @@ def cadastrar_terreno(request):
 
 
 
-def adicionar_planta(request, terreno_id):
+def adicionar_planta(request):
     if request.method == "POST":
-        planta_id = request.POST.get('planta_id')
-        terreno = Terreno.objects.get(id=terreno_id)
-        planta = Planta.objects.get(id=planta_id)
+        nome_planta = request.POST.get('nome')
 
-        # Adicionando a planta ao terreno
-        terreno.plantas.add(planta)
+        # Este cria uma nova planta 
+        planta = Planta.objects.create(nome=nome_planta)
 
-        messages.success(request, f'{planta.nome} adicionada com sucesso ao terreno.')
-        return redirect('detalhes_terreno', terreno_id=terreno.id)
+        messages.success(request, f'{planta.nome} adicionada com sucesso.')
+        # Redirecionamento para url planta
+        return redirect('planta')  
 
-    plantas = Planta.objects.all()
-    return render(request, 'adicionar_planta.html', {'plantas': plantas, 'terreno_id': terreno_id})
+    return render(request, 'adicionar_planta.html')
+
