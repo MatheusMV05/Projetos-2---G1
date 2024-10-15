@@ -42,6 +42,94 @@
 
 * Twilio API: Para envio de alertas e notificações via SMS.
 
+# Status Report 1
+<br>
+
+<br/>
+<p align="center" style="">
+  <a href="">
+    <img src="https://img.shields.io/badge/screencast das histórias-006400?style=for-the-badge&logo=youtube&logoColor=white" height="35px"/>
+  </a>
+  <a href="">
+    <img src="https://img.shields.io/badge/screencast dos protótipos-C4A000?style=for-the-badge&logo=youtube&logoColor=black" height="35px"/>
+  </a>
+  <a href="">
+    <img src="https://img.shields.io/badge/relatório programação em par-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
+  </a>
+  <a href="">
+    <img src="https://img.shields.io/badge/figma com sketches-006400?style=for-the-badge&logo=figma&logoColor=white" height="35px"/>
+  </a>
+</p>
+
+<br/>
+
+- <strong> Instruções de acesso </strong>
+
+
+</p>
+<br/>
+
+
+### Histórias de Usuário
+---
+
+- <strong>H1 - Registrar as características do terreno </strong>
+
+![H1](https://imgur.com/YPRMhm7.png)
+
+<br>
+
+- <strong>H2 - Validar quais plantas podem ser cultivadas juntas </strong>
+
+![H2](https://imgur.com/qxE9Lvg.png)
+
+<br>
+
+- <strong>H3 - Lista de afazeres em forma de calendário </strong>
+
+![H3](https://imgur.com/TRdI9uY.png)
+
+<br>
+
+- <strong>H4 - Salvar quanto de cada planta foi colhido </strong>
+
+![H4](https://imgur.com/YBiWxIU.png)
+
+<br>
+
+- <strong>H5 -Aviso para preservar a qualidade da terra</strong>
+
+![H5](https://imgur.com/Puk7T3Y.png)
+
+
+
+<br>
+
+- <strong>Backlog</strong>
+
+![Backlog](https://imgur.com/xdAEM2x.png)
+
+
+<br>
+
+- <strong>Board</strong>
+
+![Board](https://imgur.com/PKvY7PE.png)
+
+
+<br>
+
+- <strong>Issue/Bug tracker</strong>
+
+![issue/bug tracker1]()
+![issue/bug tracker2]()
+
+<br>
+
+- <strong>Diagrama de Atividades</strong>
+
+![Diagrama de atividade (4)](https://imgur.com/2xMP24I.png)
+
 ## Contribuidores
 <a href="https://github.com/MatheusMV05/Projetos-2---G1/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=MatheusMV05/Projetos-2---G1" />
