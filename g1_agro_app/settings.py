@@ -100,6 +100,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Configuração do modelo de usuário personalizado
+AUTH_USER_MODEL = 'ryb_agro_app.Usuario'  # Substitua 'your_app_name' pelo nome do seu aplicativo
+
+# Configuração do backend de autenticação
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

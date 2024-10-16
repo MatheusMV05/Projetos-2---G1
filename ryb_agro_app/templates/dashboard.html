@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
+    
     <title>Dashboard</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
@@ -17,7 +17,7 @@
         </div>
          <div class="logo"></div>
             <article>
-                <img src="img/Logomarca Horizontal.png">
+                <img src="{% static 'img/Logomarca Horizontal.svg' %}">
             </article>
         </div>
         <div class="menu-abrir" id="menu-abrir">
@@ -32,7 +32,6 @@
                 <a href="#"><li>ABA1</li></a>
                 <a href="#"><li>ABA2</li></a>
                 <a href="#"><li>ABA3</li></a>
-                <a href="#"><li>ABA4</li></a>
             </ul>
         </nav>
         </div>

@@ -6,17 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recuperar senha - Cultiva Fácil</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/recuperar-senha.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/recuperar-senha.css' %}">
     <script src="{% static 'js/recuperar-senha.js' %}"></script>
 </head>
 
 <body class="gojali-regular">
-    <header>
-        <h1>Esqueci minha senha</h1>
-    </header>
-    <main>
 
+    <div class="logo">
+        <a href="{% url 'landingPage' %}"><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt=""></a>
+    </div>
+    <main>
+        <h1>
+            Recuperar senha
+        </h1>
+        <p>Insira seu e-mail para receber um link de redefinição de senha.</p>
         <form id="forgot-password-form">
 
             <div class="email-recuperacao">
