@@ -10,7 +10,7 @@
 <p align="center">
   <a href="cultivafacil.azurewebsites.net">
   <img aling="center" src="https://img.shields.io/badge/Acesse%20o%20Site-%4CD971?style=for-the-badge&logo=microsoft-azure&logoColor=black" width="200"/>
-    <a/>
+    <\a>
 </p>
 
 <p align="center">
