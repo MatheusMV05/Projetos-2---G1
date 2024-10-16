@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ryb_agro_app'
+    'ryb_agro_app',
     "whitenoise.runserver_nostatic",
 ]
 
