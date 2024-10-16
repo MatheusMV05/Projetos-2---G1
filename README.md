@@ -55,7 +55,7 @@
   <a href="">
     <img src="https://img.shields.io/badge/screencast dos protótipos-C4A000?style=for-the-badge&logo=youtube&logoColor=black" height="35px"/>
   </a>
-  <a href="">
+  <a href="https://docs.google.com/document/d/1CTdH4KScu2_aoF6t_cYpeq7---v7txc7X3GmHufF0NM/edit?usp=sharing">
     <img src="https://img.shields.io/badge/relatório programação em par-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
   </a>
   <a href="">
