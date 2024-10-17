@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/cb33a0d0-34d0-4899-84d2-53c2ce8b0870)
+
 <h1 align="center">
   <br>
   <a href=""><img src="https://imgur.com/FCRPo4P.png" alt="CultivaFacil" width="500"></a>
