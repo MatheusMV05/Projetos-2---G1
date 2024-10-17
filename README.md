@@ -58,7 +58,7 @@
   <a href="https://docs.google.com/document/d/1CTdH4KScu2_aoF6t_cYpeq7---v7txc7X3GmHufF0NM/edit?usp=sharing">
     <img src="https://img.shields.io/badge/relatório programação em par-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
   </a>
-  <a href="">
+  <a href="https://www.figma.com/design/kmZcVfZnd4kcPBtJh1Ojiw/Sketches%2FStoryboard---Cultiva-Fácil?node-id=0-1&t=lzIqMANvf24dmYFn-1">
     <img src="https://img.shields.io/badge/figma com sketches-006400?style=for-the-badge&logo=figma&logoColor=white" height="35px"/>
   </a>
 </p>
