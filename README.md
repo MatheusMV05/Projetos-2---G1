@@ -1,4 +1,4 @@
-
+![image](https://github.com/user-attachments/assets/cb33a0d0-34d0-4899-84d2-53c2ce8b0870)
 <h1 align="center">
   <br>
   <a href=""><img src="https://imgur.com/FCRPo4P.png" alt="CultivaFacil" width="500"></a>
@@ -52,7 +52,7 @@
   <a href="https://www.youtube.com/watch?v=vOhT-xIG1yY">
     <img src="https://img.shields.io/badge/screencast das histórias implementadas-006400?style=for-the-badge&logo=youtube&logoColor=white" height="35px"/>
   </a>
-  <a href="">
+  <a href="https://www.youtube.com/watch?v=xMVgNrbnVL4">
     <img src="https://img.shields.io/badge/screencast dos protótipos-C4A000?style=for-the-badge&logo=youtube&logoColor=black" height="35px"/>
   </a>
   <a href="https://docs.google.com/document/d/1CTdH4KScu2_aoF6t_cYpeq7---v7txc7X3GmHufF0NM/edit?usp=sharing">
@@ -138,8 +138,8 @@
 
 - <strong>Issue/Bug tracker</strong>
 
-![issue/bug tracker1]()
-![issue/bug tracker2]()
+![issue/bug tracker1](https://imgur.com/mRiAoG1.png)
+![issue/bug tracker2](https://imgur.com/RRsPt9R.png)
 
 <br>
 
