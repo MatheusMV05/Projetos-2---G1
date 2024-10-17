@@ -19,6 +19,10 @@ def cadastro(request):
         celular = request.POST.get('celular')
         password = request.POST.get('password')
         confirmar_senha = request.POST.get('confirmar_senha')
+
+        if not password and not email:
+            messages.error(request, 'O email e senha são obrigatórios.')
+            return redirect('cadastro')
         
         if not email:
             messages.error(request, 'O email é obrigatório.')
