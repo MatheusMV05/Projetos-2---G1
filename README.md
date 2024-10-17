@@ -67,8 +67,23 @@
 
 - <strong> Instruções de acesso </strong>
 
+<p align="center" style="">
+<a href="https://scribehow.com/shared/Como_se_cadastrar_no_site_Cultiva_Facil__QcprqLOtQIm2FieyWKBEVA">
+  <img src="https://img.shields.io/badge/Cadastro do Usuario-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
+</a>
+
+<a href="https://scribehow.com/shared/Como_cadastrar_as_caracteristicas_do_seu_terreno_no_site_Cultiva_Facil__ht2pCAB6RPqO3wQt9fnLuQ">
+  <img src="https://img.shields.io/badge/Cadastro das caracteristicas do terreno-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
+</a>
+
+<a href="https://scribehow.com/shared/Como_Adicionar_Plantas_no_Site_Cultiva_Facil__sjjS1yE6TIqxwjPehh2nUQ">
+  <img src="https://img.shields.io/badge/Cadastro das plantas cultivadas-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
+</a>
 
 </p>
+
+
+
 <br/>
 
 
