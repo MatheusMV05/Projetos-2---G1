@@ -37,3 +37,38 @@ class Planta(models.Model):
 
     def __str__(self):
         return f'{self.nome} - {self.quantidade} kg ({self.frequencia})'
+
+class cronograma(models.Model):
+    # Associa o cronograma a um usuário específico
+    user = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    
+    # Data específica do cronograma
+    data = models.DateField()
+    
+    # Associa o cronograma a uma planta específica
+    planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
+    
+    # Quantidade de planta associada ao cronograma (referência à planta)
+    quantidade = models.ForeignKey(Planta, on_delete=models.CASCADE)
+    
+    # Frequência de atividades associada ao cronograma (referência à planta)
+    frequencia = models.ForeignKey(Planta, on_delete=models.CASCADE)
+    
+    # Descrição do preparo da planta
+    preparo = models.TextField()
+    
+    # Descrição da rega da planta
+    regar = models.TextField()
+    
+    # Descrição da adubação da planta
+    adubar = models.TextField()
+    
+    # Descrição do controle de pragas da planta
+    pragas = models.TextField()
+    
+    # Descrição da colheita da planta
+    colheita = models.TextField()
+
+    # Representação em string do cronograma, mostrando a data e o nome da planta
+    def __str__(self):
+        return f'{self.data} - {self.planta.nome}'
