@@ -13,6 +13,6 @@ urlpatterns = [
     path('trocar-senha/', views.trocar_senha, name='trocar-senha'),
     path('primeiro-acesso/', views.cadastrar_terreno, name='primeiro-acesso'),
     path('planta/', views.add_planta, name='planta'),
-    path('afazeres/', views.afazeres, name='afazeres'),
+    path('tarefas_do_dia/', views.tarefas_do_dia, name='tarefas_do_dia'),
     
 ]

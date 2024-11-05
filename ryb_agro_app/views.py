@@ -144,8 +144,95 @@ def add_planta(request):
 
     return JsonResponse({'status': 'invalid method'}, status=405)
 
-def afazeres(request):
-    return render(request, 'afazeres.html')
-    
-    
-    
+
+from django.shortcuts import render
+from .models import Planta, Etapa, Cronograma
+from datetime import date
+
+def tarefas_do_dia(request):
+    tarefas_do_dia = {}
+
+    # Itera sobre cada planta
+    for planta in Planta.objects.all():
+        dias_desde_plantio = (date.today() - planta.data_plantio).days
+        tarefas = []
+
+        # Valor padrão para etapas como lista vazia
+        etapas = []
+
+        # Cria cronogramas e etapas, se necessário
+        if not planta.cronogramas.exists():
+            cronograma = Cronograma.objects.create(planta=planta)
+
+            # Define as etapas para cada planta
+            if planta.nome == "Abóbora":
+                etapas = [
+                    {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo com compostagem e cobertura vegetal."},
+                    {"tipo_acao": "Plantio", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Plantar sementes de abóbora."},
+                    {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigar levemente semanalmente para manter o solo úmido."},
+                    {"tipo_acao": "Inspeção", "dias_após_plantio": 14, "intervalo_dias": 14, "descricao": "Inspecionar pragas e remover ervas daninhas."},
+                    {"tipo_acao": "Biofertilização", "dias_após_plantio": 21, "intervalo_dias": 21, "descricao": "Aplicar biofertilizante para fortalecer o solo."},
+                    {"tipo_acao": "Colheita", "dias_após_plantio": 90, "intervalo_dias": 0, "descricao": "Colher frutos maduros."}
+                ]
+            elif planta.nome == "Batata-Doce":
+                etapas = [
+                    {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar solo com adubo orgânico e cobertura vegetal."},
+                    {"tipo_acao": "Plantio", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Plantar mudas ou brotos com espaçamento adequado."},
+                    {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação leve semanal para manter o solo úmido."},
+                    {"tipo_acao": "Inspeção", "dias_após_plantio": 14, "intervalo_dias": 14, "descricao": "Inspecionar pragas e realizar capina."},
+                    {"tipo_acao": "Colheita", "dias_após_plantio": 150, "intervalo_dias": 0, "descricao": "Colher batatas-doces maduras."}
+                ]
+            elif planta.nome == "Cenoura":
+                etapas = [
+                    {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo retirando pedras e aplicando composto."},
+                    {"tipo_acao": "Semeadura", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Semeadura das sementes a 1 cm de profundidade."},
+                    {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação leve semanalmente para manter o solo úmido."},
+                    {"tipo_acao": "Desbaste", "dias_após_plantio": 30, "intervalo_dias": 0, "descricao": "Realizar desbaste para manter espaçamento."},
+                    {"tipo_acao": "Colheita", "dias_após_plantio": 90, "intervalo_dias": 0, "descricao": "Colher cenouras maduras."}
+                ]
+            elif planta.nome == "Inhame":
+                etapas = [
+                    {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo com adubação e cobertura verde."},
+                    {"tipo_acao": "Plantio", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Plantar pedaços de inhame com espaçamento adequado."},
+                    {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação leve semanal nas primeiras semanas."},
+                    {"tipo_acao": "Inspeção", "dias_após_plantio": 14, "intervalo_dias": 14, "descricao": "Capina e controle de pragas."},
+                    {"tipo_acao": "Colheita", "dias_após_plantio": 240, "intervalo_dias": 0, "descricao": "Colher inhames quando as folhas começarem a secar."}
+                ]
+            elif planta.nome == "Milho":
+                etapas = [
+                    {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo com composto."},
+                    {"tipo_acao": "Semeadura", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Semeadura das sementes a 3-5 cm de profundidade."},
+                    {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação semanal para manter o solo úmido."},
+                    {"tipo_acao": "Adubação", "dias_após_plantio": 30, "intervalo_dias": 30, "descricao": "Aplicar fertilizante durante o crescimento."},
+                    {"tipo_acao": "Colheita", "dias_após_plantio": 120, "intervalo_dias": 0, "descricao": "Colher espigas maduras."}
+                ]
+
+            # Cria as etapas no cronograma
+            for etapa in etapas:
+                Etapa.objects.create(
+                    cronograma=cronograma,
+                    tipo_acao=etapa['tipo_acao'],
+                    dias_após_plantio=etapa['dias_após_plantio'],
+                    intervalo_dias=etapa['intervalo_dias'],
+                    descricao=etapa['descricao']
+                )
+
+        # Adiciona as tarefas do dia ao dicionário para cada planta
+        for cronograma in planta.cronogramas.all():
+            for etapa in cronograma.etapas.all():
+                if etapa.intervalo_dias == 0:
+                    # Exibe a tarefa no primeiro dia
+                    if dias_desde_plantio >= etapa.dias_após_plantio:
+                        tarefas.append(f"{etapa.tipo_acao}: {etapa.descricao}")
+                else:
+                    # Condição para tarefas com intervalo
+                    if dias_desde_plantio >= etapa.dias_após_plantio and \
+                       (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
+                        tarefas.append(f"{etapa.tipo_acao}: {etapa.descricao}")
+
+        # Se houver tarefas para a planta, adiciona ao dicionário
+        if tarefas:
+            tarefas_do_dia[planta.nome] = tarefas
+
+    # Renderiza as tarefas do dia
+    return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
