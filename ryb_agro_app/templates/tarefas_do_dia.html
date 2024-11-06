@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Tarefas do Dia</title>
+    <style>
+        /* Estilos básicos para a to-do list */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .planta-section {
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .checkbox {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Tarefas do Dia</h1>
+    {% for planta, tarefas in tarefas_do_dia.items %}
+        <div class="planta-section">
+            <h2>{{ planta }}</h2>
+            <ul>
+                {% for tarefa in tarefas %}
+                    <li>
+                        <input type="checkbox" class="checkbox"> <!-- Caixa de seleção para marcar tarefa como concluída -->
+                        {{ tarefa }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% empty %}
+        <p>Não há tarefas programadas para hoje.</p>
+    {% endfor %}
+</body>
+</html>
