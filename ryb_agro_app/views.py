@@ -174,7 +174,7 @@ def tarefas_do_dia(request):
                     {"tipo_acao": "Biofertilização", "dias_após_plantio": 21, "intervalo_dias": 21, "descricao": "Aplicar biofertilizante para fortalecer o solo."},
                     {"tipo_acao": "Colheita", "dias_após_plantio": 90, "intervalo_dias": 0, "descricao": "Colher frutos maduros."}
                 ]
-            elif planta.nome == "Batata-Doce":
+            if planta.nome == "Batata-Doce":
                 etapas = [
                     {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar solo com adubo orgânico e cobertura vegetal."},
                     {"tipo_acao": "Plantio", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Plantar mudas ou brotos com espaçamento adequado."},
@@ -182,7 +182,7 @@ def tarefas_do_dia(request):
                     {"tipo_acao": "Inspeção", "dias_após_plantio": 14, "intervalo_dias": 14, "descricao": "Inspecionar pragas e realizar capina."},
                     {"tipo_acao": "Colheita", "dias_após_plantio": 150, "intervalo_dias": 0, "descricao": "Colher batatas-doces maduras."}
                 ]
-            elif planta.nome == "Cenoura":
+            if planta.nome == "Cenoura":
                 etapas = [
                     {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo retirando pedras e aplicando composto."},
                     {"tipo_acao": "Semeadura", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Semeadura das sementes a 1 cm de profundidade."},
@@ -190,7 +190,7 @@ def tarefas_do_dia(request):
                     {"tipo_acao": "Desbaste", "dias_após_plantio": 30, "intervalo_dias": 0, "descricao": "Realizar desbaste para manter espaçamento."},
                     {"tipo_acao": "Colheita", "dias_após_plantio": 90, "intervalo_dias": 0, "descricao": "Colher cenouras maduras."}
                 ]
-            elif planta.nome == "Inhame":
+            if planta.nome == "Inhame":
                 etapas = [
                     {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo com adubação e cobertura verde."},
                     {"tipo_acao": "Plantio", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Plantar pedaços de inhame com espaçamento adequado."},
@@ -198,7 +198,7 @@ def tarefas_do_dia(request):
                     {"tipo_acao": "Inspeção", "dias_após_plantio": 14, "intervalo_dias": 14, "descricao": "Capina e controle de pragas."},
                     {"tipo_acao": "Colheita", "dias_após_plantio": 240, "intervalo_dias": 0, "descricao": "Colher inhames quando as folhas começarem a secar."}
                 ]
-            elif planta.nome == "Milho":
+            if planta.nome == "Milho":
                 etapas = [
                     {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo com composto."},
                     {"tipo_acao": "Semeadura", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Semeadura das sementes a 3-5 cm de profundidade."},
