@@ -1,46 +1,66 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Trocar senha - Cultiva Fácil</title>
+		{% load static %}
+		<link rel="stylesheet" href="{% static 'css/trocar-senha.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+		<script src="{% static 'js/trocar-senha.js' %}"></script>
+	</head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trocar senha - Cultiva Fácil</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/trocar-senha.css' %}">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <script src="{% static 'js/trocar-senha.js' %}"></script>
-</head>
-
-<body class="gojali-regular">
-    <div class="logo">
-        <a href="{% url 'landingPage' %}" aria-label="Página inicial" tabindex="0">
-            <img src="{% static 'img/Logomarca Horizontal.svg' %}" alt="Logomarca da empresa">
-        </a>
-    </div>
-    <main role="main">
-        <h1>
-            Trocar Senha
-        </h1>
-        <form id="redefine-password-form">
-            <div class="senha-atual">
-                <label for="current-password">Senha atual:</label>
-                <input type="password" id="current-password" name="current-password" required tabindex="1">
-            </div>
-            <div class="nova-senha">
-                <label for="new-password">Nova senha:</label>
-                <input type="password" id="new-password" name="new-password" required tabindex="2">
-            </div>
-            <div class="confirmar-senha">
-                <label for="confirm-password">Confirmar senha:</label>
-                <input type="password" id="confirm-password" name="confirm-password" required tabindex="3">
-            </div>
-            <button type="submit" tabindex="4">Trocar senha</button>
-        </form>
-    </main>
-    <footer>
-        <p>&copy; 2024 Cultiva Fácil</p>
-    </footer>
-
-</body>
-
+	<body class="gojali-regular">
+		<div class="logo">
+			<a
+				href="{% url 'landingPage' %}"
+				aria-label="Página inicial"
+				tabindex="0"
+			>
+				<img
+					src="{% static 'img/Logomarca Horizontal.svg' %}"
+					alt="Logomarca da empresa"
+				/>
+			</a>
+		</div>
+		<main role="main">
+			<h1>Trocar Senha</h1>
+			<form id="redefine-password-form">
+				<div class="senha-atual">
+					<label for="current-password">Senha atual:</label>
+					<input
+						type="password"
+						id="current-password"
+						name="current-password"
+						required
+						tabindex="1"
+					/>
+				</div>
+				<div class="nova-senha">
+					<label for="new-password">Nova senha:</label>
+					<input
+						type="password"
+						id="new-password"
+						name="new-password"
+						required
+						tabindex="2"
+					/>
+				</div>
+				<div class="confirmar-senha">
+					<label for="confirm-password">Confirmar senha:</label>
+					<input
+						type="password"
+						id="confirm-password"
+						name="confirm-password"
+						required
+						tabindex="3"
+					/>
+				</div>
+				<button type="submit" tabindex="4">Trocar senha</button>
+			</form>
+		</main>
+		<footer>
+			<p>&copy; 2024 Cultiva Fácil</p>
+		</footer>
+	</body>
 </html>
