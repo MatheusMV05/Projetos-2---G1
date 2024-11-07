@@ -155,7 +155,6 @@ def add_planta(request):
 
     return JsonResponse({'status': 'invalid method'}, status=405)
 
-
 from django.shortcuts import render
 from .models import Planta, Etapa, Cronograma
 from datetime import date
