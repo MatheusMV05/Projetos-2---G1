@@ -1,0 +1,40 @@
+
+{
+    "Abóbora": [
+      {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo com compostagem e cobertura vegetal."},
+      {"tipo_acao": "Plantio", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Plantar sementes de abóbora."},
+      {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigar levemente semanalmente para manter o solo úmido."},
+      {"tipo_acao": "Inspeção", "dias_após_plantio": 14, "intervalo_dias": 14, "descricao": "Inspecionar pragas e remover ervas daninhas."},
+      {"tipo_acao": "Biofertilização", "dias_após_plantio": 21, "intervalo_dias": 21, "descricao": "Aplicar biofertilizante para fortalecer o solo."},
+      {"tipo_acao": "Colheita", "dias_após_plantio": 90, "intervalo_dias": 0, "descricao": "Colher frutos maduros."}
+    ],
+    "Batata-Doce": [
+      {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar solo com adubo orgânico e cobertura vegetal."},
+      {"tipo_acao": "Plantio", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Plantar mudas ou brotos com espaçamento adequado."},
+      {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação leve semanal para manter o solo úmido."},
+      {"tipo_acao": "Inspeção", "dias_após_plantio": 14, "intervalo_dias": 14, "descricao": "Inspecionar pragas e realizar capina."},
+      {"tipo_acao": "Colheita", "dias_após_plantio": 150, "intervalo_dias": 0, "descricao": "Colher batatas-doces maduras."}
+    ],
+    "Cenoura": [
+      {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo retirando pedras e aplicando composto."},
+      {"tipo_acao": "Semeadura", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Semeadura das sementes a 1 cm de profundidade."},
+      {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação leve semanalmente para manter o solo úmido."},
+      {"tipo_acao": "Desbaste", "dias_após_plantio": 30, "intervalo_dias": 0, "descricao": "Realizar desbaste para manter espaçamento."},
+      {"tipo_acao": "Colheita", "dias_após_plantio": 90, "intervalo_dias": 0, "descricao": "Colher cenouras maduras."}
+    ],
+    "Inhame": [
+      {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo com adubação e cobertura verde."},
+      {"tipo_acao": "Plantio", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Plantar pedaços de inhame com espaçamento adequado."},
+      {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação leve semanal nas primeiras semanas."},
+      {"tipo_acao": "Inspeção", "dias_após_plantio": 14, "intervalo_dias": 14, "descricao": "Capina e controle de pragas."},
+      {"tipo_acao": "Colheita", "dias_após_plantio": 240, "intervalo_dias": 0, "descricao": "Colher inhames quando as folhas começarem a secar."}
+    ],
+    "Milho": [
+      {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo com composto."},
+      {"tipo_acao": "Semeadura", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Semeadura das sementes a 3-5 cm de profundidade."},
+      {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação semanal para manter o solo úmido."},
+      {"tipo_acao": "Adubação", "dias_após_plantio": 30, "intervalo_dias": 30, "descricao": "Aplicar fertilizante durante o crescimento."},
+      {"tipo_acao": "Colheita", "dias_após_plantio": 120, "intervalo_dias": 0, "descricao": "Colher espigas maduras."}
+    ]
+  }
+  
