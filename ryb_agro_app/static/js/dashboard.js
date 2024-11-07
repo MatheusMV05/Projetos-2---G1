@@ -1,10 +1,10 @@
-let SubmitMenu = document.getElementById('menu-abrir')
-let menu = document.getElementById('menu-mobile')
+let SubmitMenu = document.getElementById('menu-abrir');
+let menu = document.getElementById('menu-mobile');
 
-SubmitMenu.addEventListener('click',()=>{
-    menu.classList.add('abrir-menu')
-})
+SubmitMenu.addEventListener('click', () => {
+	menu.classList.add('abrir-menu');
+});
 
-menu.addEventListener('click',()=>{
-    menu.classList.remove('abrir-menu')
-})
+menu.addEventListener('click', () => {
+	menu.classList.remove('abrir-menu');
+});
