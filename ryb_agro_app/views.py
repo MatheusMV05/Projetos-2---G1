@@ -30,6 +30,18 @@ def cadastro(request):
         password = request.POST.get('password')
         confirmar_senha = request.POST.get('confirmar_senha')
 
+        if not password and not email:
+            messages.error(request, 'O email e senha são obrigatórios.')
+            return redirect('cadastro')
+        
+        if not email:
+            messages.error(request, 'O email é obrigatório.')
+            return redirect('cadastro')
+        
+        if not password:
+            messages.error(request, 'A senha é obrigatória.')
+            return redirect('cadastro')
+
         if email != confirmar_email:
             messages.error(request, 'Os emails não coincidem.')
             return redirect('cadastro')
@@ -50,7 +62,6 @@ def cadastro(request):
         if user is not None:
             login(request, user)  # Autentica o usuário
 
-        messages.success(request, 'Cadastro realizado com sucesso. Agora preencha as informações do terreno.')
         return redirect('primeiro-acesso')  # Redireciona para o primeiro acesso
 
     return render(request, 'cadastro.html')

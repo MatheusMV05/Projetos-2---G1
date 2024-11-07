@@ -14,9 +14,11 @@
 <body class="gojali-regular">
 
     <div class="logo">
-        <a href="{% url 'landingPage' %}"><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt=""></a>
+        <a href="{% url 'landingPage' %}" aria-label="Página inicial" tabindex="0">
+            <img src="{% static 'img/Logomarca Horizontal.svg' %}" alt="Logomarca da empresa">
+        </a>
     </div>
-    <main>
+    <main role="main">
         <h1>
             Recuperar senha
         </h1>
@@ -25,13 +27,13 @@
 
             <div class="email-recuperacao">
                 <label for="email">Digite seu e-mail:</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" required tabindex="1">
             </div>
 
-            <button type="submit">Enviar Link de Redefinição</button>
+            <button type="submit" tabindex="2">Enviar Link de Redefinição</button>
 
         </form>
-        <p id="error-message"></p>
+        <p id="error-message" role="alert" aria-live="assertive"></p>
     </main>
     <footer>
         <p>&copy; 2024 Cultiva Fácil</p>
