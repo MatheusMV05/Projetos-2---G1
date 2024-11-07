@@ -6,7 +6,17 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.shortcuts import render
+from .models import Planta, Etapa, Cronograma
+from datetime import date
 
+import os  # Adicione esta linha para importar o módulo 'os'
+import json
+from django.conf import settings
+from django.shortcuts import render
+from django.http import JsonResponse
+from datetime import date
+from .models import Planta, Cronograma, Etapa
 
 def landingPage(request):
     return render(request, 'landingPage.html')
@@ -155,11 +165,14 @@ def add_planta(request):
 
     return JsonResponse({'status': 'invalid method'}, status=405)
 
-from django.shortcuts import render
-from .models import Planta, Etapa, Cronograma
-from datetime import date
+
 
 def tarefas_do_dia(request):
+    # Carrega o arquivo JSON com as etapas de cultivo
+    json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
+    with open(json_path, 'r', encoding='utf-8') as file:
+        etapas_plantas = json.load(file)
+    
     tarefas_do_dia = {}
 
     # Itera sobre cada planta
@@ -167,57 +180,12 @@ def tarefas_do_dia(request):
         dias_desde_plantio = (date.today() - planta.data_plantio).days
         tarefas = []
 
-        # Valor padrão para etapas como lista vazia
-        etapas = []
+        # Obtém as etapas do JSON, se disponíveis para essa planta
+        etapas = etapas_plantas.get(planta.nome, [])
 
-        # Cria cronogramas e etapas, se necessário
+        # Cria as etapas no banco de dados se não houver um cronograma existente para essa planta
         if not planta.cronogramas.exists():
             cronograma = Cronograma.objects.create(planta=planta)
-
-            # Define as etapas para cada planta
-            if planta.nome == "Abóbora":
-                etapas = [
-                    {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo com compostagem e cobertura vegetal."},
-                    {"tipo_acao": "Plantio", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Plantar sementes de abóbora."},
-                    {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigar levemente semanalmente para manter o solo úmido."},
-                    {"tipo_acao": "Inspeção", "dias_após_plantio": 14, "intervalo_dias": 14, "descricao": "Inspecionar pragas e remover ervas daninhas."},
-                    {"tipo_acao": "Biofertilização", "dias_após_plantio": 21, "intervalo_dias": 21, "descricao": "Aplicar biofertilizante para fortalecer o solo."},
-                    {"tipo_acao": "Colheita", "dias_após_plantio": 90, "intervalo_dias": 0, "descricao": "Colher frutos maduros."}
-                ]
-            if planta.nome == "Batata-Doce":
-                etapas = [
-                    {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar solo com adubo orgânico e cobertura vegetal."},
-                    {"tipo_acao": "Plantio", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Plantar mudas ou brotos com espaçamento adequado."},
-                    {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação leve semanal para manter o solo úmido."},
-                    {"tipo_acao": "Inspeção", "dias_após_plantio": 14, "intervalo_dias": 14, "descricao": "Inspecionar pragas e realizar capina."},
-                    {"tipo_acao": "Colheita", "dias_após_plantio": 150, "intervalo_dias": 0, "descricao": "Colher batatas-doces maduras."}
-                ]
-            if planta.nome == "Cenoura":
-                etapas = [
-                    {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo retirando pedras e aplicando composto."},
-                    {"tipo_acao": "Semeadura", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Semeadura das sementes a 1 cm de profundidade."},
-                    {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação leve semanalmente para manter o solo úmido."},
-                    {"tipo_acao": "Desbaste", "dias_após_plantio": 30, "intervalo_dias": 0, "descricao": "Realizar desbaste para manter espaçamento."},
-                    {"tipo_acao": "Colheita", "dias_após_plantio": 90, "intervalo_dias": 0, "descricao": "Colher cenouras maduras."}
-                ]
-            if planta.nome == "Inhame":
-                etapas = [
-                    {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo com adubação e cobertura verde."},
-                    {"tipo_acao": "Plantio", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Plantar pedaços de inhame com espaçamento adequado."},
-                    {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação leve semanal nas primeiras semanas."},
-                    {"tipo_acao": "Inspeção", "dias_após_plantio": 14, "intervalo_dias": 14, "descricao": "Capina e controle de pragas."},
-                    {"tipo_acao": "Colheita", "dias_após_plantio": 240, "intervalo_dias": 0, "descricao": "Colher inhames quando as folhas começarem a secar."}
-                ]
-            if planta.nome == "Milho":
-                etapas = [
-                    {"tipo_acao": "Preparo do Solo", "dias_após_plantio": -14, "intervalo_dias": 0, "descricao": "Preparar o solo com composto."},
-                    {"tipo_acao": "Semeadura", "dias_após_plantio": 0, "intervalo_dias": 0, "descricao": "Semeadura das sementes a 3-5 cm de profundidade."},
-                    {"tipo_acao": "Irrigação", "dias_após_plantio": 7, "intervalo_dias": 7, "descricao": "Irrigação semanal para manter o solo úmido."},
-                    {"tipo_acao": "Adubação", "dias_após_plantio": 30, "intervalo_dias": 30, "descricao": "Aplicar fertilizante durante o crescimento."},
-                    {"tipo_acao": "Colheita", "dias_após_plantio": 120, "intervalo_dias": 0, "descricao": "Colher espigas maduras."}
-                ]
-
-            # Cria as etapas no cronograma
             for etapa in etapas:
                 Etapa.objects.create(
                     cronograma=cronograma,
