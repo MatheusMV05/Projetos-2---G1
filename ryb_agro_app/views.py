@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login   
+from django.contrib.auth import authenticate, login
 from .models import Usuario, Planta
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -18,8 +18,10 @@ from django.http import JsonResponse
 from datetime import date
 from .models import Planta, Cronograma, Etapa
 
+
 def landingPage(request):
     return render(request, 'landingPage.html')
+
 
 def cadastro(request):
     if request.method == 'POST':
@@ -33,11 +35,11 @@ def cadastro(request):
         if not password and not email:
             messages.error(request, 'O email e senha são obrigatórios.')
             return redirect('cadastro')
-        
+
         if not email:
             messages.error(request, 'O email é obrigatório.')
             return redirect('cadastro')
-        
+
         if not password:
             messages.error(request, 'A senha é obrigatória.')
             return redirect('cadastro')
@@ -55,19 +57,23 @@ def cadastro(request):
             return redirect('cadastro')
 
         # Criação do usuário
-        usuario = Usuario.objects.create_user( nome=nome ,email=email, celular=celular, password=password)
+        usuario = Usuario.objects.create_user(
+            nome=nome, email=email, celular=celular, password=password)
 
         # Autentica o usuário automaticamente
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)  # Autentica o usuário
 
-        return redirect('primeiro-acesso')  # Redireciona para o primeiro acesso
+        # Redireciona para o primeiro acesso
+        return redirect('primeiro-acesso')
 
     return render(request, 'cadastro.html')
 
+
 def dashboard(request):
     return render(request, 'dashboard.html')
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -77,15 +83,17 @@ def login_view(request):
         user = authenticate(request, email=email, password=password)
 
         if user is not None:
-            login(request, user)  
+            login(request, user)
             return redirect('dashboard')
         else:
             messages.error(request, 'Email ou senha incorretos.')
             return redirect('login')
     return render(request, 'login.html')
 
+
 def recuperar_senha(request):
     return render(request, 'recuperar-senha.html')
+
 
 def redefine_senha(request):
     if request.method == 'POST':
@@ -93,6 +101,7 @@ def redefine_senha(request):
         messages.success(request, f'Link de redefinição enviado para {email}.')
         return redirect('login')
     return render(request, 'redefine-senha.html')
+
 
 def trocar_senha(request):
     if request.method == 'POST':
@@ -118,7 +127,6 @@ def trocar_senha(request):
     return render(request, 'trocar-senha.html')
 
 
-
 def cadastrar_terreno(request):
     if request.method == "POST":
         cidade = request.POST.get("cidade")
@@ -132,10 +140,9 @@ def cadastrar_terreno(request):
         usuario.save()
 
         messages.success(request, 'Terreno cadastrado com sucesso.')
-        return redirect('planta') 
+        return redirect('planta')
 
     return render(request, 'primeiro-acesso.html')
-
 
 
 # View para renderizar e processar dados
@@ -166,24 +173,18 @@ def add_planta(request):
     return JsonResponse({'status': 'invalid method'}, status=405)
 
 
-
 def tarefas_do_dia(request):
-    # Carrega o arquivo JSON com as etapas de cultivo
     json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
     with open(json_path, 'r', encoding='utf-8') as file:
         etapas_plantas = json.load(file)
-    
+
     tarefas_do_dia = {}
 
-    # Itera sobre cada planta
     for planta in Planta.objects.all():
         dias_desde_plantio = (date.today() - planta.data_plantio).days
         tarefas = []
 
-        # Obtém as etapas do JSON, se disponíveis para essa planta
         etapas = etapas_plantas.get(planta.nome, [])
-
-        # Cria as etapas no banco de dados se não houver um cronograma existente para essa planta
         if not planta.cronogramas.exists():
             cronograma = Cronograma.objects.create(planta=planta)
             for etapa in etapas:
@@ -195,22 +196,25 @@ def tarefas_do_dia(request):
                     descricao=etapa['descricao']
                 )
 
-        # Adiciona as tarefas do dia ao dicionário para cada planta
         for cronograma in planta.cronogramas.all():
             for etapa in cronograma.etapas.all():
                 if etapa.intervalo_dias == 0:
-                    # Exibe a tarefa no primeiro dia
                     if dias_desde_plantio >= etapa.dias_após_plantio:
-                        tarefas.append(f"{etapa.tipo_acao}: {etapa.descricao}")
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
                 else:
-                    # Condição para tarefas com intervalo
                     if dias_desde_plantio >= etapa.dias_após_plantio and \
                        (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
-                        tarefas.append(f"{etapa.tipo_acao}: {etapa.descricao}")
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
 
-        # Se houver tarefas para a planta, adiciona ao dicionário
         if tarefas:
             tarefas_do_dia[planta.nome] = tarefas
 
-    # Renderiza as tarefas do dia
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
