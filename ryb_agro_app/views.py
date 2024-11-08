@@ -199,7 +199,7 @@ def tarefas_do_dia(request):
         for cronograma in planta.cronogramas.all():
             for etapa in cronograma.etapas.all():
                 if etapa.intervalo_dias == 0:
-                    if dias_desde_plantio >= etapa.dias_após_plantio:
+                    if dias_desde_plantio == etapa.dias_após_plantio:
                         tarefas.append({
                             "tipo_acao": etapa.tipo_acao,
                             "descricao": etapa.descricao,
