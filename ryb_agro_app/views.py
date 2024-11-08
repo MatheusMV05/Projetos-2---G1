@@ -174,22 +174,17 @@ def add_planta(request):
 
 
 def tarefas_do_dia(request):
-    # Carrega o arquivo JSON com as etapas de cultivo
     json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
     with open(json_path, 'r', encoding='utf-8') as file:
         etapas_plantas = json.load(file)
 
     tarefas_do_dia = {}
 
-    # Itera sobre cada planta
     for planta in Planta.objects.all():
         dias_desde_plantio = (date.today() - planta.data_plantio).days
         tarefas = []
 
-        # Obtém as etapas do JSON, se disponíveis para essa planta
         etapas = etapas_plantas.get(planta.nome, [])
-
-        # Cria as etapas no banco de dados se não houver um cronograma existente para essa planta
         if not planta.cronogramas.exists():
             cronograma = Cronograma.objects.create(planta=planta)
             for etapa in etapas:
@@ -201,22 +196,25 @@ def tarefas_do_dia(request):
                     descricao=etapa['descricao']
                 )
 
-        # Adiciona as tarefas do dia ao dicionário para cada planta
         for cronograma in planta.cronogramas.all():
             for etapa in cronograma.etapas.all():
                 if etapa.intervalo_dias == 0:
-                    # Exibe a tarefa no primeiro dia
                     if dias_desde_plantio >= etapa.dias_após_plantio:
-                        tarefas.append(f"{etapa.tipo_acao}: {etapa.descricao}")
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
                 else:
-                    # Condição para tarefas com intervalo
                     if dias_desde_plantio >= etapa.dias_após_plantio and \
                        (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
-                        tarefas.append(f"{etapa.tipo_acao}: {etapa.descricao}")
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
 
-        # Se houver tarefas para a planta, adiciona ao dicionário
         if tarefas:
             tarefas_do_dia[planta.nome] = tarefas
 
-    # Renderiza as tarefas do dia
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
