@@ -15,3 +15,16 @@ function toggleTaskCompletion(checkbox) {
 		plantaSection.querySelector('ul').appendChild(taskItem);
 	}
 }
+
+document
+	.getElementById('toggle-concluidas-btn')
+	.addEventListener('click', function () {
+		const concluidasSection = document.getElementById('concluidas-list');
+		const isVisible = concluidasSection.style.display !== 'none';
+
+		// Alternar visibilidade
+		concluidasSection.style.display = isVisible ? 'none' : 'block';
+
+		// Girar a seta
+		this.classList.toggle('closed', isVisible);
+	});
