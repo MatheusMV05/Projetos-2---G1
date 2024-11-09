@@ -45,28 +45,27 @@ function showTaskDetails(tipoAcao, descricao, planta) {
 	$('#taskModal').modal('show');
 }
 
-// Função para alternar a conclusão das tarefas
 function toggleTaskCompletion(checkbox) {
-	const taskItem = checkbox.closest('.tarefa'); // Obtém o item da tarefa
+	const taskItem = checkbox.parentElement; // Obtem o item da tarefa
 	const targetList = checkbox.checked ? 'concluidas-list' : 'pendentes-section';
 
 	// Mover o item da tarefa para a lista apropriada
 	if (checkbox.checked) {
 		document.getElementById('concluidas-list').appendChild(taskItem);
 	} else {
-		document.getElementById('pendentes-section').appendChild(taskItem);
+		const plantaSection = taskItem.closest('.planta-section');
+		plantaSection.querySelector('ul').appendChild(taskItem);
 	}
 }
 
-// Alternar visibilidade da seção de tarefas concluídas
 document
 	.getElementById('toggle-concluidas-btn')
 	.addEventListener('click', function () {
-		const concluidasList = document.getElementById('concluidas-list');
-		const isVisible = concluidasList.style.display !== 'none';
+		const concluidasSection = document.getElementById('concluidas-list');
+		const isVisible = concluidasSection.style.display !== 'none';
 
 		// Alternar visibilidade
-		concluidasList.style.display = isVisible ? 'none' : 'block';
+		concluidasSection.style.display = isVisible ? 'none' : 'block';
 
 		// Girar a seta
 		this.classList.toggle('closed', isVisible);
