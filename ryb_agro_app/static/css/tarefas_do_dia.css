@@ -71,15 +71,39 @@ li {
 
 /* Estilo da barra para a seção de tarefas concluídas */
 .concluidas-bar {
-    
-    border-radius: 8px; /* Bordas arredondadas */
-    background-color: #fff; /* Fundo verde claro para contraste */
-    padding: 15px; /* Espaçamento interno */
-    margin-top: 20px; /* Separação superior */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+	border-radius: 8px; /* Bordas arredondadas */
+	background-color: #fff;
+	padding: 15px; /* Espaçamento interno */
+	margin-top: 20px; /* Separação superior */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
 }
 
 /* Alinhar o título da barra com o toggle */
 .concluidas-bar .h4 {
-    margin-bottom: 10px; /* Espaço abaixo do título */
+	margin-bottom: 10px; /* Espaço abaixo do título */
+}
+
+/* Estilo do calendário */
+.calendario {
+	background-color: #fff;
+	padding: 10px;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.dias-semana div {
+	width: 40px;
+	text-align: center;
+}
+#dias-semana div {
+    background-color: lightblue;
+    padding: 5px;
+    border: 1px solid black;
+    margin: 2px;
+    text-align: center;
+    border-radius: 3px;
+}
+
+.dia-ativo {
+	font-weight: bold;
+	color: blue;
 }
