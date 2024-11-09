@@ -1,82 +1,124 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Minhas tarefas</title>
 
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Tarefas do Dia</title>
+		{% load static %}
 
-	{% load static %}
+		<link
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/tarefas_do_dia.css' %}" />
+	</head>
 
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-	<link rel="stylesheet" href="{% static 'css/style.css' %}" />
-	<link rel="stylesheet" href="{% static 'css/tarefas_do_dia.css' %}" />
-</head>
+	<body>
+		<div class="container my-4">
+			<h1 class="text-center mb-4">Minhas tarefas</h1>
 
-<body>
-	<div class="container my-4">
-		<h1 class="text-center mb-4">Lista de Tarefas do Dia</h1>
+			<!-- Weekly Calendar -->
+			<div
+				id="dias-semana"
+				class="dias-semana d-flex justify-content-center mb-4"
+			></div>
 
-		<!-- Seção para Tarefas Pendentes -->
-		<div id="pendentes-section">
-			{% for planta, tarefas in tarefas_do_dia.items %}
-			<div class="planta-section mb-3">
-				<h2 class="h4 text-primary">{{ planta }}</h2>
-				<ul class="list-group">
-					{% for tarefa in tarefas %}
-					<li class="list-group-item d-flex align-items-center">
-						<span
-							onclick="showTaskDetails('{{ tarefa.tipo_acao }}', '{{ tarefa.descricao }}', '{{ tarefa.planta }}')">
-							{{ tarefa.tipo_acao }} - {{ tarefa.planta }}
-						</span>
-						<input type="checkbox" class="checkbox" onclick="toggleTaskCompletion(this)" />
-					</li>
-					{% endfor %}
+			<!-- Seção para Tarefas Pendentes -->
+			<div id="pendentes-section">
+				{% for planta, tarefas in tarefas_do_dia.items %}
+				<div class="planta-section mb-3">
+					<ul class="list-group" id="pendentes-list">
+						{% for tarefa in tarefas %}
+						<li
+							class="list-group-item d-flex justify-content-between align-items-center"
+						>
+							<span
+								onclick="showTaskDetails('{{ tarefa.tipo_acao }}', '{{ tarefa.descricao }}', '{{ tarefa.planta }}')"
+							>
+								{{ tarefa.tipo_acao }} - {{ tarefa.planta }}
+							</span>
+							<input
+								type="checkbox"
+								class="checkbox"
+								onclick="toggleTaskCompletion(this)"
+							/>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+				{% empty %}
+				<p class="text-muted">Não há tarefas programadas para hoje.</p>
+				{% endfor %}
+			</div>
+
+			<!-- Seção para Tarefas Concluídas -->
+			<div id="concluidas-container" class="concluidas-bar mt-5">
+				<h2
+					class="h4 text-success d-flex justify-content-between align-items-center"
+				>
+					Concluídas
+					<span id="toggle-concluidas-btn" class="toggle-arrow">▼</span>
+				</h2>
+				<ul class="list-group" id="concluidas-list">
+					<!-- Tarefas concluídas aparecerão aqui -->
 				</ul>
 			</div>
-			{% empty %}
-			<p class="text-muted">Não há tarefas programadas para hoje.</p>
-			{% endfor %}
-		</div>
 
-		<!-- Seção para Tarefas Concluídas -->
-		<div id="concluidas-container" class="concluidas-bar mt-5">
-			<h2 class="h4 text-success d-flex justify-content-between align-items-center">
-				Tarefas Concluídas
-				<span id="toggle-concluidas-btn" class="toggle-arrow">▼</span>
-			</h2>
-			<ul class="list-group" id="concluidas-list">
-				<!-- Tarefas concluídas aparecerão aqui -->
-			</ul>
-		</div>
-
-
-		<!-- Modal para exibir mais informações sobre a tarefa -->
-		<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="taskModalLabel">Detalhes da Tarefa</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<p id="taskDetails"></p>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">
-							Fechar
-						</button>
+			<!-- Modal para exibir mais informações sobre a tarefa -->
+			<div
+				class="modal fade"
+				id="taskModal"
+				tabindex="-1"
+				aria-labelledby="taskModalLabel"
+				aria-hidden="true"
+			>
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="taskModalLabel">
+								Detalhes da Tarefa
+							</h5>
+							<button
+								type="button"
+								class="close"
+								data-dismiss="modal"
+								aria-label="Close"
+							>
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p id="taskDetails"></p>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-dismiss="modal"
+							>
+								Fechar
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<!-- Closing container div -->
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="{% static 'js/tarefas_do_dia.js' %}" defer></script>
+		<script>
+			// JavaScript functions to manage task completion and toggling visibility of completed tasks
+			$(document).ready(function () {
+				carregarDiasSemana(); // Call the function to load the days of the week
+			});
 
-	</div> <!-- Closing container div -->
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="{% static 'js/tarefas_do_dia.js' %}"></script>
-</body>
-
+			function toggleCompletedTasks() {
+				$('#concluidas-list').toggle();
+				$('#toggle-concluidas-btn').toggleClass('closed');
+			}
+		</script>
+	</body>
 </html>

@@ -1,0 +1,116 @@
+body {
+	background-color: #f9f9f9;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	width: 100vw;
+	margin: 0;
+}
+
+.container {
+	width: 30vw;
+	text-align: center;
+	padding: 20px;
+}
+
+.logo {
+	margin-bottom: 7rem;
+	/* Reduced margin to move the image upwards */
+}
+
+.logo img {
+	width: 150px;
+}
+
+h1 {
+	font-size: 2.25rem;
+	font-weight: bold;
+	margin-bottom: 80px;
+	color: #1b4a3f;
+}
+
+label {
+	display: block;
+	text-align: left;
+	margin-bottom: 5px;
+	font-size: 1.125rem;
+	font-weight: bolder;
+	color: #1b4a3f;
+}
+
+input[type='email'],
+input[type='password'] {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 20px;
+	border: 1px solid #1b4a3f;
+	border-radius: 5px;
+	font-size: 1.125rem;
+}
+
+input::placeholder {
+	color: #999999;
+}
+
+.recuperar {
+	font-size: 0.875rem;
+	font-weight: bolder;
+	margin-bottom: 1.5rem;
+	color: #1b4a3f;
+}
+
+.submit {
+	width: 50%;
+	margin: 0 auto;
+}
+
+button {
+	width: 100%;
+	padding: 10px;
+	background-color: #1b4a3f;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	font-size: 1.125rem;
+	font-weight: bolder;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #d9d9d9;
+	color: #1b4a3f;
+}
+
+.register-link {
+	margin-top: 20px;
+	font-size: 0.875rem;
+	font-weight: bolder;
+	color: #1b4a3f;
+}
+
+@media only screen and (max-width: 500px) {
+	.container {
+		width: 75%;
+		display: grid;
+		place-items: center;
+	}
+
+	button {
+		width: 109%;
+	}
+
+	.recuperar {
+		font-size: smaller;
+		margin-top: -1rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.register-link {
+		font-size: smaller;
+	}
+
+	.logo {
+		margin-bottom: 3rem;
+	}
+}

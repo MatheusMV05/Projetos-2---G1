@@ -2,8 +2,18 @@
 body {
 	background-color: #f3f3f3;
 }
-.planta-section {
-	margin-bottom: 20px;
+/* Task Item Styles */
+.list-group-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-left: 4px solid #4caf50; /* Color bar for task type */
+    margin-bottom: 10px;
+    padding: 15px;
+}
+
+.planta-section ul {
+    padding: 0;
 }
 h2 {
 	font-size: 1.5em;
@@ -22,20 +32,19 @@ li {
 	justify-content: space-between; /* Alinha o checkbox à direita */
 }
 
-/* Estilização do checkbox como círculo */
+/* Checkbox as a Circular Toggle */
 .checkbox {
-	appearance: none; /* Remove o estilo padrão do checkbox */
-	width: 20px;
-	height: 20px;
-	border: 2px solid #666;
-	border-radius: 50%; /* Faz o checkbox ser circular */
-	cursor: pointer;
-	outline: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #666;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 .checkbox:checked {
-	background-color: #4caf50; /* Cor quando estiver selecionado */
-	border-color: #4caf50;
+    background-color: #4caf50;
+    border-color: #4caf50;
 }
 
 .checkbox:checked::before {
@@ -49,17 +58,22 @@ li {
 	border-radius: 50%;
 	transform: translate(-50%, -50%);
 }
-/* Estilo da seta para toggle */
+/* Style for Completed Task Bar */
+.concluidas-bar {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 .toggle-arrow {
-	cursor: pointer;
-	font-size: 1.2rem; /* Tamanho da seta */
-	user-select: none; /* Evita seleção de texto na seta */
-	color: #28a745; /* Verde para combinar com o título */
-	transition: transform 0.3s ease-in-out; /* Transição para girar */
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
 }
 
 .toggle-arrow.closed {
-	transform: rotate(-90deg); /* Girar a seta ao fechar */
+    transform: rotate(-90deg);
 }
 
 /* Alinhamento */
@@ -71,15 +85,31 @@ li {
 
 /* Estilo da barra para a seção de tarefas concluídas */
 .concluidas-bar {
-    
-    border-radius: 8px; /* Bordas arredondadas */
-    background-color: #fff; /* Fundo verde claro para contraste */
-    padding: 15px; /* Espaçamento interno */
-    margin-top: 20px; /* Separação superior */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+	border-radius: 8px; /* Bordas arredondadas */
+	background-color: #fff;
+	padding: 15px; /* Espaçamento interno */
+	margin-top: 20px; /* Separação superior */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
 }
 
 /* Alinhar o título da barra com o toggle */
 .concluidas-bar .h4 {
-    margin-bottom: 10px; /* Espaço abaixo do título */
+	margin-bottom: 10px; /* Espaço abaixo do título */
+}
+
+/* Styles for the day-of-week calendar */
+.dias-semana div {
+    width: 45px;
+    text-align: center;
+    background-color: #eee;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 2px;
+    font-weight: bold;
+}
+
+.dia-ativo {
+    color: white;
+    background-color: #4caf50;
+    border: none;
 }
