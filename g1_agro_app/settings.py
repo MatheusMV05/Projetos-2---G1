@@ -47,7 +47,7 @@ else:
             'OPTIONS': {'sslmode': 'require'},
         }
     }
-    
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -123,7 +123,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Configuração do modelo de usuário personalizado
-AUTH_USER_MODEL = 'ryb_agro_app.Usuario'  # Substitua 'your_app_name' pelo nome do seu aplicativo
+# Substitua 'your_app_name' pelo nome do seu aplicativo
+AUTH_USER_MODEL = 'ryb_agro_app.Usuario'
 
 # Configuração do backend de autenticação
 AUTHENTICATION_BACKENDS = (
@@ -150,9 +151,13 @@ USE_TZ = True
 STATIC_URL = os.environ.get('DJANGO_STATIC_URL', "/static/")
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
+STATICFILES_STORAGE = (
+    'whitenoise.storage.CompressedManifestStaticFilesStorage')
 
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    # Outros diretórios de arquivos estáticos, se houver
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
