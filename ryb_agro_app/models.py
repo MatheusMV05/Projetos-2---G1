@@ -90,3 +90,13 @@ class Etapa(models.Model):
     # Representação em string da etapa, mostrando o nome e os dias após o plantio
     def __str__(self):
         return f'{self.nome} ({self.dias_após_plantio} dias após plantio)'
+    
+class Colheita(models.Model):
+    etapa = models.ForeignKey(Etapa, on_delete=models.CASCADE, related_name='colheitas')
+
+    quantidade = models.IntegerField()
+
+    data_colheita = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Colheita de {self.quantidade} kg em {self.data_colheita}'

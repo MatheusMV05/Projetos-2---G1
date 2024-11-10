@@ -45,11 +45,35 @@ function showTaskDetails(tipoAcao, descricao, planta) {
 }
 
 // Toggle task completion status
-function toggleTaskCompletion(checkbox) {
+function toggleTaskCompletion(checkbox, tipoAcao, tarefaId) {
 	const taskItem = checkbox.parentElement;
 	if (checkbox.checked) {
 		document.getElementById('concluidas-list').appendChild(taskItem);
+		
+		// Verifique se o tipo é colheita e envie ao backend
+		if (tipoAcao === "Colheita") {
+			fetch('/registrar_colheita/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRFToken': '{{ csrf_token }}'  // Token CSRF do Django
+				},
+				body: JSON.stringify({ tarefaId: tarefaId })
+			})
+			.then(response => response.json())
+			.then(data => console.log(data.message))
+			.catch(error => console.error('Erro:', error));
+		}
 	} else {
 		document.getElementById('pendentes-section').appendChild(taskItem);
 	}
 }
+
+
+// Função para obter o CSRF token no Django
+function getCookie(name) {
+	const value = `; ${document.cookie}`;
+	const parts = value.split(`; ${name}=`);
+	if (parts.length === 2) return parts.pop().split(';').shift();
+}
+

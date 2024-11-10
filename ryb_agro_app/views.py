@@ -218,3 +218,21 @@ def tarefas_do_dia(request):
             tarefas_do_dia[planta.nome] = tarefas
 
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
+
+def registrar_colheita(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        tarefa_id = data.get('tarefaId')
+
+        try:
+            tarefa = Etapa.objects.get(id=tarefa_id, tipo_acao="Colheita")
+            tarefa.concluida = True
+            tarefa.save()
+
+            # Lógica adicional para armazenar a quantidade colhida
+
+            return JsonResponse({"message": "Colheita registrada com sucesso."}, status=200)
+        except Etapa.DoesNotExist:
+            return JsonResponse({"message": "Tarefa não encontrada ou não é de tipo Colheita."}, status=404)
+
+    return JsonResponse({"message": "Método não permitido."}, status=405)
