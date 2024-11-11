@@ -188,13 +188,17 @@ def tarefas_do_dia(request):
         if not planta.cronogramas.exists():
             cronograma = Cronograma.objects.create(planta=planta)
             for etapa in etapas:
-                Etapa.objects.create(
-                    cronograma=cronograma,
-                    tipo_acao=etapa['tipo_acao'],
-                    dias_após_plantio=etapa['dias_após_plantio'],
-                    intervalo_dias=etapa['intervalo_dias'],
-                    descricao=etapa['descricao']
-                )
+                # Verifique se 'etapa' é realmente um dicionário
+                if isinstance(etapa, dict):
+                    Etapa.objects.create(
+                        cronograma=cronograma,
+                        tipo_acao=etapa.get('tipo_acao'),
+                        dias_após_plantio=etapa.get('dias_após_plantio'),
+                        intervalo_dias=etapa.get('intervalo_dias'),
+                        descricao=etapa.get('descricao')
+                    )
+                else:
+                    print(f"Etapa inesperada: {etapa}")  # Para depuração, remover em produção
 
         for cronograma in planta.cronogramas.all():
             for etapa in cronograma.etapas.all():
@@ -218,6 +222,7 @@ def tarefas_do_dia(request):
             tarefas_do_dia[planta.nome] = tarefas
 
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
+
 
 def registrar_colheita(request):
     if request.method == 'POST':
