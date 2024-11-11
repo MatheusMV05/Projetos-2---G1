@@ -118,9 +118,25 @@ li {
 .search-container {
 	position: relative;
 	margin-bottom: 20px;
+    display: flex;
+    align-items: center;
 }
 
 #search-plant {
 	font-size: 1rem;
 	padding-left: 1.5rem;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.5rem;
+}
+
+#tipo-acao-filter {
+    width: auto;
+}
+
+.search-container i{
+    font-size: 1.2rem;
+    cursor: pointer;
 }

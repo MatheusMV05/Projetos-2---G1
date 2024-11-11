@@ -119,3 +119,53 @@ function buscarPlanta() {
 		})
 		.catch((error) => console.error('Erro ao buscar plantas:', error));
 }
+
+function aplicarFiltros() {
+	const query = document.getElementById('search-plant').value;
+	const tipoAcao = document.getElementById('tipo-acao-filter').value;
+
+	// Faz a requisição ao backend com os parâmetros de busca e filtragem
+	fetch(
+		`/buscar_planta/?query=${encodeURIComponent(
+			query
+		)}&tipo_acao=${encodeURIComponent(tipoAcao)}`
+	)
+		.then((response) => response.json())
+		.then((data) => {
+			const pendentesSection = document.getElementById('pendentes-section');
+			pendentesSection.innerHTML = '';
+
+			if (data.tarefas) {
+				for (const [planta, tarefas] of Object.entries(data.tarefas)) {
+					const plantaSection = document.createElement('div');
+					plantaSection.classList.add('planta-section', 'mb-3');
+					const tarefaList = document.createElement('ul');
+					tarefaList.classList.add('list-group');
+
+					tarefas.forEach((tarefa) => {
+						const listItem = document.createElement('li');
+						listItem.classList.add(
+							'list-group-item',
+							'd-flex',
+							'justify-content-between',
+							'align-items-center'
+						);
+						listItem.innerHTML = `
+                            <span onclick="showTaskDetails('${tarefa.tipo_acao}', '${tarefa.descricao}', '${tarefa.planta}')">
+                                ${tarefa.tipo_acao} - ${tarefa.planta}
+                            </span>
+                            <input type="checkbox" class="checkbox" onclick="toggleTaskCompletion(this)" />
+                        `;
+						tarefaList.appendChild(listItem);
+					});
+
+					plantaSection.appendChild(tarefaList);
+					pendentesSection.appendChild(plantaSection);
+				}
+			} else {
+				pendentesSection.innerHTML =
+					'<p class="text-muted">Nenhuma tarefa encontrada.</p>';
+			}
+		})
+		.catch((error) => console.error('Erro ao buscar plantas:', error));
+}

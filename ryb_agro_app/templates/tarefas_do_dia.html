@@ -29,15 +29,27 @@
 				class="dias-semana d-flex justify-content-center mb-4"
 			></div>
 
-			<div class="search-container">
+			<div class="search-container d-flex align-items-center">
 				<input
 					type="search"
 					id="search-plant"
 					class="form-control"
 					placeholder="&#xf002; Buscar planta"
 					style="font-family: Arial, FontAwesome"
-					oninput="buscarPlanta()"
+					oninput="aplicarFiltros()"
 				/>
+				<select
+					id="tipo-acao-filter"
+					class="form-control ml-2"
+					onchange="aplicarFiltros()"
+				>
+					<option value="">Todos</option>
+					<option value="Plantio">Plantio</option>
+					<option value="Colheita">Colheita</option>
+					<option value="Regar">Regar</option>
+					<!-- Adicione outros tipos de ação conforme necessário -->
+				</select>
+				<i class="fa-duotone fa-solid fa-filter ml-2"></i>
 			</div>
 
 			<!-- Seção para Tarefas Pendentes -->

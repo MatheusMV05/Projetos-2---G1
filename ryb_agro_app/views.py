@@ -235,35 +235,43 @@ def tarefas_do_dia(request):
 def buscar_planta(request):
     if request.method == 'GET':
         termo_busca = request.GET.get('query', '').lower()
+        tipo_acao_filtro = request.GET.get('tipo_acao', '').lower()
         tarefas_filtradas = {}
 
         for planta in Planta.objects.all():
+            # Aplica o termo de busca
             if termo_busca in planta.nome.lower():
                 tarefas = []
                 dias_desde_plantio = (date.today() - planta.data_plantio).days
+
+                # Carrega as etapas de cada planta do arquivo JSON
                 etapas_plantas = json.load(open(os.path.join(
                     settings.BASE_DIR, 'etapas_plantas.json'), 'r', encoding='utf-8'))
                 planta_etapas = etapas_plantas.get(
                     planta.nome, {}).get("acoes", [])
 
-                # Filtra as etapas da planta com base nas regras
+                # Filtra as etapas da planta com base nas regras de intervalo
                 for cronograma in planta.cronogramas.all():
                     for etapa in cronograma.etapas.all():
                         if etapa.intervalo_dias == 0:
                             if dias_desde_plantio >= etapa.dias_após_plantio:
-                                tarefas.append({
-                                    "tipo_acao": etapa.tipo_acao,
-                                    "descricao": etapa.descricao,
-                                    "planta": planta.nome
-                                })
+                                # Verifica se corresponde ao filtro de tipo de ação
+                                if not tipo_acao_filtro or tipo_acao_filtro == etapa.tipo_acao.lower():
+                                    tarefas.append({
+                                        "tipo_acao": etapa.tipo_acao,
+                                        "descricao": etapa.descricao,
+                                        "planta": planta.nome
+                                    })
                         else:
                             if dias_desde_plantio >= etapa.dias_após_plantio and \
                                (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
-                                tarefas.append({
-                                    "tipo_acao": etapa.tipo_acao,
-                                    "descricao": etapa.descricao,
-                                    "planta": planta.nome
-                                })
+                                if not tipo_acao_filtro or tipo_acao_filtro == etapa.tipo_acao.lower():
+                                    tarefas.append({
+                                        "tipo_acao": etapa.tipo_acao,
+                                        "descricao": etapa.descricao,
+                                        "planta": planta.nome
+                                    })
+
                 if tarefas:
                     tarefas_filtradas[planta.nome] = tarefas
 
