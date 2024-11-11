@@ -118,8 +118,8 @@ li {
 .search-container {
 	position: relative;
 	margin-bottom: 20px;
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 #search-plant {
@@ -128,15 +128,19 @@ li {
 }
 
 .search-icon {
-    position: absolute;
-    left: 0.5rem;
+	position: absolute;
+	left: 0.5rem;
 }
 
 #tipo-acao-filter {
-    width: auto;
+	width: auto;
 }
 
-.search-container i{
-    font-size: 1.2rem;
-    cursor: pointer;
+.search-container i {
+	font-size: 1.2rem;
+	cursor: pointer;
+}
+
+#add-task-btn {
+	fill: var(--Color-2, #1b4a3f);
 }

@@ -134,6 +134,95 @@
 				</div>
 			</div>
 		</div>
+		<!-- Botão de adicionar tarefa -->
+		<button
+			id="add-task-btn"
+			class="btn btn-primary"
+			onclick="abrirModalTarefa()"
+			style="
+				position: fixed;
+				bottom: 1.5rem;
+				right: 1.5rem;
+				width: 4.5rem;
+				height: 4.5rem;
+				border-radius: 50%;
+				background-color: #1b4a3f;
+				color: white;
+				font-size: 2rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			"
+		>
+			+
+		</button>
+
+		<!-- Modal para adicionar nova tarefa -->
+		<div
+			class="modal fade"
+			id="addTaskModal"
+			tabindex="-1"
+			aria-labelledby="addTaskModalLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="addTaskModalLabel">
+							Adicionar Nova Tarefa
+						</h5>
+						<button
+							type="button"
+							class="close"
+							data-dismiss="modal"
+							aria-label="Close"
+						>
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form id="add-task-form" onsubmit="adicionarTarefa(event)">
+						<div class="modal-body">
+							<div class="form-group">
+								<label for="tipo-acao">Tipo de Ação</label>
+								<select id="tipo-acao" class="form-control" required>
+									<option value="Preparo do Solo">Preparo do Solo</option>
+									<option value="Plantio">Plantio</option>
+									<option value="Irrigação">Irrigação</option>
+									<option value="Inspeção">Inspeção</option>
+									<option value="Biofertilização">Biofertilização</option>
+									<option value="Controle de Pragas">Controle de Pragas</option>
+									<option value="Colheita">Colheita</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="descricao">Descrição</label>
+								<textarea
+									class="form-control"
+									id="descricao"
+									rows="3"
+									required
+								></textarea>
+							</div>
+							<div class="form-group">
+								<label for="planta">Planta</label>
+								<input type="text" class="form-control" id="planta" required />
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-dismiss="modal"
+							>
+								Cancelar
+							</button>
+							<button type="submit" class="btn btn-primary">Salvar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
 		<!-- Closing container div -->
 		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
