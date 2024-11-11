@@ -4,16 +4,16 @@ body {
 }
 /* Task Item Styles */
 .list-group-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-left: 4px solid #4caf50; /* Color bar for task type */
-    margin-bottom: 10px;
-    padding: 15px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-left: 4px solid #4caf50; /* Color bar for task type */
+	margin-bottom: 10px;
+	padding: 15px;
 }
 
 .planta-section ul {
-    padding: 0;
+	padding: 0;
 }
 h2 {
 	font-size: 1.5em;
@@ -34,17 +34,17 @@ li {
 
 /* Checkbox as a Circular Toggle */
 .checkbox {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #666;
-    border-radius: 50%;
-    cursor: pointer;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border: 2px solid #666;
+	border-radius: 50%;
+	cursor: pointer;
 }
 
 .checkbox:checked {
-    background-color: #4caf50;
-    border-color: #4caf50;
+	background-color: #4caf50;
+	border-color: #4caf50;
 }
 
 .checkbox:checked::before {
@@ -60,20 +60,20 @@ li {
 }
 /* Style for Completed Task Bar */
 .concluidas-bar {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	background-color: #f9f9f9;
+	border-radius: 8px;
+	padding: 10px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .toggle-arrow {
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: transform 0.3s ease;
+	cursor: pointer;
+	font-size: 1.2rem;
+	transition: transform 0.3s ease;
 }
 
 .toggle-arrow.closed {
-    transform: rotate(-90deg);
+	transform: rotate(-90deg);
 }
 
 /* Alinhamento */
@@ -99,17 +99,28 @@ li {
 
 /* Styles for the day-of-week calendar */
 .dias-semana div {
-    width: 45px;
-    text-align: center;
-    background-color: #eee;
-    border-radius: 5px;
-    padding: 5px;
-    margin: 2px;
-    font-weight: bold;
+	width: 45px;
+	text-align: center;
+	background-color: #eee;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 2px;
+	font-weight: bold;
 }
 
 .dia-ativo {
-    color: white;
-    background-color: #4caf50;
-    border: none;
+	color: white;
+	background-color: #4caf50;
+	border: none;
+}
+
+/* Estilo do campo de busca */
+.search-container {
+	position: relative;
+	margin-bottom: 20px;
+}
+
+#search-plant {
+	font-size: 1rem;
+	padding-left: 1.5rem;
 }

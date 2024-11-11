@@ -49,26 +49,25 @@ function toggleTaskCompletion(checkbox, tipoAcao, tarefaId) {
 	const taskItem = checkbox.parentElement;
 	if (checkbox.checked) {
 		document.getElementById('concluidas-list').appendChild(taskItem);
-		
+
 		// Verifique se o tipo é colheita e envie ao backend
-		if (tipoAcao === "Colheita") {
+		if (tipoAcao === 'Colheita') {
 			fetch('/registrar_colheita/', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					'X-CSRFToken': '{{ csrf_token }}'  // Token CSRF do Django
+					'X-CSRFToken': '{{ csrf_token }}', // Token CSRF do Django
 				},
-				body: JSON.stringify({ tarefaId: tarefaId })
+				body: JSON.stringify({ tarefaId: tarefaId }),
 			})
-			.then(response => response.json())
-			.then(data => console.log(data.message))
-			.catch(error => console.error('Erro:', error));
+				.then((response) => response.json())
+				.then((data) => console.log(data.message))
+				.catch((error) => console.error('Erro:', error));
 		}
 	} else {
 		document.getElementById('pendentes-section').appendChild(taskItem);
 	}
 }
-
 
 // Função para obter o CSRF token no Django
 function getCookie(name) {
@@ -77,3 +76,46 @@ function getCookie(name) {
 	if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+function buscarPlanta() {
+	const query = document.getElementById('search-plant').value;
+
+	fetch(`/buscar_planta/?query=${encodeURIComponent(query)}`)
+		.then((response) => response.json())
+		.then((data) => {
+			const pendentesSection = document.getElementById('pendentes-section');
+			pendentesSection.innerHTML = '';
+
+			if (data.tarefas) {
+				for (const [planta, tarefas] of Object.entries(data.tarefas)) {
+					const plantaSection = document.createElement('div');
+					plantaSection.classList.add('planta-section', 'mb-3');
+					const tarefaList = document.createElement('ul');
+					tarefaList.classList.add('list-group');
+
+					tarefas.forEach((tarefa) => {
+						const listItem = document.createElement('li');
+						listItem.classList.add(
+							'list-group-item',
+							'd-flex',
+							'justify-content-between',
+							'align-items-center'
+						);
+						listItem.innerHTML = `
+                            <span onclick="showTaskDetails('${tarefa.tipo_acao}', '${tarefa.descricao}', '${tarefa.planta}')">
+                                ${tarefa.tipo_acao} - ${tarefa.planta}
+                            </span>
+                            <input type="checkbox" class="checkbox" onclick="toggleTaskCompletion(this)" />
+                        `;
+						tarefaList.appendChild(listItem);
+					});
+
+					plantaSection.appendChild(tarefaList);
+					pendentesSection.appendChild(plantaSection);
+				}
+			} else {
+				pendentesSection.innerHTML =
+					'<p class="text-muted">Nenhuma tarefa encontrada.</p>';
+			}
+		})
+		.catch((error) => console.error('Erro ao buscar plantas:', error));
+}

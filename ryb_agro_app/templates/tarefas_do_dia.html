@@ -29,6 +29,17 @@
 				class="dias-semana d-flex justify-content-center mb-4"
 			></div>
 
+			<div class="search-container">
+				<input
+					type="search"
+					id="search-plant"
+					class="form-control"
+					placeholder="&#xf002; Buscar planta"
+					style="font-family: Arial, FontAwesome"
+					oninput="buscarPlanta()"
+				/>
+			</div>
+
 			<!-- Seção para Tarefas Pendentes -->
 			<div id="pendentes-section">
 				{% for planta, tarefas in tarefas_do_dia.items %}

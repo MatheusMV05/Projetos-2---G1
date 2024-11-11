@@ -202,7 +202,8 @@ def tarefas_do_dia(request):
                         descricao=acao.get('descricao')
                     )
                 else:
-                    print(f"Etapa inesperada: {acao}")  # Para depuração, remover em produção
+                    # Para depuração, remover em produção
+                    print(f"Etapa inesperada: {acao}")
 
         # Verifica etapas já existentes no cronograma da planta
         for cronograma in planta.cronogramas.all():
@@ -227,6 +228,47 @@ def tarefas_do_dia(request):
             tarefas_do_dia[planta.nome] = tarefas
 
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
+
+
+@login_required
+@csrf_exempt
+def buscar_planta(request):
+    if request.method == 'GET':
+        termo_busca = request.GET.get('query', '').lower()
+        tarefas_filtradas = {}
+
+        for planta in Planta.objects.all():
+            if termo_busca in planta.nome.lower():
+                tarefas = []
+                dias_desde_plantio = (date.today() - planta.data_plantio).days
+                etapas_plantas = json.load(open(os.path.join(
+                    settings.BASE_DIR, 'etapas_plantas.json'), 'r', encoding='utf-8'))
+                planta_etapas = etapas_plantas.get(
+                    planta.nome, {}).get("acoes", [])
+
+                # Filtra as etapas da planta com base nas regras
+                for cronograma in planta.cronogramas.all():
+                    for etapa in cronograma.etapas.all():
+                        if etapa.intervalo_dias == 0:
+                            if dias_desde_plantio >= etapa.dias_após_plantio:
+                                tarefas.append({
+                                    "tipo_acao": etapa.tipo_acao,
+                                    "descricao": etapa.descricao,
+                                    "planta": planta.nome
+                                })
+                        else:
+                            if dias_desde_plantio >= etapa.dias_após_plantio and \
+                               (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
+                                tarefas.append({
+                                    "tipo_acao": etapa.tipo_acao,
+                                    "descricao": etapa.descricao,
+                                    "planta": planta.nome
+                                })
+                if tarefas:
+                    tarefas_filtradas[planta.nome] = tarefas
+
+        return JsonResponse({'tarefas': tarefas_filtradas})
+    return JsonResponse({'error': 'Método não permitido'}, status=405)
 
 
 def registrar_colheita(request):
