@@ -184,22 +184,27 @@ def tarefas_do_dia(request):
         dias_desde_plantio = (date.today() - planta.data_plantio).days
         tarefas = []
 
-        etapas = etapas_plantas.get(planta.nome, [])
+        # Obtenha as etapas de ações da planta
+        planta_etapas = etapas_plantas.get(planta.nome, {})
+        acoes = planta_etapas.get("acoes", [])
+
+        # Verifica e cria cronograma se não existir
         if not planta.cronogramas.exists():
             cronograma = Cronograma.objects.create(planta=planta)
-            for etapa in etapas:
-                # Verifique se 'etapa' é realmente um dicionário
-                if isinstance(etapa, dict):
+            for acao in acoes:
+                # Verifica se 'acao' é um dicionário
+                if isinstance(acao, dict):
                     Etapa.objects.create(
                         cronograma=cronograma,
-                        tipo_acao=etapa.get('tipo_acao'),
-                        dias_após_plantio=etapa.get('dias_após_plantio'),
-                        intervalo_dias=etapa.get('intervalo_dias'),
-                        descricao=etapa.get('descricao')
+                        tipo_acao=acao.get('tipo_acao'),
+                        dias_após_plantio=acao.get('dias_após_plantio'),
+                        intervalo_dias=acao.get('intervalo_dias'),
+                        descricao=acao.get('descricao')
                     )
                 else:
-                    print(f"Etapa inesperada: {etapa}")  # Para depuração, remover em produção
+                    print(f"Etapa inesperada: {acao}")  # Para depuração, remover em produção
 
+        # Verifica etapas já existentes no cronograma da planta
         for cronograma in planta.cronogramas.all():
             for etapa in cronograma.etapas.all():
                 if etapa.intervalo_dias == 0:

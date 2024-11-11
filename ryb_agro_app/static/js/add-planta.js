@@ -23,7 +23,7 @@ let savedPlants = [];
 // Dados das plantas para exibição
 const data = [
 	{ title: 'Abóbora', image: cardContainer.dataset.aboboraImg },
-	{ title: 'Batata doce', image: cardContainer.dataset.batataImg },
+	{ title: 'Batata-doce', image: cardContainer.dataset.batataImg },
 	{ title: 'Cenoura', image: cardContainer.dataset.cenouraImg },
 	{ title: 'Inhame', image: cardContainer.dataset.inhameImg },
 	{ title: 'Milho', image: cardContainer.dataset.milhoImg },
@@ -76,7 +76,7 @@ window.addEventListener('click', (event) => {
 // Dados das plantas que não devem ser plantadas juntas
 const conflictingPlants = {
 	Abóbora: ['Cenoura'],
-	'Batata doce': ['Abóbora'],
+	'Batata-doce': ['Abóbora'],
 	Cenoura: ['Abóbora'],
 	Inhame: [],
 	Milho: [],
