@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .models import Usuario, Planta
+from .models import Usuario, Planta, Celeiro
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -296,3 +296,47 @@ def registrar_colheita(request):
             return JsonResponse({"message": "Tarefa não encontrada ou não é de tipo Colheita."}, status=404)
 
     return JsonResponse({"message": "Método não permitido."}, status=405)
+
+
+
+@login_required
+def celeiro(request):
+    # Recupera todos os celeiros do usuário
+    celeiros_usuario = Celeiro.objects.filter(user=request.user)
+    
+    celeiros_info = []
+
+    for celeiro in celeiros_usuario:
+        # Soma o peso esperado e o peso colhido total do celeiro
+        peso_esperado_total = sum(planta.peso_previsto for planta in celeiro.plantas.all())
+        peso_colhido_total = sum(planta.peso_colhido for planta in celeiro.plantas.all())
+
+        # Armazena informações de cada planta no celeiro
+        plantas_info = []
+        for planta in celeiro.plantas.all():
+            planta_info = {
+                "nome": planta.nome,
+                "quantidade": planta.quantidade,
+                "frequencia": planta.frequencia,
+                "data_plantio": planta.data_plantio,
+                "peso_previsto": planta.peso_previsto,
+                "peso_colhido": planta.peso_colhido,
+            }
+            plantas_info.append(planta_info)
+
+        # Adiciona as informações do celeiro e das plantas
+        celeiro_info = {
+            "nome": celeiro.nome,
+            "localizacao": celeiro.localizacao,
+            "peso_esperado_total": peso_esperado_total,
+            "peso_colhido_total": peso_colhido_total,
+            "plantas_info": plantas_info,
+        }
+        celeiros_info.append(celeiro_info)
+
+    return render(request, 'celeiro.html', {'celeiros_info': celeiros_info})
+
+
+
+
+

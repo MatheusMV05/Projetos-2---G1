@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panorama Mensal</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/tarefas_do_dia.css' %}">
+  <link rel="stylesheet" href="{% static 'css/celeiro.css' %}">
+</head>
+<body>
+  <div class="celeiro-container">
+    <div class="header">
+      <h1>Panorama Mensal</h1>
+      <p id="mes-atual">Novembro</p> <!-- Aqui o JS pode atualizar para o mês atual -->
+      <button class="btn-colheita">Colheita</button>
+    </div>
+
+    <div class="gauge-colheita">
+      <h2>Massa Colhida</h2>
+      <div class="gauge-half-circle">
+        <!-- O JavaScript pode adicionar a representação gráfica aqui -->
+      </div>
+      <p id="kg-colhidos">250 kg</p> <!-- Este valor pode ser atualizado dinamicamente -->
+    </div>
+
+    <div class="informativos">
+      <div class="info">
+        <h3>Previsto</h3>
+        <p id="kg-previsto">300 kg</p> <!-- Valor atualizado via JS -->
+      </div>
+      <div class="info">
+        <h3>Esperado</h3>
+        <p id="kg-esperado">280 kg</p> <!-- Valor atualizado via JS -->
+      </div>
+    </div>
+
+    <div class="relatorio-colheita">
+      <h2>Relatório de Colheita</h2>
+      <div class="grafico-colheita">
+        <!-- Aqui vai o gráfico circular com as porcentagens de cada planta -->
+        <p id="total-colhido">250 kg</p> <!-- Peso total no centro -->
+      </div>
+      <ul class="legenda">
+        <li><span class="cor-planta"></span> Planta A - 50%</li>
+        <li><span class="cor-planta"></span> Planta B - 30%</li>
+        <li><span class="cor-planta"></span> Planta C - 20%</li>
+      </ul>
+    </div>
+  </div>
+  <script src="{% static 'js/celeiro.js' %}"></script>
+</body>
+</html>

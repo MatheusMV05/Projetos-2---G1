@@ -1,6 +1,8 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, User
 from django.db import models
 from datetime import date
+from django.conf import settings
+
 
 # Gerenciador de Usuário Personalizado
 class UsuarioManager(BaseUserManager):
@@ -34,18 +36,44 @@ class Usuario(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+    
+# peso total de colheitas registradas em quilogramas
+# soma do peso previsto de todas as plantas 
+class Celeiro(models.Model):
+    nome = models.CharField(max_length=255)
+    capacidade = models.IntegerField()
+    localizacao = models.CharField(max_length=255)
+    peso_colhido = models.FloatField(default=0)  # Peso real colhido até o momento
+    peso_esperado = models.FloatField(default=0)  # Peso esperado somando todas as plantas
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.nome} - {self.localizacao}'
 
 # Modelo de Planta
-
+#eu fiz uma alteração em planta para fazer sentido com Celeiro
+# peso que se espera colher de uma determinada Planta
+# o peso efetivamente colhido dessa planta
 class Planta(models.Model):
     nome = models.CharField(max_length=255)
-    quantidade = models.FloatField()
+    quantidade = models.FloatField()  # Quantidade em unidades ou quilogramas disponíveis para plantio
     frequencia = models.CharField(max_length=50)
-    user = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    data_plantio = models.DateField(auto_now_add=True)  # Define a data de plantio automaticamente para novos registros
+    data_plantio = models.DateField(auto_now_add=True)
+    peso_previsto = models.FloatField()  # Peso previsto para essa planta ao final da colheita
+    peso_colhido = models.FloatField(default=0)  # Peso real colhido dessa planta até o momento
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    celeiro = models.ForeignKey(Celeiro, on_delete=models.CASCADE, related_name="plantas")
 
     def __str__(self):
         return f'{self.nome} - {self.quantidade} kg ({self.frequencia})'
+
+    def atualizar_peso_colhido(self, peso_adicional):
+        # Método para atualizar o peso colhido dessa planta
+        self.peso_colhido += peso_adicional
+        self.save()
+        # Atualiza o peso colhido total no celeiro
+        self.celeiro.peso_colhido += peso_adicional
+        self.celeiro.save()
 
 # Modelo de Cronograma para cada planta
 class Cronograma(models.Model):
@@ -100,3 +128,9 @@ class Colheita(models.Model):
 
     def __str__(self):
         return f'Colheita de {self.quantidade} kg em {self.data_colheita}'
+    
+
+
+
+
+    
