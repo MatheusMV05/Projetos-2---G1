@@ -14,7 +14,9 @@ urlpatterns = [
     path('primeiro-acesso/', views.cadastrar_terreno, name='primeiro-acesso'),
     path('planta/', views.add_planta, name='planta'),
     path('tarefas_do_dia/', views.tarefas_do_dia, name='tarefas_do_dia'),
-    path('registrar_colheita/', views.registrar_colheita, name='registrar_colheita'),
+    path('registrar_colheita/', views.registrar_colheita,
+         name='registrar_colheita'),
     path('buscar_planta/', views.buscar_planta, name='buscar_planta'),
+    path('adicionar_tarefa/', views.adicionar_tarefa, name='adicionar_tarefa'),
 
 ]

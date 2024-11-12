@@ -17,6 +17,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from datetime import date
 from .models import Planta, Cronograma, Etapa
+from django.views.decorators.http import require_POST
 
 
 def landingPage(request):
@@ -296,3 +297,40 @@ def registrar_colheita(request):
             return JsonResponse({"message": "Tarefa não encontrada ou não é de tipo Colheita."}, status=404)
 
     return JsonResponse({"message": "Método não permitido."}, status=405)
+
+
+@login_required
+@csrf_exempt
+@require_POST
+def adicionar_tarefa(request):
+    data = json.loads(request.body)
+    tipo_acao = data.get('tipo_acao')
+    descricao = data.get('descricao')
+    planta_nome = data.get('planta')
+
+    try:
+        planta = Planta.objects.get(nome=planta_nome, user=request.user)
+        cronograma, created = Cronograma.objects.get_or_create(planta=planta)
+
+        # Criação da etapa com base nas informações recebidas
+        etapa = Etapa.objects.create(
+            cronograma=cronograma,
+            tipo_acao=tipo_acao,
+            descricao=descricao,
+            dias_após_plantio=0,  # Assume que é para hoje
+            intervalo_dias=0  # Uma vez única para esta tarefa
+        )
+
+        return JsonResponse({
+            'success': True,
+            'tarefa': {
+                'id': etapa.id,
+                'tipo_acao': etapa.tipo_acao,
+                'descricao': etapa.descricao,
+                'planta': planta.nome
+            }
+        }, status=201)
+    except Planta.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Planta não encontrada.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)

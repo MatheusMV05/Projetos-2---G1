@@ -24,7 +24,7 @@ h1 {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	border-left: 17px solid #EE9C2A; /* Color bar for task type */
+	border-left: 17px solid #ee9c2a; /* Color bar for task type */
 	border-radius: 16px;
 }
 
@@ -126,6 +126,22 @@ li {
 /* Alinhar o título da barra com o toggle */
 .concluidas-bar .h4 {
 	margin-bottom: 10px; /* Espaço abaixo do título */
+}
+
+/* Animação para tarefa concluída */
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+}
+
+.fade-out {
+	animation: fadeOut 0.3s forwards;
 }
 
 /* Styles for the day-of-week calendar */
