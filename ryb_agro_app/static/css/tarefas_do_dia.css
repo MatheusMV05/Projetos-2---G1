@@ -89,15 +89,9 @@ li {
 	border-radius: 50%;
 	transform: translate(-50%, -50%);
 }
-/* Style for Completed Task Bar */
-.concluidas-bar {
-	background-color: #f9f9f9;
-	border-radius: 8px;
-	padding: 10px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
 
 .toggle-arrow {
+	color: black;
 	cursor: pointer;
 	font-size: 1.2rem;
 	transition: transform 0.3s ease;
@@ -120,12 +114,19 @@ li {
 	background-color: #fff;
 	padding: 15px; /* Espaçamento interno */
 	margin-top: 20px; /* Separação superior */
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+	fill: #fff;
+	filter: drop-shadow(0px -3px 24px rgba(0, 0, 0, 0.25));
 }
 
 /* Alinhar o título da barra com o toggle */
 .concluidas-bar .h4 {
 	margin-bottom: 10px; /* Espaço abaixo do título */
+}
+
+/* Estilo para o título "Concluídas" */
+.concluidas-bar h2 {
+	color: black;
+	font-weight: bold;
 }
 
 /* Animação para tarefa concluída */
@@ -172,8 +173,11 @@ li {
 }
 
 #search-plant {
+	border-radius: 16px;
+	border: 1px solid #9b9b9b;
+	background: var(--Color-4, #9b9b9b28);
+	padding: 0.5rem; /* Ajuste de padding para um melhor espaçamento */
 	font-size: 1rem;
-	padding-left: 1.5rem;
 }
 
 .search-icon {
@@ -183,6 +187,11 @@ li {
 
 #tipo-acao-filter {
 	width: auto;
+	border-radius: 16px;
+	border: 1px solid #9b9b9b;
+	background: var(--Color-4, #d9d9d9);
+	padding: 0.5rem; /* Ajuste de padding para um melhor espaçamento */
+	font-size: 1rem;
 }
 
 .search-container i {
