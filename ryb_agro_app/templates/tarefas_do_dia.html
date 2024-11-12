@@ -30,14 +30,17 @@
 			></div>
 
 			<div class="search-container d-flex align-items-center">
-				<input
-					type="search"
-					id="search-plant"
-					class="form-control"
-					placeholder="&#xf002; Buscar planta"
-					style="font-family: Arial, FontAwesome"
-					oninput="aplicarFiltros()"
-				/>
+				<div class="busca">
+					<input
+						type="search"
+						id="search-plant"
+						class="form-control"
+						placeholder="&#xf002; Buscar planta"
+						style="font-family: Arial, FontAwesome"
+						oninput="aplicarFiltros()"
+					/>
+				</div>
+
 				<select
 					id="tipo-acao-filter"
 					class="form-control ml-2"
@@ -63,10 +66,10 @@
 						<li
 							class="list-group-item d-flex justify-content-between align-items-center"
 						>
-							<span
+							<span class="task-title"
 								onclick="showTaskDetails('{{ tarefa.tipo_acao }}', '{{ tarefa.descricao }}', '{{ tarefa.planta }}')"
 							>
-								{{ tarefa.tipo_acao }} - {{ tarefa.planta }}
+								{{ tarefa.tipo_acao }} <br> {{ tarefa.planta }}
 							</span>
 							<input
 								type="checkbox"

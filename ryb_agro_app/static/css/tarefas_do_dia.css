@@ -2,14 +2,30 @@
 body {
 	background-color: #f3f3f3;
 }
+
+h1 {
+	display: flex;
+	width: auto;
+	height: 24px;
+	flex-direction: column;
+	justify-content: center;
+	flex-shrink: 0;
+
+	color: #000;
+	text-align: center;
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 100%;
+	letter-spacing: -0.96px;
+}
 /* Task Item Styles */
 .list-group-item {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	border-left: 4px solid #4caf50; /* Color bar for task type */
-	margin-bottom: 10px;
-	padding: 15px;
+	border-left: 17px solid #EE9C2A; /* Color bar for task type */
+	border-radius: 16px;
 }
 
 .planta-section ul {
@@ -24,27 +40,42 @@ ul {
 	padding: 0;
 }
 li {
-	padding: 10px;
-	border: 1px solid #ddd;
-	margin-bottom: 5px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between; /* Alinha o checkbox à direita */
+	width: 90vw;
+	height: 104px;
+	flex-shrink: 0;
+
+	border-radius: 16px;
+	background: #fff;
+	box-shadow: 0px 0px 16px -4px rgba(0, 0, 0, 0.25);
+}
+
+.task-title {
+	color: #000;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 24px; /* 120% */
+	letter-spacing: 0.4px;
 }
 
 /* Checkbox as a Circular Toggle */
 .checkbox {
 	appearance: none;
-	width: 20px;
-	height: 20px;
+	width: 23px;
+	height: 23px;
+	flex-shrink: 0;
 	border: 2px solid #666;
 	border-radius: 50%;
 	cursor: pointer;
+
+	fill: #d9d9d9;
+	stroke-width: 2px;
+	stroke: #bfbfbf;
 }
 
 .checkbox:checked {
-	background-color: #4caf50;
-	border-color: #4caf50;
+	background-color: #8aaa8d;
+	border: 2px solid #cfdad0;
 }
 
 .checkbox:checked::before {
@@ -99,19 +130,21 @@ li {
 
 /* Styles for the day-of-week calendar */
 .dias-semana div {
-	width: 45px;
+	width: 61px;
 	text-align: center;
-	background-color: #eee;
-	border-radius: 5px;
+	border-radius: 4px;
 	padding: 5px;
 	margin: 2px;
 	font-weight: bold;
 }
 
 .dia-ativo {
-	color: white;
-	background-color: #4caf50;
-	border: none;
+	width: 30px;
+	height: auto;
+	flex-shrink: 0;
+	color: #fff;
+	border-radius: 4px;
+	background: var(--Color-2, #1b4a3f);
 }
 
 /* Estilo do campo de busca */
