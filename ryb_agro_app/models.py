@@ -61,24 +61,17 @@ class Celeiro(models.Model):
 
 class Planta(models.Model):
     nome = models.CharField(max_length=255)
-    quantidade = models.FloatField()  # Quantidade em unidades ou quilogramas disponíveis para plantio
+    quantidade = models.FloatField(default=0)  # Quantidade em unidades ou quilogramas disponíveis para plantio
     frequencia = models.CharField(max_length=50)
     data_plantio = models.DateField(auto_now_add=True)
-    peso_previsto = models.FloatField()  # Peso previsto para essa planta ao final da colheita
-    peso_colhido = models.FloatField(default=0)  # Peso real colhido dessa planta até o momento
+    peso_previsto = models.FloatField(default=0 ,null=True, blank=True)  # Peso previsto para essa planta ao final da colheita
+    peso_colhido = models.FloatField(default=0 ,null=True, blank=True)  # Peso real colhido dessa planta até o momento
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    celeiro = models.ForeignKey(Celeiro, on_delete=models.CASCADE, related_name="plantas")
+    celeiro = models.ForeignKey(Celeiro, on_delete=models.CASCADE, related_name="plantas" ,null=True, blank=True)
 
     def __str__(self):
         return f'{self.nome} - {self.quantidade} kg ({self.frequencia})'
 
-    def atualizar_peso_colhido(self, peso_adicional):
-        # Método para atualizar o peso colhido dessa planta
-        self.peso_colhido += peso_adicional
-        self.save()
-        # Atualiza o peso colhido total no celeiro
-        self.celeiro.peso_colhido += peso_adicional
-        self.celeiro.save()
 
 # Modelo de Cronograma para cada planta
 
