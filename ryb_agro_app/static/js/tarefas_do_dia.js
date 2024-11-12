@@ -47,10 +47,19 @@ function showTaskDetails(tipoAcao, descricao, planta) {
 // Toggle task completion status
 function toggleTaskCompletion(checkbox, tipoAcao, tarefaId) {
 	const taskItem = checkbox.parentElement;
-	if (checkbox.checked) {
-		document.getElementById('concluidas-list').appendChild(taskItem);
 
-		// Verifique se o tipo é colheita e envie ao backend
+	// Verificar se a tarefa foi marcada como concluída
+	if (checkbox.checked) {
+		// Adicionar uma classe para animação de conclusão
+		taskItem.classList.add('fade-out');
+
+		// Remover a tarefa da lista de pendentes após a animação
+		setTimeout(() => {
+			document.getElementById('concluidas-list').appendChild(taskItem);
+			taskItem.classList.remove('fade-out'); // Remove a classe para reutilização futura
+		}, 300);
+
+		// Enviar ao backend caso seja uma colheita
 		if (tipoAcao === 'Colheita') {
 			fetch('/registrar_colheita/', {
 				method: 'POST',
@@ -65,6 +74,7 @@ function toggleTaskCompletion(checkbox, tipoAcao, tarefaId) {
 				.catch((error) => console.error('Erro:', error));
 		}
 	} else {
+		// Remover a tarefa da lista de concluídas e retornar para pendentes
 		document.getElementById('pendentes-section').appendChild(taskItem);
 	}
 }
@@ -168,4 +178,63 @@ function aplicarFiltros() {
 			}
 		})
 		.catch((error) => console.error('Erro ao buscar plantas:', error));
+}
+
+function abrirModalTarefa() {
+	// Exibe o modal usando o método Bootstrap para mostrar modais
+	$('#addTaskModal').modal('show');
+}
+
+function adicionarTarefa(event) {
+	event.preventDefault(); // Evita o reload da página ao enviar o formulário
+
+	// Coletando os valores do formulário
+	const tipoAcao = document.getElementById('tipo-acao').value;
+	const descricao = document.getElementById('descricao').value;
+	const planta = document.getElementById('planta').value;
+
+	// Enviando a nova tarefa ao backend
+	fetch('/adicionar_tarefa/', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': getCookie('csrftoken'), // Token CSRF para segurança no Django
+		},
+		body: JSON.stringify({
+			tipo_acao: tipoAcao,
+			descricao: descricao,
+			planta: planta,
+		}),
+	})
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.success) {
+				// Criando o novo item da tarefa
+				const novaTarefa = document.createElement('li');
+				novaTarefa.classList.add(
+					'list-group-item',
+					'd-flex',
+					'justify-content-between',
+					'align-items-center'
+				);
+				novaTarefa.innerHTML = `
+                <span onclick="showTaskDetails('${data.tarefa.tipo_acao}', '${data.tarefa.descricao}', '${data.tarefa.planta}')">
+                    ${data.tarefa.tipo_acao} - ${data.tarefa.planta}
+                </span>
+                <input type="checkbox" class="checkbox" onclick="toggleTaskCompletion(this, '${data.tarefa.tipo_acao}', ${data.tarefa.id})" />
+            `;
+
+				// Adicionando a nova tarefa à lista de pendentes
+				document.getElementById('pendentes-list').appendChild(novaTarefa);
+
+				// Limpar o formulário e fechar o modal
+				document.getElementById('add-task-form').reset();
+				$('#addTaskModal').modal('hide');
+			} else {
+				console.error('Erro ao adicionar tarefa:', data.error);
+			}
+		})
+		.catch((error) => {
+			console.error('Erro de conexão:', error);
+		});
 }
