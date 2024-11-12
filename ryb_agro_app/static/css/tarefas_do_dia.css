@@ -116,12 +116,23 @@ li {
 
 /* Estilo da barra para a seção de tarefas concluídas */
 .concluidas-bar {
+	width: 90vw;
 	border-radius: 8px; /* Bordas arredondadas */
 	background-color: #fff;
 	padding: 15px; /* Espaçamento interno */
 	margin-top: 20px; /* Separação superior */
 	fill: #fff;
 	filter: drop-shadow(0px -3px 24px rgba(0, 0, 0, 0.25));
+}
+
+/* Estilo para o título "Concluídas" */
+.concluidas-bar h2 {
+	color: #000;
+	font-size: 1.2rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 24px; /* 200% */
+	letter-spacing: -0.48px;
 }
 
 /* Alinhar o título da barra com o toggle */
