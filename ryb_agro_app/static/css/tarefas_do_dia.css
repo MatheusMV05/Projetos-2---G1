@@ -90,15 +90,21 @@ li {
 	transform: translate(-50%, -50%);
 }
 
+/* Estilo para o ícone de toggle (seta) */
 .toggle-arrow {
-	color: black;
+	width: 10.542px;
+	height: 6.247px;
+	flex-shrink: 0;
 	cursor: pointer;
 	font-size: 1.2rem;
 	transition: transform 0.3s ease;
+	color: #000;
 }
 
 .toggle-arrow.closed {
-	transform: rotate(-90deg);
+	transform: rotate(
+		-90deg
+	); /* Rotação para a seta apontar para a direita quando fechada */
 }
 
 /* Alinhamento */
@@ -121,12 +127,6 @@ li {
 /* Alinhar o título da barra com o toggle */
 .concluidas-bar .h4 {
 	margin-bottom: 10px; /* Espaço abaixo do título */
-}
-
-/* Estilo para o título "Concluídas" */
-.concluidas-bar h2 {
-	color: black;
-	font-weight: bold;
 }
 
 /* Animação para tarefa concluída */
