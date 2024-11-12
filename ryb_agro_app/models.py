@@ -64,10 +64,10 @@ class Planta(models.Model):
     quantidade = models.FloatField(default=0)  # Quantidade em unidades ou quilogramas disponíveis para plantio
     frequencia = models.CharField(max_length=50)
     data_plantio = models.DateField(auto_now_add=True)
-    peso_previsto = models.FloatField(default=0 ,null=True, blank=True)  # Peso previsto para essa planta ao final da colheita
-    peso_colhido = models.FloatField(default=0 ,null=True, blank=True)  # Peso real colhido dessa planta até o momento
+    peso_previsto = models.FloatField(null=True, blank=True)  # Peso previsto para essa planta ao final da colheita
+    peso_colhido = models.FloatField(null=True, blank=True)  # Peso real colhido dessa planta até o momento
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    celeiro = models.ForeignKey(Celeiro, on_delete=models.CASCADE, related_name="plantas" ,null=True, blank=True)
+    celeiro = models.ForeignKey(Celeiro, on_delete=models.CASCADE, related_name="plantas", null=True, blank=True)
 
     def __str__(self):
         return f'{self.nome} - {self.quantidade} kg ({self.frequencia})'
