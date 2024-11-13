@@ -215,10 +215,9 @@ li {
 }
 
 .calendar-container {
-	width: 90vw;
+	width: 82vw;
 	height: 100vh;
-	background-color: #f4f4f4;
-	width: 320px;
+	background-color: #f3f3f3;
 	text-align: center;
 }
 .trimester-display {
@@ -243,6 +242,7 @@ li {
 }
 .trimester-month:hover {
 	background-color: #1b4a3f89;
+	color: #f3f3f3;
 }
 .highlighted-month {
 	width: 104px;
@@ -268,6 +268,7 @@ li {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin-bottom: 12px;
 }
 .day-header {
 	color: #000;
