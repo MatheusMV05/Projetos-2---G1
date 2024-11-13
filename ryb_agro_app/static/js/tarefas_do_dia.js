@@ -57,6 +57,7 @@ function toggleTaskCompletion(checkbox, tipoAcao, tarefaId) {
 		setTimeout(() => {
 			document.getElementById('concluidas-list').appendChild(taskItem);
 			taskItem.classList.remove('fade-out'); // Remove a classe para reutilização futura
+			taskItem.style.width = '100%'; // Ensure proper width in completed section
 		}, 300);
 
 		// Enviar ao backend caso seja uma colheita
@@ -76,6 +77,7 @@ function toggleTaskCompletion(checkbox, tipoAcao, tarefaId) {
 	} else {
 		// Remover a tarefa da lista de concluídas e retornar para pendentes
 		document.getElementById('pendentes-section').appendChild(taskItem);
+		taskItem.style.width = '82vw'; // Reset width for pending section
 	}
 }
 

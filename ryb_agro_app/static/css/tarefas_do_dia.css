@@ -122,8 +122,20 @@ li {
 	background-color: #fff;
 	padding: 15px; /* Espaçamento interno */
 	margin-top: 20px; /* Separação superior */
+	box-sizing: border-box; /* Inclui padding e bordas no tamanho total */
 	fill: #fff;
 	filter: drop-shadow(0px -3px 24px rgba(0, 0, 0, 0.25));
+}
+
+#concluidas-list .list-group-item {
+	margin-bottom: 12px; /* Espaçamento entre tarefas */
+	width: 100%; /* Ensure completed tasks fill their container */
+	box-sizing: border-box; /* Apply box-sizing for padding consistency */
+}
+
+#concluidas-list {
+	overflow: hidden;
+	box-sizing: border-box;
 }
 
 /* Estilo para o título "Concluídas" */
@@ -138,7 +150,7 @@ li {
 
 /* Alinhar o título da barra com o toggle */
 .concluidas-bar .h4 {
-	margin-bottom: 10px; /* Espaço abaixo do título */
+	margin-bottom: 24px; /* Espaço abaixo do título */
 }
 
 /* Animação para tarefa concluída */
@@ -213,7 +225,7 @@ li {
 }
 
 #add-task-btn {
-	fill:#1b4a3f;
+	fill: #1b4a3f;
 }
 
 .calendar-container {
