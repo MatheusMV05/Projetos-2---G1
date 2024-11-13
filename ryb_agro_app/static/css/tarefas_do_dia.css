@@ -213,7 +213,7 @@ li {
 }
 
 #add-task-btn {
-	fill: var(--Color-2, #1b4a3f);
+	fill:#1b4a3f;
 }
 
 .calendar-container {
