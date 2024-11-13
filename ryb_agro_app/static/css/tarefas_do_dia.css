@@ -26,6 +26,7 @@ h1 {
 	justify-content: space-between;
 	border-left: 17px solid #ee9c2a; /* Color bar for task type */
 	border-radius: 16px;
+	width: 82vw;
 }
 
 .planta-section ul {
@@ -90,15 +91,21 @@ li {
 	transform: translate(-50%, -50%);
 }
 
+/* Estilo para o ícone de toggle (seta) */
 .toggle-arrow {
-	color: black;
+	width: 10.542px;
+	height: 6.247px;
+	flex-shrink: 0;
 	cursor: pointer;
 	font-size: 1.2rem;
 	transition: transform 0.3s ease;
+	color: #000;
 }
 
 .toggle-arrow.closed {
-	transform: rotate(-90deg);
+	transform: rotate(
+		-90deg
+	); /* Rotação para a seta apontar para a direita quando fechada */
 }
 
 /* Alinhamento */
@@ -110,6 +117,7 @@ li {
 
 /* Estilo da barra para a seção de tarefas concluídas */
 .concluidas-bar {
+	width: 82vw;
 	border-radius: 8px; /* Bordas arredondadas */
 	background-color: #fff;
 	padding: 15px; /* Espaçamento interno */
@@ -118,15 +126,19 @@ li {
 	filter: drop-shadow(0px -3px 24px rgba(0, 0, 0, 0.25));
 }
 
+/* Estilo para o título "Concluídas" */
+.concluidas-bar h2 {
+	color: #000;
+	font-size: 1.2rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 24px; /* 200% */
+	letter-spacing: -0.48px;
+}
+
 /* Alinhar o título da barra com o toggle */
 .concluidas-bar .h4 {
 	margin-bottom: 10px; /* Espaço abaixo do título */
-}
-
-/* Estilo para o título "Concluídas" */
-.concluidas-bar h2 {
-	color: black;
-	font-weight: bold;
 }
 
 /* Animação para tarefa concluída */
@@ -170,6 +182,7 @@ li {
 	margin-bottom: 20px;
 	display: flex;
 	align-items: center;
+	width: 82vw;
 }
 
 #search-plant {
@@ -201,4 +214,126 @@ li {
 
 #add-task-btn {
 	fill: var(--Color-2, #1b4a3f);
+}
+
+.calendar-container {
+	width: 82vw;
+	height: 100vh;
+	background-color: #f3f3f3;
+	text-align: center;
+}
+.trimester-display {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	gap: 10px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	font-size: 1.2em;
+}
+.trimester-month {
+	color: #9b9b9b;
+	padding: 5px 10px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background 0.3s;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 24px; /* 133.333% */
+	letter-spacing: -0.72px;
+}
+.trimester-month:hover {
+	background-color: #1b4a3f89;
+	color: #f3f3f3;
+}
+.highlighted-month {
+	width: 104px;
+	height: 32px;
+	border-radius: 8px;
+	background-color: #1b4a3f;
+	color: #fff;
+
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 24px; /* 133.333% */
+	letter-spacing: -0.72px;
+}
+.calendar-grid {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 5px;
+}
+.day-header,
+.day-cell {
+	width: 40px;
+	height: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 12px;
+}
+.day-header {
+	color: #000;
+	text-align: center;
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 24px; /* 133.333% */
+	letter-spacing: -0.72px;
+}
+.day-cell {
+	cursor: pointer;
+	border-radius: 50%;
+	transition: background 0.3s;
+
+	color: #000;
+	text-align: center;
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 24px; /* 133.333% */
+	letter-spacing: -0.72px;
+}
+.date-cell {
+	/* Background color only applied to cells with dates */
+	background-color: #e7e7e7; /* Replace with your chosen background color */
+}
+.day-cell:hover {
+	background-color: #1b4a3f89;
+}
+.current-day {
+	background-color: #1b4a3f;
+	border: 1px solid #000;
+	color: white;
+	font-weight: bold;
+}
+
+/* Default mobile-first styles are already applied */
+
+/* Tablets */
+@media (min-width: 768px) {
+	.list-group-item {
+		width: 90%; /* Adjust width for tablet screens */
+	}
+	.search-container {
+		width: 70%; /* More compact search area */
+	}
+}
+
+/* Laptops and Desktops */
+@media (min-width: 992px) {
+	.container,
+	.scroll-snap-container,
+	.concluidas-bar {
+		max-width: 100%;
+		padding-left: 0; /* Remove any left padding */
+		margin-left: 0; /* Remove any left margin */
+	}
+
+	/* Adjust the task list items to take full width */
+	.list-group-item,
+	.search-container,
+	.calendar-container {
+		width: 100%;
+	}
 }

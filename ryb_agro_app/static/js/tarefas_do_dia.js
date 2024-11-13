@@ -238,3 +238,80 @@ function adicionarTarefa(event) {
 			console.error('Erro de conexão:', error);
 		});
 }
+
+const trimesterDisplay = document.getElementById('trimester-display');
+const calendarGrid = document.getElementById('calendar-grid');
+
+let date = new Date();
+
+function getTrimester(month) {
+	if (month < 3) return [0, 1, 2]; // Q1: Jan, Feb, Mar
+	else if (month < 6) return [3, 4, 5]; // Q2: Apr, May, Jun
+	else if (month < 9) return [6, 7, 8]; // Q3: Jul, Aug, Sep
+	else return [9, 10, 11]; // Q4: Oct, Nov, Dec
+}
+
+function renderTrimester() {
+	trimesterDisplay.innerHTML = '';
+	const currentMonth = date.getMonth();
+	const trimesterMonths = getTrimester(currentMonth);
+
+	trimesterMonths.forEach((monthIndex) => {
+		const monthDiv = document.createElement('div');
+		monthDiv.classList.add('trimester-month');
+		monthDiv.innerText = new Date(
+			date.getFullYear(),
+			monthIndex
+		).toLocaleString('default', { month: 'long' });
+
+		if (monthIndex === currentMonth) {
+			monthDiv.classList.add('highlighted-month');
+		}
+
+		trimesterDisplay.appendChild(monthDiv);
+	});
+}
+
+function renderCalendar() {
+	calendarGrid.innerHTML = `
+                <div class="day-header">D</div>
+                <div class="day-header">S</div>
+                <div class="day-header">T</div>
+                <div class="day-header">Q</div>
+                <div class="day-header">Q</div>
+                <div class="day-header">S</div>
+                <div class="day-header">S</div>
+            `;
+
+	const year = date.getFullYear();
+	const month = date.getMonth();
+	const firstDayIndex = new Date(year, month, 1).getDay();
+	const lastDay = new Date(year, month + 1, 0).getDate();
+
+	for (let i = 0; i < firstDayIndex; i++) {
+		calendarGrid.innerHTML += `<div class="day-cell"></div>`;
+	}
+
+	for (let i = 1; i <= lastDay; i++) {
+		const day = document.createElement('div');
+		day.classList.add('day-cell', 'date-cell'); // Apply background only to actual date cells
+		day.innerText = i;
+
+		if (
+			i === new Date().getDate() &&
+			year === new Date().getFullYear() &&
+			month === new Date().getMonth()
+		) {
+			day.classList.add('current-day');
+		}
+
+		day.addEventListener('click', () => {
+			alert(`Date selected: ${i}/${month + 1}/${year}`);
+		});
+
+		calendarGrid.appendChild(day);
+	}
+}
+
+renderTrimester();
+renderCalendar();
