@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .models import Usuario, Planta, Celeiro
@@ -7,7 +7,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.shortcuts import render
-from .models import Planta, Etapa, Cronograma
+from .models import Planta, Etapa, Cronograma, DemandaComercial
+
 from datetime import date
 from django.conf import settings
 from datetime import datetime
@@ -395,3 +396,70 @@ def adicionar_tarefa(request):
         return JsonResponse({'success': False, 'error': 'Planta não encontrada.'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+# @login_required
+def demandas_comerciais(request):
+    demanda_em_edicao = None  # Variável para armazenar a demanda em edição
+    
+    # Registrar ou editar demanda
+    if request.method == 'POST':
+        if 'registrar' in request.POST:
+            # Registro de nova demanda
+            DemandaComercial.objects.create(
+                nome=request.POST.get('nome'),
+                tipo=request.POST.get('tipo'),
+                quantidade=request.POST.get('quantidade'),
+                preco=request.POST.get('preco'),
+                prazo=request.POST.get('prazo'),
+                agricultor=request.user
+            )
+            messages.success(request, 'Demanda comercial registrada com sucesso.')
+            return redirect('demandas_comerciais')
+        
+        elif 'editar' in request.POST:
+            # Edição de demanda existente
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda.nome = request.POST.get('nome')
+            demanda.tipo = request.POST.get('tipo')
+            demanda.quantidade = request.POST.get('quantidade')
+            demanda.preco = request.POST.get('preco')
+            demanda.prazo = request.POST.get('prazo')
+            demanda.save()
+            messages.success(request, 'Demanda comercial atualizada com sucesso.')
+            return redirect('demandas_comerciais')
+
+        elif 'alterar_status' in request.POST:
+            # Atualização de status
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda.status = request.POST.get('status')
+            demanda.save()
+            messages.success(request, 'Status da demanda atualizado com sucesso.')
+            return redirect('demandas_comerciais')
+
+    # Preparação para editar uma demanda
+    if 'editar_demanda_id' in request.GET:
+        demanda_em_edicao = get_object_or_404(DemandaComercial, id=request.GET['editar_demanda_id'], agricultor=request.user)
+
+    # Exclusão de demanda
+    if request.method == 'POST' and 'excluir' in request.POST:
+        demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+        demanda.delete()
+        messages.success(request, 'Demanda comercial excluída com sucesso.')
+        return redirect('demandas_comerciais')
+
+    # Listagem e filtro
+    demandas = DemandaComercial.objects.filter(agricultor=request.user).order_by('-data_criacao')
+    tipo_filtro = request.GET.get('tipo')
+    status_filtro = request.GET.get('status')
+    
+    if tipo_filtro:
+        demandas = demandas.filter(tipo=tipo_filtro)
+    if status_filtro:
+        demandas = demandas.filter(status=status_filtro)
+        
+    return render(request, 'demandas_comerciais.html', {
+        'demandas': demandas,
+        'demanda_em_edicao': demanda_em_edicao,
+        'tipo_filtro': tipo_filtro,
+        'status_filtro': status_filtro
+    })
