@@ -349,3 +349,41 @@ li {
 		width: 100%;
 	}
 }
+
+/* Bottom Navigation Styles */
+.bottom-nav {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 54px;
+	background-color: #fff;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	box-shadow: 0px -3px 24px -6px rgba(0, 0, 0, 0.25);
+	z-index: 1000; /* Ensure it stays above other content */
+	padding: 5px 0;
+}
+
+.nav-item {
+	color: #1b4a3f; /* White text color */
+	text-align: center;
+	text-decoration: none;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.nav-item i {
+	font-size: 1.125rem; /* Icon size */
+}
+
+.nav-item span {
+	font-size: 0.625rem; /* Label text size */
+	text-align: center;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 24px; /* 240% */
+	letter-spacing: -0.4px;
+}
