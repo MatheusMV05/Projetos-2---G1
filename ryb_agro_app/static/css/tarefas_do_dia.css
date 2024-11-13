@@ -213,3 +213,94 @@ li {
 #add-task-btn {
 	fill: var(--Color-2, #1b4a3f);
 }
+
+.calendar-container {
+	width: 90vw;
+	height: 100vh;
+	background-color: #f4f4f4;
+	width: 320px;
+	text-align: center;
+}
+.trimester-display {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	gap: 10px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	font-size: 1.2em;
+}
+.trimester-month {
+	color: #9b9b9b;
+	padding: 5px 10px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background 0.3s;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 24px; /* 133.333% */
+	letter-spacing: -0.72px;
+}
+.trimester-month:hover {
+	background-color: #1b4a3f89;
+}
+.highlighted-month {
+	width: 104px;
+	height: 32px;
+	border-radius: 8px;
+	background-color: #1b4a3f;
+	color: #fff;
+
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 24px; /* 133.333% */
+	letter-spacing: -0.72px;
+}
+.calendar-grid {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 5px;
+}
+.day-header,
+.day-cell {
+	width: 40px;
+	height: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.day-header {
+	color: #000;
+	text-align: center;
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 24px; /* 133.333% */
+	letter-spacing: -0.72px;
+}
+.day-cell {
+	cursor: pointer;
+	border-radius: 50%;
+	transition: background 0.3s;
+
+	color: #000;
+	text-align: center;
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 24px; /* 133.333% */
+	letter-spacing: -0.72px;
+}
+.date-cell {
+	/* Background color only applied to cells with dates */
+	background-color: #e7e7e7; /* Replace with your chosen background color */
+}
+.day-cell:hover {
+	background-color: #1b4a3f89;
+}
+.current-day {
+	background-color: #1b4a3f;
+	border: 1px solid #000;
+	color: white;
+	font-weight: bold;
+}
