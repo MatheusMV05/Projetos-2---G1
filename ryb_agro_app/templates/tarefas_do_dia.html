@@ -17,138 +17,190 @@
 			src="https://kit.fontawesome.com/8bd07f7496.js"
 			crossorigin="anonymous"
 		></script>
+
+		<style>
+			/* Scroll Snap Layout */
+			.scroll-snap-container {
+				display: flex;
+				overflow-x: scroll;
+				scroll-snap-type: x mandatory;
+				width: 100vw;
+			}
+
+			.screen {
+				scroll-snap-align: start;
+				flex: 0 0 100vw;
+				width: 100vw;
+				padding: 20px;
+				box-sizing: border-box;
+			}
+
+			/* Screen Indicator Bar */
+			.screen-indicator-bar {
+				display: flex;
+				justify-content: center;
+				gap: 10px;
+				margin-bottom: 15px;
+			}
+
+			.screen-indicator-bar button {
+				padding: 10px 20px;
+				font-weight: bold;
+				background-color: #ddd;
+				border: none;
+				cursor: pointer;
+				border-radius: 5px;
+			}
+
+			.screen-indicator-bar button.active {
+				background-color: #1b4a3f;
+				color: white;
+			}
+		</style>
 	</head>
 
 	<body>
 		<div class="container my-4">
 			<h1 class="text-center mb-4">Minhas tarefas</h1>
 
-			<!-- Weekly Calendar -->
-			<div
-				id="dias-semana"
-				class="dias-semana d-flex justify-content-center mb-4"
-			></div>
-
-			<div class="search-container d-flex align-items-center">
-				<div class="busca">
-					<input
-						type="search"
-						id="search-plant"
-						class="form-control"
-						placeholder="&#xf002; Buscar planta"
-						style="font-family: Arial, FontAwesome"
-						oninput="aplicarFiltros()"
-					/>
-				</div>
-
-				<select
-					id="tipo-acao-filter"
-					class="form-control ml-2"
-					onchange="aplicarFiltros()"
-				>
-					<option value="">Todos</option>
-					<option value="Preparo do Solo">Preparo do Solo</option>
-					<option value="Plantio">Plantio</option>
-					<option value="Irrigação">Irrigação</option>
-					<option value="Inspeção">Inspeção</option>
-					<option value="Biofertilização">Biofertilização</option>
-					<option value="Colheita">Colheita</option>
-				</select>
-				<i class="fa-duotone fa-solid fa-filter ml-2"></i>
+			<!-- Screen Indicator Bar -->
+			<div class="screen-indicator-bar">
+				<button onclick="scrollToScreen(0)" id="screen-1-indicator">
+					Tarefas
+				</button>
+				<button onclick="scrollToScreen(1)" id="screen-2-indicator">
+					Calendário
+				</button>
 			</div>
+			<div class="scroll-snap-container">
+				<!-- First Screen -->
+				<div class="screen">
+					<!-- Weekly Calendar -->
+					<div
+						id="dias-semana"
+						class="dias-semana d-flex justify-content-center mb-4"
+					></div>
 
-			<!-- Seção para Tarefas Pendentes -->
-			<div id="pendentes-section">
-				{% for planta, tarefas in tarefas_do_dia.items %}
-				<div class="planta-section mb-3">
-					<ul class="list-group" id="pendentes-list">
-						{% for tarefa in tarefas %}
-						<li
-							class="list-group-item d-flex justify-content-between align-items-center"
-							style="
-								height: 104px;
-								border-radius: 16px;
-								background: #fff;
-								box-shadow: 0px 0px 16px -4px rgba(0, 0, 0, 0.25);
-							"
-						>
-							<span
-								class="task-title"
-								onclick="showTaskDetails('{{ tarefa.tipo_acao }}', '{{ tarefa.descricao }}', '{{ tarefa.planta }}')"
-							>
-								{{ tarefa.tipo_acao }} <br />
-								{{ tarefa.planta }}
-							</span>
+					<div class="search-container d-flex align-items-center">
+						<div class="busca">
 							<input
-								type="checkbox"
-								class="checkbox"
-								onclick="toggleTaskCompletion(this)"
+								type="search"
+								id="search-plant"
+								class="form-control"
+								placeholder="&#xf002; Buscar planta"
+								style="font-family: Arial, FontAwesome"
+								oninput="aplicarFiltros()"
 							/>
-						</li>
+						</div>
+
+						<select
+							id="tipo-acao-filter"
+							class="form-control ml-2"
+							onchange="aplicarFiltros()"
+						>
+							<option value="">Todos</option>
+							<option value="Preparo do Solo">Preparo do Solo</option>
+							<option value="Plantio">Plantio</option>
+							<option value="Irrigação">Irrigação</option>
+							<option value="Inspeção">Inspeção</option>
+							<option value="Biofertilização">Biofertilização</option>
+							<option value="Colheita">Colheita</option>
+						</select>
+						<i class="fa-duotone fa-solid fa-filter ml-2"></i>
+					</div>
+
+					<!-- Seção para Tarefas Pendentes -->
+					<div id="pendentes-section">
+						{% for planta, tarefas in tarefas_do_dia.items %}
+						<div class="planta-section mb-3">
+							<ul class="list-group" id="pendentes-list">
+								{% for tarefa in tarefas %}
+								<li
+									class="list-group-item d-flex justify-content-between align-items-center"
+									style="
+										height: 104px;
+										border-radius: 16px;
+										background: #fff;
+										box-shadow: 0px 0px 16px -4px rgba(0, 0, 0, 0.25);
+									"
+								>
+									<span
+										class="task-title"
+										onclick="showTaskDetails('{{ tarefa.tipo_acao }}', '{{ tarefa.descricao }}', '{{ tarefa.planta }}')"
+									>
+										{{ tarefa.tipo_acao }} <br />
+										{{ tarefa.planta }}
+									</span>
+									<input
+										type="checkbox"
+										class="checkbox"
+										onclick="toggleTaskCompletion(this)"
+									/>
+								</li>
+								{% endfor %}
+							</ul>
+						</div>
+						{% empty %}
+						<p class="text-muted">Não há tarefas programadas para hoje.</p>
 						{% endfor %}
-					</ul>
-				</div>
-				{% empty %}
-				<p class="text-muted">Não há tarefas programadas para hoje.</p>
-				{% endfor %}
-			</div>
+					</div>
 
-			<!-- Seção para Tarefas Concluídas -->
-			<div id="concluidas-container" class="concluidas-bar mt-5">
-				<h2
-					class="h4 text-success d-flex justify-content-between align-items-center"
-				>
-					Concluídas
-					<i
-						id="toggle-concluidas-btn"
-						class="fa-solid fa-angle-down toggle-arrow"
-					></i>
-				</h2>
-				<ul class="list-group" id="concluidas-list">
-					<!-- Tarefas concluídas aparecerão aqui -->
-				</ul>
-			</div>
+					<!-- Seção para Tarefas Concluídas -->
+					<div id="concluidas-container" class="concluidas-bar mt-5">
+						<h2
+							class="h4 text-success d-flex justify-content-between align-items-center"
+						>
+							Concluídas
+							<i
+								id="toggle-concluidas-btn"
+								class="fa-solid fa-angle-down toggle-arrow"
+							></i>
+						</h2>
+						<ul class="list-group" id="concluidas-list">
+							<!-- Tarefas concluídas aparecerão aqui -->
+						</ul>
+					</div>
 
-			<!-- Modal para exibir mais informações sobre a tarefa -->
-			<div
-				class="modal fade"
-				id="taskModal"
-				tabindex="-1"
-				aria-labelledby="taskModalLabel"
-				aria-hidden="true"
-			>
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="taskModalLabel">
-								Detalhes da Tarefa
-							</h5>
-							<button
-								type="button"
-								class="close"
-								data-dismiss="modal"
-								aria-label="Close"
-							>
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<p id="taskDetails"></p>
-						</div>
-						<div class="modal-footer">
-							<button
-								type="button"
-								class="btn btn-secondary"
-								data-dismiss="modal"
-							>
-								Fechar
-							</button>
+					<!-- Modal para exibir mais informações sobre a tarefa -->
+					<div
+						class="modal fade"
+						id="taskModal"
+						tabindex="-1"
+						aria-labelledby="taskModalLabel"
+						aria-hidden="true"
+					>
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="taskModalLabel">
+										Detalhes da Tarefa
+									</h5>
+									<button
+										type="button"
+										class="close"
+										data-dismiss="modal"
+										aria-label="Close"
+									>
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<p id="taskDetails"></p>
+								</div>
+								<div class="modal-footer">
+									<button
+										type="button"
+										class="btn btn-secondary"
+										data-dismiss="modal"
+									>
+										Fechar
+									</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-		<!-- Botão de adicionar tarefa
+				<!-- Botão de adicionar tarefa
 		<button
 			id="add-task-btn"
 			class="btn btn-primary"
@@ -171,7 +223,7 @@
 			+
 		</button> -->
 
-		<!-- Modal para adicionar nova tarefa
+				<!-- Modal para adicionar nova tarefa
 		<div
 			class="modal fade"
 			id="addTaskModal"
@@ -236,7 +288,13 @@
 				</div>
 			</div>
 		</div> -->
-
+				<!-- Second Screen -->
+				<div class="screen">
+					<h2>Resumo Semanal</h2>
+					<!-- Placeholder for additional weekly summary or other content -->
+				</div>
+			</div>
+		</div>
 		<!-- Closing container div -->
 		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -251,6 +309,40 @@
 				$('#concluidas-list').toggle();
 				$('#toggle-concluidas-btn').toggleClass('closed');
 			}
+		</script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const container = document.querySelector('.scroll-snap-container');
+				const screen1Indicator = document.getElementById('screen-1-indicator');
+				const screen2Indicator = document.getElementById('screen-2-indicator');
+
+				// Function to update active screen based on scroll position
+				function updateActiveScreen() {
+					if (container.scrollLeft < container.clientWidth / 2) {
+						screen1Indicator.classList.add('active');
+						screen2Indicator.classList.remove('active');
+					} else {
+						screen1Indicator.classList.remove('active');
+						screen2Indicator.classList.add('active');
+					}
+				}
+
+				// Initialize the active button based on the initial scroll position
+				updateActiveScreen();
+
+				// Add scroll event listener to update active screen when scrolling
+				container.addEventListener('scroll', updateActiveScreen);
+
+				// Scroll to specific screen when clicking on indicator buttons
+				window.scrollToScreen = function (screenIndex) {
+					container.scrollTo({
+						left: screenIndex * container.clientWidth,
+						behavior: 'smooth',
+					});
+					// Update active screen immediately on button click
+					updateActiveScreen();
+				};
+			});
 		</script>
 	</body>
 </html>
