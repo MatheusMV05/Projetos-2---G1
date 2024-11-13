@@ -26,6 +26,7 @@ h1 {
 	justify-content: space-between;
 	border-left: 17px solid #ee9c2a; /* Color bar for task type */
 	border-radius: 16px;
+	width: 82vw;
 }
 
 .planta-section ul {
@@ -116,7 +117,7 @@ li {
 
 /* Estilo da barra para a seção de tarefas concluídas */
 .concluidas-bar {
-	width: 90vw;
+	width: 82vw;
 	border-radius: 8px; /* Bordas arredondadas */
 	background-color: #fff;
 	padding: 15px; /* Espaçamento interno */
@@ -181,6 +182,7 @@ li {
 	margin-bottom: 20px;
 	display: flex;
 	align-items: center;
+	width: 82vw;
 }
 
 #search-plant {
