@@ -9,6 +9,9 @@ import json
 from django.shortcuts import render
 from .models import Planta, Etapa, Cronograma
 from datetime import date
+from django.conf import settings
+from datetime import datetime
+
 
 import os  # Adicione esta linha para importar o módulo 'os'
 import json
@@ -229,6 +232,22 @@ def tarefas_do_dia(request):
             tarefas_do_dia[planta.nome] = tarefas
 
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
+
+def insumos_view(request):
+    # Caminho do arquivo JSON com os insumos
+    json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
+
+    # Carregar o arquivo JSON
+    with open(json_path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    # Filtrar os insumos de acordo com as plantas
+    insumos_por_planta = {}
+    for planta, detalhes in data.items():
+        insumos_por_planta[planta] = detalhes['insumos_necessarios']
+
+    # Renderizar o template com os dados de insumos
+    return render(request, 'insumos.html', {'insumos_por_planta': insumos_por_planta})
 
 
 @login_required
