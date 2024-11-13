@@ -370,27 +370,27 @@
 				const container = document.querySelector('.scroll-snap-container');
 				const activeIndicator = document.getElementById('activeIndicator');
 
-				// Function to update the active indicator position
 				function updateActiveScreen() {
-					const isFirstScreen =
-						container.scrollLeft < container.clientWidth / 2;
-					activeIndicator.style.left = isFirstScreen ? '0%' : '50%'; // Move indicator to left or right half
+					const screenWidth = window.innerWidth;
+					const isFirstScreen = container.scrollLeft < screenWidth / 2;
+					activeIndicator.style.left = isFirstScreen ? '0%' : '50%';
 				}
 
-				// Initialize the active indicator position
-				updateActiveScreen();
-
-				// Add scroll event listener to update active screen when scrolling
-				container.addEventListener('scroll', updateActiveScreen);
-
-				// Scroll to specific screen when clicking on indicator buttons
 				window.scrollToScreen = function (screenIndex) {
+					const screenWidth = window.innerWidth;
 					container.scrollTo({
-						left: screenIndex * container.clientWidth,
+						left: screenIndex * screenWidth,
 						behavior: 'smooth',
 					});
 					updateActiveScreen();
 				};
+
+				container.addEventListener('scroll', updateActiveScreen);
+
+				// Recalculate on resize
+				window.addEventListener('resize', updateActiveScreen);
+
+				updateActiveScreen(); // Initial setup
 			});
 		</script>
 	</body>

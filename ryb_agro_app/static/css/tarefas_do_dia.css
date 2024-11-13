@@ -307,3 +307,33 @@ li {
 	color: white;
 	font-weight: bold;
 }
+
+/* Default mobile-first styles are already applied */
+
+/* Tablets */
+@media (min-width: 768px) {
+	.list-group-item {
+		width: 90%; /* Adjust width for tablet screens */
+	}
+	.search-container {
+		width: 70%; /* More compact search area */
+	}
+}
+
+/* Laptops and Desktops */
+@media (min-width: 992px) {
+	.container,
+	.scroll-snap-container,
+	.concluidas-bar {
+		max-width: 100%;
+		padding-left: 0; /* Remove any left padding */
+		margin-left: 0; /* Remove any left margin */
+	}
+
+	/* Adjust the task list items to take full width */
+	.list-group-item,
+	.search-container,
+	.calendar-container {
+		width: 100%;
+	}
+}
