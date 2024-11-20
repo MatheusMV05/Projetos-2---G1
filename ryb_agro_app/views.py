@@ -22,6 +22,7 @@ from django.http import JsonResponse
 from datetime import date
 from .models import Planta, Cronograma, Etapa
 from django.views.decorators.http import require_POST
+import requests
 
 
 def landingPage(request):
@@ -463,3 +464,33 @@ def demandas_comerciais(request):
         'tipo_filtro': tipo_filtro,
         'status_filtro': status_filtro
     })
+
+def obter_clima(request):
+    user = request.user
+    api_key = "6eebaf0af1dfc7fbc708215c92de060c"
+    url_clima = f"http://api.openweathermap.org/data/2.5/weather?q={user.cidade},{user.estado}&units=metric&lang=pt_br&appid={api_key}"
+    url_lua = f"https://api.openweathermap.org/data/2.5/onecall?lat=LATITUDE&lon=LONGITUDE&exclude=current,minutely,hourly,alerts&appid={api_key}"
+
+    try:
+        response_clima = requests.get(url_clima)
+        response_lua = requests.get(url_lua)
+
+        if response_clima.status_code == 200 and response_lua.status_code == 200:
+            clima_data = response_clima.json()
+            lua_data = response_lua.json()
+
+            clima = {
+                "temperatura": clima_data["main"]["temp"],
+                "descricao": clima_data["weather"][0]["description"],
+                "umidade": clima_data["main"]["humidity"],
+                "vento": clima_data["wind"]["speed"],
+                "fase_da_lua": lua_data["daily"][0]["moon_phase"],
+            }
+
+            return render(request, "dashboard.html", {"clima": clima})
+        else:
+            messages.error(request, "Erro ao obter os dados de clima.")
+            return redirect("dashboard")
+    except Exception as e:
+        messages.error(request, f"Erro: {e}")
+        return redirect("dashboard")

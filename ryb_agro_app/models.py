@@ -159,6 +159,17 @@ class DemandaComercial(models.Model):
         return f"{self.nome} - {self.tipo.capitalize()} - {self.status}"
 
 
+class Clima(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    temperatura = models.FloatField()
+    descricao = models.CharField(max_length=255)
+    umidade = models.FloatField()
+    vento = models.FloatField()
+    fase_da_lua = models.CharField(max_length=100)
+    data = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Clima de {self.user.cidade} em {self.data}"
 
 
     
