@@ -1,39 +1,173 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-		<title>Dashboard</title>
-		{% load static %}
-		<link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
-		<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-		<script src="{% static 'js/dashboard.js' %}"></script>
-	</head>
-	<body>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	{% load static %}
+	<title>Dashboard</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+	<link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+</head>
+<body>
+	<!-- Cabeçalho com logo e ícones -->
+	<div class="header-container">
 		<header>
-			<div class="user">
-				<i class="ri-user-fill"></i>
-			</div>
-			<div class="logo"></div>
-			<article>
-				<img src="{% static 'img/Logomarca Horizontal.svg' %}" />
-			</article>
 			<div class="menu-abrir" id="menu-abrir">
-				<i class="ri-menu-line"></i>
+				<img src="{% static 'img/menu-line.svg' %}" alt="Abrir menu" />
 			</div>
 			<div class="menu-mobile" id="menu-mobile">
 				<div class="menu-fechar">
-					<i class="ri-close-large-line"></i>
+					<img src="{% static 'img/close-large-line.svg' %}" alt="Fechar menu" />
 				</div>
 				<nav class="mobile">
 					<ul>
-						<a href="#"><li>ABA1</li></a>
-						<a href="#"><li>ABA2</li></a>
-						<a href="#"><li>ABA3</li></a>
+						<li><a href="#">ABA1</a></li>
+						<li><a href="#">ABA2</a></li>
+						<li><a href="#">ABA3</a></li>
+						<li><a href="#">ABA4</a></li>
 					</ul>
 				</nav>
 			</div>
+			<nav class="nav-logo">
+				<div class="logo">
+					<img src="{% static 'img/Logomarca Horizontal.svg' %}" alt="Logomarca" />
+				</div>
+			</nav>
+			<nav class="nav-user">
+				<div class="user">
+					<img src="{% static 'img/user.svg' %}" alt="Usuário" />
+				</div>
+			</nav>
 		</header>
-	</body>
+	</div>
+	<h2>Bem-vindo,<br><span>Arnaldo</span></h2>
+	<br>
+	<div style="margin-top: 10px; display: flex; align-items: flex-start; gap: 20px;">
+		{% if clima %}
+		<div>
+			<h4>📍 Localização</h4>
+			<p>{{ clima.cidade }}, {{ clima.estado }}</p>
+	
+			<h4>🌡️ Clima Atual</h4>
+			<p>Temperatura: {{ clima.temperatura }}°C</p>
+			<p>Descrição: {{ clima.descricao }}</p>
+			<p>Umidade: {{ clima.umidade }}%</p>
+			<p>Vento: {{ clima.vento }} km/h</p>
+	
+			<h4>🌙 Fase da Lua</h4>
+			<p>{{ clima.fase_da_lua }}</p>
+		</div>
+		{% else %}
+		<p>⚠️ Não foi possível carregar os dados de clima no momento.</p>
+		{% endif %}
+	</div>
+	<h2>Minhas tarefas</h2>
+	<br>
+	<div class="d-flex">
+		<div class="card" style="width: 18rem; margin-left: 40px; border-radius: 10px; border-color: #fff;">
+			<div class="card-body">
+				<label>
+					<input type="checkbox" name="task" class="task-checkbox" />
+					<span class="custom-checkbox"></span> <!-- Customizado -->
+				</label>
+
+				<div class="adubar">
+					<img src="img/fertilizer-bag.svg" alt="">
+				</div>
+				<p class="card-text" style="font-size: larger; font-weight: 500; margin-left: 10px;">Adubar
+					<br>beterraba<br>
+				</p>
+				<h6>Hoje</h6>
+			</div>
+		</div>
+		<div class="card" style="width: 18rem; margin-left: 20px; border-radius: 10px; border-color: #fff;">
+			<div class="card-body">
+				<label>
+					<input type="checkbox" name="task" class="task-checkbox" />
+					<span class="custom-checkbox"></span> <!-- Customizado -->
+				</label>
+
+				<div class="regar">
+					<img src="img/watering-can.svg" alt="">
+				</div>
+				<p class="card-text" style="font-size: larger; font-weight: 500; margin-left: 10px;">Regar
+					<br>batata<br>
+				</p>
+				<h6>Amanhã</h6>
+			</div>
+		</div>
+		<div class="card" style="width: 18rem; margin-left: 20px; border-radius: 10px; border-color: #fff;">
+			<div class="card-body">
+				<label>
+					<input type="checkbox" name="task" class="task-checkbox" />
+					<span class="custom-checkbox"></span> <!-- Customizado -->
+				</label>
+
+				<div class="colher">
+					<img src="img/plantation-worker-alt.svg" alt="">
+				</div>
+				<p class="card-text" style="font-size: larger; font-weight: 500; margin-left: 10px;">Colher
+					<br>tomate<br>
+				</p>
+				<h6>7 dias</h6>
+			</div>
+		</div>
+	</div>
+	<br>
+	<h2>Meu plantio</h2>
+	<br>
+	<h2>Meu celeiro</h2>
+	<script>
+		function obterLocalizacao() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(
+					function (position) {
+						const latitude = position.coords.latitude;
+						const longitude = position.coords.longitude;
+	
+						console.log("Latitude:", latitude, "Longitude:", longitude); // Para debug
+	
+						fetch("{% url 'obter_clima' %}", {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+								"X-CSRFToken": "{{ csrf_token }}",
+							},
+							body: JSON.stringify({ latitude, longitude }),
+						})
+							.then(response => response.json())
+							.then(data => {
+								console.log("Resposta do servidor:", data);
+								if (data.clima) {
+									// Atualizar a UI com os dados recebidos
+									console.log("Clima:", data.clima);
+									location.reload(); // Recarrega a página
+								} else {
+									console.error("Erro:", data.error);
+								}
+							})
+							.catch(error => console.error("Erro no fetch:", error));
+					},
+					function (error) {
+						console.error("Erro ao obter localização:", error);
+					}
+				);
+			} else {
+				console.error("Geolocalização não é suportada pelo navegador.");
+			}
+		}
+	
+		// Chama a função ao carregar a página
+		window.onload = obterLocalizacao;
+	</script>
+	
+	
+	<script src="{% static 'js/dashboard.js' %}"></script>
+
+
+</body>
+
+
 </html>

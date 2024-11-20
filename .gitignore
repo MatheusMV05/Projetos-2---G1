@@ -7,3 +7,5 @@ venv/
 
 # Ignorar diretórios __pycache__
 __pycache__/
+
+ryb_agro_app/migrations

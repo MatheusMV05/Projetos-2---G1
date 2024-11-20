@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
-from datetime import date
+from django.conf import settings
+from datetime import date, timedelta
+
 
 # Gerenciador de Usuário Personalizado
 
@@ -40,20 +42,42 @@ class Usuario(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+    
+
+# Modelo do Celeiro
+class Celeiro(models.Model):
+    nome = models.CharField(max_length=255)
+    capacidade = models.IntegerField()
+    localizacao = models.CharField(max_length=255)
+    peso_colhido = models.FloatField(default=0)  # Peso real colhido até o momento
+    peso_esperado = models.FloatField(default=0)  # Peso esperado somando todas as plantas
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.nome} - {self.localizacao}'
+
+    def atualizar_peso_colhido(self, peso_adicional):
+        # Atualiza o peso colhido total no celeiro
+        self.peso_colhido += peso_adicional
+        self.save()
+
 
 # Modelo de Planta
 
 
 class Planta(models.Model):
     nome = models.CharField(max_length=255)
-    quantidade = models.FloatField()
+    quantidade = models.FloatField(default=0)  # Quantidade em unidades ou quilogramas disponíveis para plantio
     frequencia = models.CharField(max_length=50)
-    user = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    # Define a data de plantio automaticamente para novos registros
     data_plantio = models.DateField(auto_now_add=True)
+    peso_previsto = models.FloatField(null=True, blank=True)  # Peso previsto para essa planta ao final da colheita
+    peso_colhido = models.FloatField(null=True, blank=True)  # Peso real colhido dessa planta até o momento
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    celeiro = models.ForeignKey(Celeiro, on_delete=models.CASCADE, related_name="plantas", null=True, blank=True)
 
     def __str__(self):
         return f'{self.nome} - {self.quantidade} kg ({self.frequencia})'
+
 
 # Modelo de Cronograma para cada planta
 
@@ -66,9 +90,9 @@ class Cronograma(models.Model):
     # Descrição geral do cronograma (opcional)
     descricao_geral = models.TextField(blank=True, null=True)
 
-    # Representação em string do cronograma, mostrando o nome da planta associada
     def __str__(self):
         return f'Cronograma para {self.planta.nome}'
+
 
 # Modelo de Etapas para cada cronograma
 
@@ -105,3 +129,47 @@ class Colheita(models.Model):
 
     def __str__(self):
         return f'Colheita de {self.quantidade} kg em {self.data_colheita}'
+    
+
+
+class DemandaComercial(models.Model):
+    nome = models.CharField(max_length=100)  # Novo campo para nome da demanda
+    TIPOS_DEMANDA = [
+        ('compra', 'Compra'),
+        ('venda', 'Venda')
+    ]
+    STATUS_CHOICES = [
+        ('pendente', 'Pendente'),
+        ('concluída', 'Concluída'),
+        ('cancelada', 'Cancelada')
+    ]
+    
+    tipo = models.CharField(max_length=20, choices=TIPOS_DEMANDA)
+    quantidade = models.PositiveIntegerField()
+    preco = models.DecimalField(max_digits=10, decimal_places=2)
+    prazo = models.DateField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente')
+    data_criacao = models.DateField(auto_now_add=True)
+    agricultor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="demandas_comerciais")
+    
+    def prazo_proximo(self):
+        return self.prazo <= date.today() + timedelta(days=3)
+    
+    def __str__(self):
+        return f"{self.nome} - {self.tipo.capitalize()} - {self.status}"
+
+
+class Clima(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    temperatura = models.FloatField()
+    descricao = models.CharField(max_length=255)
+    umidade = models.FloatField()
+    vento = models.FloatField()
+    fase_da_lua = models.CharField(max_length=100)
+    data = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Clima de {self.user.cidade} em {self.data}"
+
+
+    

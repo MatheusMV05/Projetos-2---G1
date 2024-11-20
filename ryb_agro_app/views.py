@@ -1,14 +1,18 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .models import Usuario, Planta
+from .models import Usuario, Planta, Celeiro
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.shortcuts import render
-from .models import Planta, Etapa, Cronograma
+from .models import Planta, Etapa, Cronograma, DemandaComercial
+
 from datetime import date
+from django.conf import settings
+from datetime import datetime
+
 
 import os  # Adicione esta linha para importar o módulo 'os'
 import json
@@ -18,6 +22,7 @@ from django.http import JsonResponse
 from datetime import date
 from .models import Planta, Cronograma, Etapa
 from django.views.decorators.http import require_POST
+import requests
 
 
 def landingPage(request):
@@ -230,6 +235,22 @@ def tarefas_do_dia(request):
 
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
 
+def insumos_view(request):
+    # Caminho do arquivo JSON com os insumos
+    json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
+
+    # Carregar o arquivo JSON
+    with open(json_path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    # Filtrar os insumos de acordo com as plantas
+    insumos_por_planta = {}
+    for planta, detalhes in data.items():
+        insumos_por_planta[planta] = detalhes['insumos_necessarios']
+
+    # Renderizar o template com os dados de insumos
+    return render(request, 'insumos.html', {'insumos_por_planta': insumos_por_planta})
+
 
 @login_required
 @csrf_exempt
@@ -299,6 +320,48 @@ def registrar_colheita(request):
     return JsonResponse({"message": "Método não permitido."}, status=405)
 
 
+
+@login_required
+def celeiro(request):
+    # Recupera todos os celeiros do usuário
+    celeiros_usuario = Celeiro.objects.filter(user=request.user)
+    
+    celeiros_info = []
+
+    for celeiro in celeiros_usuario:
+        # Soma o peso esperado e o peso colhido total do celeiro
+        peso_esperado_total = sum(planta.peso_previsto for planta in celeiro.plantas.all())
+        peso_colhido_total = sum(planta.peso_colhido for planta in celeiro.plantas.all())
+
+        # Armazena informações de cada planta no celeiro
+        plantas_info = []
+        for planta in celeiro.plantas.all():
+            planta_info = {
+                "nome": planta.nome,
+                "quantidade": planta.quantidade,
+                "frequencia": planta.frequencia,
+                "data_plantio": planta.data_plantio,
+                "peso_previsto": planta.peso_previsto,
+                "peso_colhido": planta.peso_colhido,
+            }
+            plantas_info.append(planta_info)
+
+        # Adiciona as informações do celeiro e das plantas
+        celeiro_info = {
+            "nome": celeiro.nome,
+            "localizacao": celeiro.localizacao,
+            "peso_esperado_total": peso_esperado_total,
+            "peso_colhido_total": peso_colhido_total,
+            "plantas_info": plantas_info,
+        }
+        celeiros_info.append(celeiro_info)
+
+    return render(request, 'celeiro.html', {'celeiros_info': celeiros_info})
+
+
+
+
+
 @login_required
 @csrf_exempt
 @require_POST
@@ -334,3 +397,144 @@ def adicionar_tarefa(request):
         return JsonResponse({'success': False, 'error': 'Planta não encontrada.'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+# @login_required
+def demandas_comerciais(request):
+    demanda_em_edicao = None  # Variável para armazenar a demanda em edição
+    
+    # Registrar ou editar demanda
+    if request.method == 'POST':
+        if 'registrar' in request.POST:
+            # Registro de nova demanda
+            DemandaComercial.objects.create(
+                nome=request.POST.get('nome'),
+                tipo=request.POST.get('tipo'),
+                quantidade=request.POST.get('quantidade'),
+                preco=request.POST.get('preco'),
+                prazo=request.POST.get('prazo'),
+                agricultor=request.user
+            )
+            messages.success(request, 'Demanda comercial registrada com sucesso.')
+            return redirect('demandas_comerciais')
+        
+        elif 'editar' in request.POST:
+            # Edição de demanda existente
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda.nome = request.POST.get('nome')
+            demanda.tipo = request.POST.get('tipo')
+            demanda.quantidade = request.POST.get('quantidade')
+            demanda.preco = request.POST.get('preco')
+            demanda.prazo = request.POST.get('prazo')
+            demanda.save()
+            messages.success(request, 'Demanda comercial atualizada com sucesso.')
+            return redirect('demandas_comerciais')
+
+        elif 'alterar_status' in request.POST:
+            # Atualização de status
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda.status = request.POST.get('status')
+            demanda.save()
+            messages.success(request, 'Status da demanda atualizado com sucesso.')
+            return redirect('demandas_comerciais')
+
+    # Preparação para editar uma demanda
+    if 'editar_demanda_id' in request.GET:
+        demanda_em_edicao = get_object_or_404(DemandaComercial, id=request.GET['editar_demanda_id'], agricultor=request.user)
+
+    # Exclusão de demanda
+    if request.method == 'POST' and 'excluir' in request.POST:
+        demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+        demanda.delete()
+        messages.success(request, 'Demanda comercial excluída com sucesso.')
+        return redirect('demandas_comerciais')
+
+    # Listagem e filtro
+    demandas = DemandaComercial.objects.filter(agricultor=request.user).order_by('-data_criacao')
+    tipo_filtro = request.GET.get('tipo')
+    status_filtro = request.GET.get('status')
+    
+    if tipo_filtro:
+        demandas = demandas.filter(tipo=tipo_filtro)
+    if status_filtro:
+        demandas = demandas.filter(status=status_filtro)
+        
+    return render(request, 'demandas_comerciais.html', {
+        'demandas': demandas,
+        'demanda_em_edicao': demanda_em_edicao,
+        'tipo_filtro': tipo_filtro,
+        'status_filtro': status_filtro
+    })
+
+# @csrf_exempt
+# def obter_clima(request):
+#     api_key = "6eebaf0af1dfc7fbc708215c92de060c"
+
+#     if request.method == "POST":
+#         try:
+#             data = json.loads(request.body)
+#             latitude = data.get("latitude")
+#             longitude = data.get("longitude")
+
+#             if not latitude or not longitude:
+#                 return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
+
+#             # URL para obter clima e fases da lua
+#             url_clima = f"http://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&units=metric&exclude=minutely,hourly,alerts&lang=pt_br&appid={api_key}"
+#             print("URL gerada para a API OpenWeather:", url_clima)  # Log da URL
+
+#             response = requests.get(url_clima)
+#             print("Resposta da API OpenWeather:", response.status_code, response.text)  # Log da resposta
+
+#             if response.status_code == 200:
+#                 clima_data = response.json()
+#                 clima = {
+#                     "temperatura": clima_data["current"]["temp"],
+#                     "descricao": clima_data["current"]["weather"][0]["description"],
+#                     "umidade": clima_data["current"]["humidity"],
+#                     "vento": clima_data["current"]["wind_speed"],
+#                     "fase_da_lua": clima_data["daily"][0]["moon_phase"],
+#                 }
+#                 return JsonResponse({"clima": clima}, status=200)
+#             else:
+#                 return JsonResponse({"error": "Erro ao obter dados de clima."}, status=500)
+#         except Exception as e:
+#             print("Erro inesperado:", e)  # Log de erro
+#             return JsonResponse({"error": str(e)}, status=500)
+#     return JsonResponse({"error": "Método inválido."}, status=405)
+
+@csrf_exempt
+def obter_clima(request):
+    api_key = "6eebaf0af1dfc7fbc708215c92de060c"
+
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            latitude = data.get("latitude")
+            longitude = data.get("longitude")
+
+            if not latitude or not longitude:
+                return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
+
+            # URL sem exclusões de dados
+            url_clima = f"http://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&units=metric&lang=pt_br&appid={api_key}"
+
+            response = requests.get(url_clima)
+            print("Resposta da API OpenWeather:", response.status_code, response.text)  # Log da resposta
+
+            if response.status_code == 200:
+                clima_data = response.json()
+                clima = {
+                    "temperatura": clima_data["current"]["temp"],
+                    "descricao": clima_data["current"]["weather"][0]["description"],
+                    "umidade": clima_data["current"]["humidity"],
+                    "vento": clima_data["current"]["wind_speed"],
+                    "fase_da_lua": clima_data["daily"][0]["moon_phase"],
+                }
+                return JsonResponse({"clima": clima}, status=200)
+            else:
+                return JsonResponse({"error": "Erro ao obter dados de clima.", "status_code": response.status_code}, status=500)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Método inválido."}, status=405)
+
+
