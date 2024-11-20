@@ -26,29 +26,14 @@
                 {% endfor %}
             </ul>
         {% endif %}
-			<form>
-				<label for="email"> E-mail </label>
-				<input
-					id="email"
-					name="email"
-					type="email"
-					placeholder="Digite seu E-mail"
-				/>
-				<label for="password"> Senha </label>
-				<input
-					id="password"
-					name="password"
-					type="password"
-					placeholder="Digite sua senha"
-				/>
-
-				<div class="recuperar">
-					Esqueceu sua senha?
-					<a href="{% url 'recuperar-senha' %}"> Clique aqui</a>
-				</div>
-
-				<button type="submit" class="submit">Entrar</button>
-			</form>
+		<form action="{% url 'login' %}" method="post">
+			{% csrf_token %}
+			<label for="email">E-mail</label>
+			<input id="email" name="email" type="email" placeholder="Digite seu E-mail" required />
+			<label for="password">Senha</label>
+			<input id="password" name="password" type="password" placeholder="Digite sua senha" required />
+			<button type="submit">Entrar</button>
+		</form>
 			<div class="register-link">
 				Ainda não possui uma conta?
 				<a href="{% url 'cadastro' %}"> Clique aqui </a>

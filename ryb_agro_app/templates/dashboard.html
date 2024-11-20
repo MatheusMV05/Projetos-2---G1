@@ -44,6 +44,25 @@
 	</div>
 	<h2>Bem-vindo,<br><span>Arnaldo</span></h2>
 	<br>
+	<div style="margin-top: 10px; display: flex; align-items: flex-start; gap: 20px;">
+		{% if clima %}
+		<div>
+			<h4>📍 Localização</h4>
+			<p>{{ clima.cidade }}, {{ clima.estado }}</p>
+	
+			<h4>🌡️ Clima Atual</h4>
+			<p>Temperatura: {{ clima.temperatura }}°C</p>
+			<p>Descrição: {{ clima.descricao }}</p>
+			<p>Umidade: {{ clima.umidade }}%</p>
+			<p>Vento: {{ clima.vento }} km/h</p>
+	
+			<h4>🌙 Fase da Lua</h4>
+			<p>{{ clima.fase_da_lua }}</p>
+		</div>
+		{% else %}
+		<p>⚠️ Não foi possível carregar os dados de clima no momento.</p>
+		{% endif %}
+	</div>
 	<h2>Minhas tarefas</h2>
 	<br>
 	<div class="d-flex">
@@ -100,7 +119,53 @@
 	<h2>Meu plantio</h2>
 	<br>
 	<h2>Meu celeiro</h2>
+	<script>
+		function obterLocalizacao() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(
+					function (position) {
+						const latitude = position.coords.latitude;
+						const longitude = position.coords.longitude;
+	
+						console.log("Latitude:", latitude, "Longitude:", longitude); // Para debug
+	
+						fetch("{% url 'obter_clima' %}", {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+								"X-CSRFToken": "{{ csrf_token }}",
+							},
+							body: JSON.stringify({ latitude, longitude }),
+						})
+							.then(response => response.json())
+							.then(data => {
+								console.log("Resposta do servidor:", data);
+								if (data.clima) {
+									// Atualizar a UI com os dados recebidos
+									console.log("Clima:", data.clima);
+									location.reload(); // Recarrega a página
+								} else {
+									console.error("Erro:", data.error);
+								}
+							})
+							.catch(error => console.error("Erro no fetch:", error));
+					},
+					function (error) {
+						console.error("Erro ao obter localização:", error);
+					}
+				);
+			} else {
+				console.error("Geolocalização não é suportada pelo navegador.");
+			}
+		}
+	
+		// Chama a função ao carregar a página
+		window.onload = obterLocalizacao;
+	</script>
+	
+	
 	<script src="{% static 'js/dashboard.js' %}"></script>
+
 
 </body>
 

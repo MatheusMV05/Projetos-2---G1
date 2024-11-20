@@ -465,32 +465,76 @@ def demandas_comerciais(request):
         'status_filtro': status_filtro
     })
 
+# @csrf_exempt
+# def obter_clima(request):
+#     api_key = "6eebaf0af1dfc7fbc708215c92de060c"
+
+#     if request.method == "POST":
+#         try:
+#             data = json.loads(request.body)
+#             latitude = data.get("latitude")
+#             longitude = data.get("longitude")
+
+#             if not latitude or not longitude:
+#                 return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
+
+#             # URL para obter clima e fases da lua
+#             url_clima = f"http://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&units=metric&exclude=minutely,hourly,alerts&lang=pt_br&appid={api_key}"
+#             print("URL gerada para a API OpenWeather:", url_clima)  # Log da URL
+
+#             response = requests.get(url_clima)
+#             print("Resposta da API OpenWeather:", response.status_code, response.text)  # Log da resposta
+
+#             if response.status_code == 200:
+#                 clima_data = response.json()
+#                 clima = {
+#                     "temperatura": clima_data["current"]["temp"],
+#                     "descricao": clima_data["current"]["weather"][0]["description"],
+#                     "umidade": clima_data["current"]["humidity"],
+#                     "vento": clima_data["current"]["wind_speed"],
+#                     "fase_da_lua": clima_data["daily"][0]["moon_phase"],
+#                 }
+#                 return JsonResponse({"clima": clima}, status=200)
+#             else:
+#                 return JsonResponse({"error": "Erro ao obter dados de clima."}, status=500)
+#         except Exception as e:
+#             print("Erro inesperado:", e)  # Log de erro
+#             return JsonResponse({"error": str(e)}, status=500)
+#     return JsonResponse({"error": "Método inválido."}, status=405)
+
+@csrf_exempt
 def obter_clima(request):
-    user = request.user
     api_key = "6eebaf0af1dfc7fbc708215c92de060c"
-    url_clima = f"http://api.openweathermap.org/data/2.5/weather?q={user.cidade},{user.estado}&units=metric&lang=pt_br&appid={api_key}"
-    url_lua = f"https://api.openweathermap.org/data/2.5/onecall?lat=LATITUDE&lon=LONGITUDE&exclude=current,minutely,hourly,alerts&appid={api_key}"
 
-    try:
-        response_clima = requests.get(url_clima)
-        response_lua = requests.get(url_lua)
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            latitude = data.get("latitude")
+            longitude = data.get("longitude")
 
-        if response_clima.status_code == 200 and response_lua.status_code == 200:
-            clima_data = response_clima.json()
-            lua_data = response_lua.json()
+            if not latitude or not longitude:
+                return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
 
-            clima = {
-                "temperatura": clima_data["main"]["temp"],
-                "descricao": clima_data["weather"][0]["description"],
-                "umidade": clima_data["main"]["humidity"],
-                "vento": clima_data["wind"]["speed"],
-                "fase_da_lua": lua_data["daily"][0]["moon_phase"],
-            }
+            # URL sem exclusões de dados
+            url_clima = f"http://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&units=metric&lang=pt_br&appid={api_key}"
 
-            return render(request, "dashboard.html", {"clima": clima})
-        else:
-            messages.error(request, "Erro ao obter os dados de clima.")
-            return redirect("dashboard")
-    except Exception as e:
-        messages.error(request, f"Erro: {e}")
-        return redirect("dashboard")
+            response = requests.get(url_clima)
+            print("Resposta da API OpenWeather:", response.status_code, response.text)  # Log da resposta
+
+            if response.status_code == 200:
+                clima_data = response.json()
+                clima = {
+                    "temperatura": clima_data["current"]["temp"],
+                    "descricao": clima_data["current"]["weather"][0]["description"],
+                    "umidade": clima_data["current"]["humidity"],
+                    "vento": clima_data["current"]["wind_speed"],
+                    "fase_da_lua": clima_data["daily"][0]["moon_phase"],
+                }
+                return JsonResponse({"clima": clima}, status=200)
+            else:
+                return JsonResponse({"error": "Erro ao obter dados de clima.", "status_code": response.status_code}, status=500)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Método inválido."}, status=405)
+
+
