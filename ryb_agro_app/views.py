@@ -13,7 +13,6 @@ from datetime import date
 from django.conf import settings
 from datetime import datetime
 
-
 import os  # Adicione esta linha para importar o módulo 'os'
 import json
 from django.conf import settings
@@ -150,8 +149,9 @@ def cadastrar_terreno(request):
 
     return render(request, 'primeiro-acesso.html')
 
-
 # View para renderizar e processar dados
+
+
 @login_required  # Garante que o usuário esteja logado para acessar essa view
 @csrf_exempt  # Apenas para testes, remova em produção
 def add_planta(request):
@@ -234,6 +234,7 @@ def tarefas_do_dia(request):
             tarefas_do_dia[planta.nome] = tarefas
 
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
+
 
 def insumos_view(request):
     # Caminho do arquivo JSON com os insumos
@@ -320,18 +321,19 @@ def registrar_colheita(request):
     return JsonResponse({"message": "Método não permitido."}, status=405)
 
 
-
 @login_required
 def celeiro(request):
     # Recupera todos os celeiros do usuário
     celeiros_usuario = Celeiro.objects.filter(user=request.user)
-    
+
     celeiros_info = []
 
     for celeiro in celeiros_usuario:
         # Soma o peso esperado e o peso colhido total do celeiro
-        peso_esperado_total = sum(planta.peso_previsto for planta in celeiro.plantas.all())
-        peso_colhido_total = sum(planta.peso_colhido for planta in celeiro.plantas.all())
+        peso_esperado_total = sum(
+            planta.peso_previsto for planta in celeiro.plantas.all())
+        peso_colhido_total = sum(
+            planta.peso_colhido for planta in celeiro.plantas.all())
 
         # Armazena informações de cada planta no celeiro
         plantas_info = []
@@ -357,9 +359,6 @@ def celeiro(request):
         celeiros_info.append(celeiro_info)
 
     return render(request, 'celeiro.html', {'celeiros_info': celeiros_info})
-
-
-
 
 
 @login_required
@@ -399,9 +398,11 @@ def adicionar_tarefa(request):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 # @login_required
+
+
 def demandas_comerciais(request):
     demanda_em_edicao = None  # Variável para armazenar a demanda em edição
-    
+
     # Registrar ou editar demanda
     if request.method == 'POST':
         if 'registrar' in request.POST:
@@ -414,56 +415,65 @@ def demandas_comerciais(request):
                 prazo=request.POST.get('prazo'),
                 agricultor=request.user
             )
-            messages.success(request, 'Demanda comercial registrada com sucesso.')
+            messages.success(
+                request, 'Demanda comercial registrada com sucesso.')
             return redirect('demandas_comerciais')
-        
+
         elif 'editar' in request.POST:
             # Edição de demanda existente
-            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get(
+                'demanda_id'), agricultor=request.user)
             demanda.nome = request.POST.get('nome')
             demanda.tipo = request.POST.get('tipo')
             demanda.quantidade = request.POST.get('quantidade')
             demanda.preco = request.POST.get('preco')
             demanda.prazo = request.POST.get('prazo')
             demanda.save()
-            messages.success(request, 'Demanda comercial atualizada com sucesso.')
+            messages.success(
+                request, 'Demanda comercial atualizada com sucesso.')
             return redirect('demandas_comerciais')
 
         elif 'alterar_status' in request.POST:
             # Atualização de status
-            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get(
+                'demanda_id'), agricultor=request.user)
             demanda.status = request.POST.get('status')
             demanda.save()
-            messages.success(request, 'Status da demanda atualizado com sucesso.')
+            messages.success(
+                request, 'Status da demanda atualizado com sucesso.')
             return redirect('demandas_comerciais')
 
     # Preparação para editar uma demanda
     if 'editar_demanda_id' in request.GET:
-        demanda_em_edicao = get_object_or_404(DemandaComercial, id=request.GET['editar_demanda_id'], agricultor=request.user)
+        demanda_em_edicao = get_object_or_404(
+            DemandaComercial, id=request.GET['editar_demanda_id'], agricultor=request.user)
 
     # Exclusão de demanda
     if request.method == 'POST' and 'excluir' in request.POST:
-        demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+        demanda = get_object_or_404(DemandaComercial, id=request.POST.get(
+            'demanda_id'), agricultor=request.user)
         demanda.delete()
         messages.success(request, 'Demanda comercial excluída com sucesso.')
         return redirect('demandas_comerciais')
 
     # Listagem e filtro
-    demandas = DemandaComercial.objects.filter(agricultor=request.user).order_by('-data_criacao')
+    demandas = DemandaComercial.objects.filter(
+        agricultor=request.user).order_by('-data_criacao')
     tipo_filtro = request.GET.get('tipo')
     status_filtro = request.GET.get('status')
-    
+
     if tipo_filtro:
         demandas = demandas.filter(tipo=tipo_filtro)
     if status_filtro:
         demandas = demandas.filter(status=status_filtro)
-        
+
     return render(request, 'demandas_comerciais.html', {
         'demandas': demandas,
         'demanda_em_edicao': demanda_em_edicao,
         'tipo_filtro': tipo_filtro,
         'status_filtro': status_filtro
     })
+
 
 @csrf_exempt
 def dashboard(request):
@@ -479,7 +489,8 @@ def dashboard(request):
                 return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
 
             # Faz a requisição à API HG Brasil
-            url_clima = f"https://api.hgbrasil.com/weather?key={api_key}&lat={latitude}&lon={longitude}&format=json"
+            url_clima = f"https://api.hgbrasil.com/weather?key={
+                api_key}&lat={latitude}&lon={longitude}&format=json"
             response = requests.get(url_clima)
 
             if response.status_code == 200:
@@ -493,7 +504,8 @@ def dashboard(request):
                         "umidade": results.get("humidity"),
                         "vento": results.get("wind_speedy"),
                         "cidade": results.get("city"),
-                        "fase_da_lua": results.get("moon_phase"),  # Fase da Lua
+                        # Fase da Lua
+                        "fase_da_lua": results.get("moon_phase"),
                     }
 
                     previsao_dias = [
@@ -503,7 +515,8 @@ def dashboard(request):
                             "min": prev.get("min"),
                             "max": prev.get("max")
                         }
-                        for prev in results.get("forecast", [])[:5]  # Pega previsão para os próximos 5 dias
+                        # Pega previsão para os próximos 5 dias
+                        for prev in results.get("forecast", [])[:5]
                     ]
 
                     # Retorna os dados JSON
@@ -520,5 +533,3 @@ def dashboard(request):
 
     # Renderiza a página inicial
     return render(request, 'dashboard.html')
-
-
