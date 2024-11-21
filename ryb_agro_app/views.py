@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .models import Usuario, Planta, Celeiro
@@ -7,7 +7,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.shortcuts import render
-from .models import Planta, Etapa, Cronograma
+from .models import Planta, Etapa, Cronograma, DemandaComercial
+
 from datetime import date
 from django.conf import settings
 from datetime import datetime
@@ -21,6 +22,7 @@ from django.http import JsonResponse
 from datetime import date
 from .models import Planta, Cronograma, Etapa
 from django.views.decorators.http import require_POST
+import requests
 
 
 def landingPage(request):
@@ -75,8 +77,6 @@ def cadastro(request):
     return render(request, 'cadastro.html')
 
 
-def dashboard(request):
-    return render(request, 'dashboard.html')
 
 
 def login_view(request):
@@ -395,3 +395,136 @@ def adicionar_tarefa(request):
         return JsonResponse({'success': False, 'error': 'Planta não encontrada.'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+# @login_required
+def demandas_comerciais(request):
+    demanda_em_edicao = None  # Variável para armazenar a demanda em edição
+    
+    # Registrar ou editar demanda
+    if request.method == 'POST':
+        if 'registrar' in request.POST:
+            # Registro de nova demanda
+            DemandaComercial.objects.create(
+                nome=request.POST.get('nome'),
+                tipo=request.POST.get('tipo'),
+                quantidade=request.POST.get('quantidade'),
+                preco=request.POST.get('preco'),
+                prazo=request.POST.get('prazo'),
+                agricultor=request.user
+            )
+            messages.success(request, 'Demanda comercial registrada com sucesso.')
+            return redirect('demandas_comerciais')
+        
+        elif 'editar' in request.POST:
+            # Edição de demanda existente
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda.nome = request.POST.get('nome')
+            demanda.tipo = request.POST.get('tipo')
+            demanda.quantidade = request.POST.get('quantidade')
+            demanda.preco = request.POST.get('preco')
+            demanda.prazo = request.POST.get('prazo')
+            demanda.save()
+            messages.success(request, 'Demanda comercial atualizada com sucesso.')
+            return redirect('demandas_comerciais')
+
+        elif 'alterar_status' in request.POST:
+            # Atualização de status
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda.status = request.POST.get('status')
+            demanda.save()
+            messages.success(request, 'Status da demanda atualizado com sucesso.')
+            return redirect('demandas_comerciais')
+
+    # Preparação para editar uma demanda
+    if 'editar_demanda_id' in request.GET:
+        demanda_em_edicao = get_object_or_404(DemandaComercial, id=request.GET['editar_demanda_id'], agricultor=request.user)
+
+    # Exclusão de demanda
+    if request.method == 'POST' and 'excluir' in request.POST:
+        demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+        demanda.delete()
+        messages.success(request, 'Demanda comercial excluída com sucesso.')
+        return redirect('demandas_comerciais')
+
+    # Listagem e filtro
+    demandas = DemandaComercial.objects.filter(agricultor=request.user).order_by('-data_criacao')
+    tipo_filtro = request.GET.get('tipo')
+    status_filtro = request.GET.get('status')
+    
+    if tipo_filtro:
+        demandas = demandas.filter(tipo=tipo_filtro)
+    if status_filtro:
+        demandas = demandas.filter(status=status_filtro)
+        
+    return render(request, 'demandas_comerciais.html', {
+        'demandas': demandas,
+        'demanda_em_edicao': demanda_em_edicao,
+        'tipo_filtro': tipo_filtro,
+        'status_filtro': status_filtro
+    })
+
+import json
+import requests
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def dashboard(request):
+    api_key = "a3580565"  # Substitua pela sua chave válida da API HG Brasil
+
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            latitude = data.get("latitude")
+            longitude = data.get("longitude")
+
+            if not latitude or not longitude:
+                return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
+
+            # Faz a requisição à API HG Brasil
+            url_clima = f"https://api.hgbrasil.com/weather?key={api_key}&lat={latitude}&lon={longitude}&format=json"
+            response = requests.get(url_clima)
+
+            if response.status_code == 200:
+                clima_data = response.json()
+
+                if clima_data.get("results"):
+                    results = clima_data["results"]
+                    clima_atual = {
+                        "temperatura": results.get("temp"),
+                        "descricao": results.get("description"),
+                        "umidade": results.get("humidity"),
+                        "vento": results.get("wind_speedy"),
+                        "cidade": results.get("city"),
+                        "fase_da_lua": results.get("moon_phase"),  # Fase da Lua
+                    }
+
+                    previsao_dias = [
+                        {
+                            "dia": prev.get("date"),
+                            "descricao": prev.get("description"),
+                            "min": prev.get("min"),
+                            "max": prev.get("max")
+                        }
+                        for prev in results.get("forecast", [])[:5]  # Pega previsão para os próximos 5 dias
+                    ]
+
+                    # Retorna os dados JSON
+                    return JsonResponse({
+                        "clima_atual": clima_atual,
+                        "previsao_dias": previsao_dias
+                    }, status=200)
+
+                return JsonResponse({"error": "Erro ao interpretar dados da API HG Brasil."}, status=500)
+
+            return JsonResponse({"error": "Erro ao obter dados de clima."}, status=500)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    # Renderiza a página inicial
+    return render(request, 'dashboard.html')
+
+
+
+

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.conf import settings
+from datetime import date, timedelta
 
 
 # Gerenciador de Usuário Personalizado
@@ -128,8 +129,47 @@ class Colheita(models.Model):
 
     def __str__(self):
         return f'Colheita de {self.quantidade} kg em {self.data_colheita}'
+    
 
 
+class DemandaComercial(models.Model):
+    nome = models.CharField(max_length=100)  # Novo campo para nome da demanda
+    TIPOS_DEMANDA = [
+        ('compra', 'Compra'),
+        ('venda', 'Venda')
+    ]
+    STATUS_CHOICES = [
+        ('pendente', 'Pendente'),
+        ('concluída', 'Concluída'),
+        ('cancelada', 'Cancelada')
+    ]
+    
+    tipo = models.CharField(max_length=20, choices=TIPOS_DEMANDA)
+    quantidade = models.PositiveIntegerField()
+    preco = models.DecimalField(max_digits=10, decimal_places=2)
+    prazo = models.DateField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente')
+    data_criacao = models.DateField(auto_now_add=True)
+    agricultor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="demandas_comerciais")
+    
+    def prazo_proximo(self):
+        return self.prazo <= date.today() + timedelta(days=3)
+    
+    def __str__(self):
+        return f"{self.nome} - {self.tipo.capitalize()} - {self.status}"
+
+
+class Clima(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    temperatura = models.FloatField()
+    descricao = models.CharField(max_length=255)
+    umidade = models.FloatField()
+    vento = models.FloatField()
+    fase_da_lua = models.CharField(max_length=100)
+    data = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Clima de {self.user.cidade} em {self.data}"
 
 
     
