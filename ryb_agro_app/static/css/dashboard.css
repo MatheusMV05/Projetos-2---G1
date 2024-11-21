@@ -134,40 +134,40 @@ h6 {
 	margin-left: 10px;
 }
 
-/* Esconde a checkbox original */
+/* Esconde a checkbox original 
 .task-checkbox {
-    display: none; /* A checkbox real não será visível */
-}
+    display: none; 
+}*/
 
 /* Estilo da checkbox customizada */
-.task-checkbox + .custom-checkbox {
+/*.task-checkbox + .custom-checkbox {
     position: absolute;
     top: 10px;
     right: 10px;
-    width: 30px;  /* Aumente o tamanho da checkbox */
-    height: 30px; /* Aumente o tamanho da checkbox */
+    width: 30px;  
+    height: 30px; 
     border: 2px solid #BFBFBF;
-    border-radius: 50%; /* Arredonda a borda */
+    border-radius: 50%; 
     cursor: pointer;
     background-color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-}
+}*/
 
 /* Adiciona o estado de marcado */
-.task-checkbox:checked + .custom-checkbox {
+/*.task-checkbox:checked + .custom-checkbox {
     background-color: #D9D9D9;
     border-color: #BFBFBF;
 	transition: 0.5s;
-}
+}*/
 
 /* Criando o "check" dentro da caixa */
-.task-checkbox:checked + .custom-checkbox::after {
+/*.task-checkbox:checked + .custom-checkbox::after {
 	transition: 0.5s;
     color: white;
-    font-size: 18px;  /* Aumenta o tamanho do ícone de check */
-}
+    font-size: 18px; 
+}*/
 
 /* Garantindo que o label é clicável */
 label {

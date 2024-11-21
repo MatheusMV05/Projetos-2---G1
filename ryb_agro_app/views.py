@@ -76,8 +76,6 @@ def cadastro(request):
     return render(request, 'cadastro.html')
 
 
-def dashboard(request):
-    return render(request, 'dashboard.html')
 
 
 def login_view(request):
@@ -477,6 +475,103 @@ def demandas_comerciais(request):
 
 @csrf_exempt
 def dashboard(request):
+    json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
+    with open(json_path, 'r', encoding='utf-8') as file:
+        etapas_plantas = json.load(file)
+
+    tarefas_do_dia = {}
+
+    for planta in Planta.objects.all():
+        dias_desde_plantio = (date.today() - planta.data_plantio).days
+        tarefas = []
+
+        planta_etapas = etapas_plantas.get(planta.nome, {})
+        acoes = planta_etapas.get("acoes", [])
+
+        if not planta.cronogramas.exists():
+            cronograma = Cronograma.objects.create(planta=planta)
+            for acao in acoes:
+                if isinstance(acao, dict):
+                    Etapa.objects.create(
+                        cronograma=cronograma,
+                        tipo_acao=acao.get('tipo_acao'),
+                        dias_após_plantio=acao.get('dias_após_plantio'),
+                        intervalo_dias=acao.get('intervalo_dias'),
+                        descricao=acao.get('descricao')
+                    )
+
+        for cronograma in planta.cronogramas.all():
+            for etapa in cronograma.etapas.all():
+                if etapa.intervalo_dias == 0:
+                    if dias_desde_plantio >= etapa.dias_após_plantio:
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
+                else:
+                    if dias_desde_plantio >= etapa.dias_após_plantio and \
+                       (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
+
+        if tarefas:
+            tarefas_do_dia[planta.nome] = tarefas
+
+    return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
+
+
+def dashboard(request):
+    # Replicando a lógica de tarefas para o dashboard
+    json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
+    with open(json_path, 'r', encoding='utf-8') as file:
+        etapas_plantas = json.load(file)
+
+    tarefas_do_dia = {}
+
+    for planta in Planta.objects.all():
+        dias_desde_plantio = (date.today() - planta.data_plantio).days
+        tarefas = []
+
+        planta_etapas = etapas_plantas.get(planta.nome, {})
+        acoes = planta_etapas.get("acoes", [])
+
+        if not planta.cronogramas.exists():
+            cronograma = Cronograma.objects.create(planta=planta)
+            for acao in acoes:
+                if isinstance(acao, dict):
+                    Etapa.objects.create(
+                        cronograma=cronograma,
+                        tipo_acao=acao.get('tipo_acao'),
+                        dias_após_plantio=acao.get('dias_após_plantio'),
+                        intervalo_dias=acao.get('intervalo_dias'),
+                        descricao=acao.get('descricao')
+                    )
+
+        for cronograma in planta.cronogramas.all():
+            for etapa in cronograma.etapas.all():
+                if etapa.intervalo_dias == 0:
+                    if dias_desde_plantio >= etapa.dias_após_plantio:
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
+                else:
+                    if dias_desde_plantio >= etapa.dias_após_plantio and \
+                       (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
+
+        if tarefas:
+            tarefas_do_dia[planta.nome] = tarefas
+
     api_key = "a3580565"  # Substitua pela sua chave válida da API HG Brasil
 
     if request.method == "POST":
@@ -489,8 +584,7 @@ def dashboard(request):
                 return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
 
             # Faz a requisição à API HG Brasil
-            url_clima = f"https://api.hgbrasil.com/weather?key={
-                api_key}&lat={latitude}&lon={longitude}&format=json"
+            url_clima = f"https://api.hgbrasil.com/weather?key={api_key}&lat={latitude}&lon={longitude}&format=json"
             response = requests.get(url_clima)
 
             if response.status_code == 200:
@@ -504,8 +598,7 @@ def dashboard(request):
                         "umidade": results.get("humidity"),
                         "vento": results.get("wind_speedy"),
                         "cidade": results.get("city"),
-                        # Fase da Lua
-                        "fase_da_lua": results.get("moon_phase"),
+                        "fase_da_lua": results.get("moon_phase"),  # Fase da Lua
                     }
 
                     previsao_dias = [
@@ -515,8 +608,7 @@ def dashboard(request):
                             "min": prev.get("min"),
                             "max": prev.get("max")
                         }
-                        # Pega previsão para os próximos 5 dias
-                        for prev in results.get("forecast", [])[:5]
+                        for prev in results.get("forecast", [])[:5]  # Pega previsão para os próximos 5 dias
                     ]
 
                     # Retorna os dados JSON
@@ -530,6 +622,11 @@ def dashboard(request):
             return JsonResponse({"error": "Erro ao obter dados de clima."}, status=500)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+
+    # Renderiza a página inicial
+    return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
+
+
 
     # Renderiza a página inicial
     return render(request, 'dashboard.html')
