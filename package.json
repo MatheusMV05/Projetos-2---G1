@@ -1,0 +1,14 @@
+{
+  "name": "projetos-2---g1",
+  "version": "1.0.0",
+  "description": "<h1 align=\"center\">\r   <br>\r   <a href=\"\"><img src=\"https://imgur.com/FCRPo4P.png\" alt=\"CultivaFacil\" width=\"500\"></a>\r   <br>\r   <br>\r </h1>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cypress": "^13.16.0"
+  }
+}

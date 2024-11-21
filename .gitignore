@@ -9,3 +9,5 @@ venv/
 __pycache__/
 
 ryb_agro_app/migrations
+
+node_modules/
