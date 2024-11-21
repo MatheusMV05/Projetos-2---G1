@@ -77,8 +77,6 @@ def cadastro(request):
     return render(request, 'cadastro.html')
 
 
-def dashboard(request):
-    return render(request, 'dashboard.html')
 
 
 def login_view(request):
@@ -465,46 +463,15 @@ def demandas_comerciais(request):
         'status_filtro': status_filtro
     })
 
-# @csrf_exempt
-# def obter_clima(request):
-#     api_key = "6eebaf0af1dfc7fbc708215c92de060c"
-
-#     if request.method == "POST":
-#         try:
-#             data = json.loads(request.body)
-#             latitude = data.get("latitude")
-#             longitude = data.get("longitude")
-
-#             if not latitude or not longitude:
-#                 return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
-
-#             # URL para obter clima e fases da lua
-#             url_clima = f"http://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&units=metric&exclude=minutely,hourly,alerts&lang=pt_br&appid={api_key}"
-#             print("URL gerada para a API OpenWeather:", url_clima)  # Log da URL
-
-#             response = requests.get(url_clima)
-#             print("Resposta da API OpenWeather:", response.status_code, response.text)  # Log da resposta
-
-#             if response.status_code == 200:
-#                 clima_data = response.json()
-#                 clima = {
-#                     "temperatura": clima_data["current"]["temp"],
-#                     "descricao": clima_data["current"]["weather"][0]["description"],
-#                     "umidade": clima_data["current"]["humidity"],
-#                     "vento": clima_data["current"]["wind_speed"],
-#                     "fase_da_lua": clima_data["daily"][0]["moon_phase"],
-#                 }
-#                 return JsonResponse({"clima": clima}, status=200)
-#             else:
-#                 return JsonResponse({"error": "Erro ao obter dados de clima."}, status=500)
-#         except Exception as e:
-#             print("Erro inesperado:", e)  # Log de erro
-#             return JsonResponse({"error": str(e)}, status=500)
-#     return JsonResponse({"error": "Método inválido."}, status=405)
+import json
+import requests
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
-def obter_clima(request):
-    api_key = "6eebaf0af1dfc7fbc708215c92de060c"
+def dashboard(request):
+    api_key = "a3580565"  # Substitua pela sua chave válida da API HG Brasil
 
     if request.method == "POST":
         try:
@@ -515,26 +482,49 @@ def obter_clima(request):
             if not latitude or not longitude:
                 return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
 
-            # URL sem exclusões de dados
-            url_clima = f"http://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&units=metric&lang=pt_br&appid={api_key}"
-
+            # Faz a requisição à API HG Brasil
+            url_clima = f"https://api.hgbrasil.com/weather?key={api_key}&lat={latitude}&lon={longitude}&format=json"
             response = requests.get(url_clima)
-            print("Resposta da API OpenWeather:", response.status_code, response.text)  # Log da resposta
 
             if response.status_code == 200:
                 clima_data = response.json()
-                clima = {
-                    "temperatura": clima_data["current"]["temp"],
-                    "descricao": clima_data["current"]["weather"][0]["description"],
-                    "umidade": clima_data["current"]["humidity"],
-                    "vento": clima_data["current"]["wind_speed"],
-                    "fase_da_lua": clima_data["daily"][0]["moon_phase"],
-                }
-                return JsonResponse({"clima": clima}, status=200)
-            else:
-                return JsonResponse({"error": "Erro ao obter dados de clima.", "status_code": response.status_code}, status=500)
+
+                if clima_data.get("results"):
+                    results = clima_data["results"]
+                    clima_atual = {
+                        "temperatura": results.get("temp"),
+                        "descricao": results.get("description"),
+                        "umidade": results.get("humidity"),
+                        "vento": results.get("wind_speedy"),
+                        "cidade": results.get("city"),
+                        "fase_da_lua": results.get("moon_phase"),  # Fase da Lua
+                    }
+
+                    previsao_dias = [
+                        {
+                            "dia": prev.get("date"),
+                            "descricao": prev.get("description"),
+                            "min": prev.get("min"),
+                            "max": prev.get("max")
+                        }
+                        for prev in results.get("forecast", [])[:5]  # Pega previsão para os próximos 5 dias
+                    ]
+
+                    # Retorna os dados JSON
+                    return JsonResponse({
+                        "clima_atual": clima_atual,
+                        "previsao_dias": previsao_dias
+                    }, status=200)
+
+                return JsonResponse({"error": "Erro ao interpretar dados da API HG Brasil."}, status=500)
+
+            return JsonResponse({"error": "Erro ao obter dados de clima."}, status=500)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
-    return JsonResponse({"error": "Método inválido."}, status=405)
+
+    # Renderiza a página inicial
+    return render(request, 'dashboard.html')
+
+
 
 
