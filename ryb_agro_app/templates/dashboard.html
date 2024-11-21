@@ -104,16 +104,22 @@
 	<br>
 	<div id="pendentes-section">
 		{% for planta, tarefas in tarefas_do_dia.items %}
-		<div class="planta-section mb-3">
-			<ul class="list-group inline-item" id="pendentes-list" style="display: inline-block;">
+
+		<!--Minhas tarefas-->
+		<div class="planta-section mb-3" style="display: inline-block;">
+			<ul class="list-group" id="pendentes-list" style="padding: 0; list-style: none;">
 				{% for tarefa in tarefas %}
 				<li class="list-group-item d-flex" style="
-						height: 104px;
-						width: 180px;
+						display: inline-block;
+						height: 112px;
+						width: 128px;
 						border-radius: 16px;
 						background: #ffffff;
 						box-shadow: 0px 0px 16px -4px rgba(0, 0, 0, 0.25);
-						align-items: center;
+						vertical-align: top; /* Alinha os itens ao topo */
+						margin-right: 16px; /* Espaço entre os itens */
+						margin-left: 19px;
+						text-align: center;
 					">
 					<span class="task-title"
 						onclick="showTaskDetails('{{ tarefa.tipo_acao }}', '{{ tarefa.descricao }}', '{{ tarefa.planta }}')">
@@ -122,14 +128,17 @@
 					</span>
 					<input type="checkbox" class="checkbox" onclick="toggleTaskCompletion(this)" />
 				</li>
+				{% endfor %}
+			</ul>
 		</div>
-		{% endfor %}
-		</ul>
 	</div>
 	{% empty %}
 	<p class="text-muted">Não há tarefas programadas para hoje.</p>
 	{% endfor %}
 	</div>
+
+
+	<!--Antigo card-->
 	<!--<div class="d-flex">
 		<div class="card" style="width: 18rem; margin-left: 40px; border-radius: 10px; border-color: #fff;">
 			<div class="card-body">
