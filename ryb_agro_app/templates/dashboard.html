@@ -193,10 +193,32 @@
 	<h2>Meu plantio</h2>
 	<br>
 	<h2>Meu celeiro</h2>
+	<!-- Botão Fixo para o Chat -->
+<button id="gemini-chat-btn" class="btn btn-primary" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    💬 Fale com o Bento
+</button>
+
+<!-- Modal para o Chat -->
+<div id="gemini-chat-modal" class="modal" tabindex="-1" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Bento chat</h5>
+                <button type="button" class="btn-close" onclick="closeChat()"></button>
+            </div>
+            <div class="modal-body">
+                <div id="chat-messages" style="height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;"></div>
+                <div class="input-group mt-3">
+                    <input id="chat-input" type="text" class="form-control" placeholder="Digite sua mensagem">
+                    <button class="btn btn-success" onclick="sendMessage()">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 	<script>
 		function obterLocalizacao() {
 			if (navigator.geolocation) {
@@ -264,6 +286,93 @@
 		// Carregar dados ao iniciar a página
 		window.onload = obterLocalizacao;
 	</script>
+
+<script>
+    const chatBtn = document.getElementById('gemini-chat-btn');
+	const chatModal = document.getElementById('gemini-chat-modal');
+	const chatMessages = document.getElementById('chat-messages');
+	const chatInput = document.getElementById('chat-input');
+
+// Função para rolar para o final do chat
+function scrollToBottom() {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Função para abrir o chat
+chatBtn.onclick = async () => {
+    chatModal.style.display = 'block';
+    chatInput.focus();
+
+    // Solicitar a mensagem inicial do Bento
+    try {
+        const response = await fetch("{% url 'dashboard' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+            body: JSON.stringify({ is_initial: true }), // Envia o sinalizador para a mensagem inicial
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.reply) {
+                chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> ${data.reply}</div>`;
+                scrollToBottom();
+            }
+        } else {
+            console.error(`Erro ao carregar mensagem inicial: ${response.status} - ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error("Erro ao carregar mensagem inicial:", error);
+        chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Não consegui iniciar a conversa.</div>`;
+    }
+};
+
+// Função para fechar o chat
+function closeChat() {
+    chatModal.style.display = 'none';
+}
+
+// Função para enviar mensagem
+async function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    // Mostra a mensagem do usuário
+    chatMessages.innerHTML += `<div class="chat-message user"><strong>Você:</strong> ${message}</div>`;
+    chatInput.value = '';
+
+    // Envia a mensagem para o backend
+    try {
+        const response = await fetch("{% url 'dashboard' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+            body: JSON.stringify({ chat_message: message }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.reply) {
+                chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> ${data.reply}</div>`;
+            } else {
+                chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Não consegui entender sua mensagem.</div>`;
+            }
+        } else {
+            chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Houve um problema ao processar sua mensagem.</div>`;
+            console.error(`Erro ao enviar mensagem: ${response.status} - ${response.statusText}`);
+        }
+    } catch (error) {
+        chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Erro ao se comunicar com o servidor.</div>`;
+        console.error("Erro ao enviar mensagem:", error);
+    }
+
+    scrollToBottom(); // Rola para o final após cada mensagem
+}
+</script>
 
 
 	<script src="{% static 'js/dashboard.js' %}"></script>

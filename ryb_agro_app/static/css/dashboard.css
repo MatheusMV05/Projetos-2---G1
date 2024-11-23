@@ -12,24 +12,18 @@ body {
 }
 
 .header-container {
-    background-color: #fff;
-    width: 100%; /* Garante que o container ocupe 100% da largura */
-    position: relative; /* Para o controle do posicionamento */
-    padding-top: 20px; /* Para garantir que a cor de fundo ocupe a parte superior */
+    width: 100%; /* Cabeçalho ocupa a largura completa */
+    background-color: #fff; /* Cor de fundo (ajuste conforme necessário) */
+    z-index: 10; /* Garante que fique acima de outros elementos */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* (Opcional) Efeito de sombra */
 }
 
 header {
-    display: flex;
-    height: 100%; /* Se você quer que ele tenha altura total */
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 0; /* Removi o margin-top original que pode estar quebrando o layout */
-    margin-bottom: 20px;
-    background-color: #fff; /* Garante que o fundo do header seja branco */
-    padding: 20px 0; /* Adiciona padding para o header ter espaço interno */
+    display: flex; /* Layout flexível */
+    justify-content: space-between; /* Elementos espaçados */
+    align-items: center; /* Centraliza verticalmente */
+    padding: 10px 20px; /* Espaçamento interno */
+    height: auto; /* Altura ajustável ao conteúdo */
 }
 
 .menu-abrir {

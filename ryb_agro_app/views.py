@@ -25,6 +25,8 @@ from django.views.decorators.http import require_POST
 import requests
 
 
+
+
 def landingPage(request):
     return render(request, 'landingPage.html')
 
@@ -520,107 +522,48 @@ def dashboard(request):
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
 
 
+from django.http import JsonResponse
+from django.shortcuts import render
+from .task import get_tarefas_do_dia
+from .api import get_climate_data
+from .chatbot import get_chat_response
+import json
+
 def dashboard(request):
-    # Replicando a lógica de tarefas para o dashboard
-    json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
-    with open(json_path, 'r', encoding='utf-8') as file:
-        etapas_plantas = json.load(file)
-
-    tarefas_do_dia = {}
-
-    for planta in Planta.objects.all():
-        dias_desde_plantio = (date.today() - planta.data_plantio).days
-        tarefas = []
-
-        planta_etapas = etapas_plantas.get(planta.nome, {})
-        acoes = planta_etapas.get("acoes", [])
-
-        if not planta.cronogramas.exists():
-            cronograma = Cronograma.objects.create(planta=planta)
-            for acao in acoes:
-                if isinstance(acao, dict):
-                    Etapa.objects.create(
-                        cronograma=cronograma,
-                        tipo_acao=acao.get('tipo_acao'),
-                        dias_após_plantio=acao.get('dias_após_plantio'),
-                        intervalo_dias=acao.get('intervalo_dias'),
-                        descricao=acao.get('descricao')
-                    )
-
-        for cronograma in planta.cronogramas.all():
-            for etapa in cronograma.etapas.all():
-                if etapa.intervalo_dias == 0:
-                    if dias_desde_plantio >= etapa.dias_após_plantio:
-                        tarefas.append({
-                            "tipo_acao": etapa.tipo_acao,
-                            "descricao": etapa.descricao,
-                            "planta": planta.nome
-                        })
-                else:
-                    if dias_desde_plantio >= etapa.dias_após_plantio and \
-                       (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
-                        tarefas.append({
-                            "tipo_acao": etapa.tipo_acao,
-                            "descricao": etapa.descricao,
-                            "planta": planta.nome
-                        })
-
-        if tarefas:
-            tarefas_do_dia[planta.nome] = tarefas
-
-    api_key = "a3580565"  # Substitua pela sua chave válida da API HG Brasil
-
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            latitude = data.get("latitude")
-            longitude = data.get("longitude")
 
-            if not latitude or not longitude:
-                return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
+            # Mensagem inicial do chatbot
+            if data.get("is_initial", False):
+                reply = (
+                    "Olá! Eu sou Bento, um especialista em agricultura. "
+                    "Estou aqui para ajudar com suas dúvidas sobre cultivo, práticas agrícolas e sustentabilidade."
+                )
+                return JsonResponse({"reply": reply}, status=200)
 
-            # Faz a requisição à API HG Brasil
-            url_clima = f"https://api.hgbrasil.com/weather?key={api_key}&lat={latitude}&lon={longitude}&format=json"
-            response = requests.get(url_clima)
+            # Lógica para clima
+            if "latitude" in data and "longitude" in data:
+                latitude = data.get("latitude")
+                longitude = data.get("longitude")
+                clima = get_climate_data(latitude, longitude)
+                return JsonResponse(clima, status=200)
 
-            if response.status_code == 200:
-                clima_data = response.json()
+            # Lógica para chatbot
+            elif "chat_message" in data:
+                chat_message = data.get("chat_message")
+                reply = get_chat_response(chat_message)
+                return JsonResponse({"reply": reply}, status=200)
 
-                if clima_data.get("results"):
-                    results = clima_data["results"]
-                    clima_atual = {
-                        "temperatura": results.get("temp"),
-                        "descricao": results.get("description"),
-                        "umidade": results.get("humidity"),
-                        "vento": results.get("wind_speedy"),
-                        "cidade": results.get("city"),
-                        "fase_da_lua": results.get("moon_phase"),  # Fase da Lua
-                    }
-
-                    previsao_dias = [
-                        {
-                            "dia": prev.get("date"),
-                            "descricao": prev.get("description"),
-                            "min": prev.get("min"),
-                            "max": prev.get("max")
-                        }
-                        for prev in results.get("forecast", [])[:5]  # Pega previsão para os próximos 5 dias
-                    ]
-
-                    # Retorna os dados JSON
-                    return JsonResponse({
-                        "clima_atual": clima_atual,
-                        "previsao_dias": previsao_dias
-                    }, status=200)
-
-                return JsonResponse({"error": "Erro ao interpretar dados da API HG Brasil."}, status=500)
-
-            return JsonResponse({"error": "Erro ao obter dados de clima."}, status=500)
+            return JsonResponse({"error": "Dados inválidos fornecidos."}, status=400)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 
     # Renderiza a página inicial
+    tarefas_do_dia = get_tarefas_do_dia()
     return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
+
+
 
 
 
