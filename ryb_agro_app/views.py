@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .models import Usuario, Planta, Celeiro
+from .models import Usuario, Celeiro, Canteiro, Setor
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -19,7 +19,6 @@ from django.conf import settings
 from django.shortcuts import render
 from django.http import JsonResponse
 from datetime import date
-from .models import Planta, Cronograma, Etapa
 from django.views.decorators.http import require_POST
 import requests
 
@@ -71,11 +70,9 @@ def cadastro(request):
             login(request, user)  # Autentica o usuário
 
         # Redireciona para o primeiro acesso
-        return redirect('primeiro-acesso')
+        return redirect('cadastrar_setores')
 
     return render(request, 'cadastro.html')
-
-
 
 
 def login_view(request):
@@ -130,22 +127,25 @@ def trocar_senha(request):
     return render(request, 'trocar-senha.html')
 
 
-def cadastrar_terreno(request):
-    if request.method == "POST":
-        cidade = request.POST.get("cidade")
-        estado = request.POST.get("estado")
-        tamanho = request.POST.get("tamanho")
+@login_required
+@csrf_exempt
+def cadastrar_setores(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        setores = data.get('setores', [])
 
-        usuario = request.user  # O usuário logado
-        usuario.cidade = cidade
-        usuario.estado = estado
-        usuario.tamanho = tamanho
-        usuario.save()
+        for index, setor_data in enumerate(setores, start=1):
+            setor_nome = f"Setor {index}"  # Nome automático do setor
+            setor = Setor.objects.create(usuario=request.user, nome=setor_nome)
 
-        messages.success(request, 'Terreno cadastrado com sucesso.')
-        return redirect('planta')
+            for i in range(setor_data['canteiros']):
+                nome_canteiro = f"{setor.nome} Canteiro {
+                    chr(65 + i)}"  # Nome automático do canteiro
+                Canteiro.objects.create(setor=setor, nome=nome_canteiro)
 
-    return render(request, 'primeiro-acesso.html')
+        return JsonResponse({"redirect_url": "/planta/"}, status=201)
+
+    return render(request, 'cadastrar_setores.html')
 
 # View para renderizar e processar dados
 
@@ -175,6 +175,16 @@ def add_planta(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
     return JsonResponse({'status': 'invalid method'}, status=405)
+
+
+@login_required
+def get_canteiros(request):
+    canteiros = Canteiro.objects.filter(setor__usuario=request.user)
+    canteiros_data = [
+        {"id": c.id, "name": f"{c.setor.nome} - {c.nome}"}
+        for c in canteiros
+    ]
+    return JsonResponse(canteiros_data, safe=False)
 
 
 def tarefas_do_dia(request):
@@ -584,7 +594,8 @@ def dashboard(request):
                 return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
 
             # Faz a requisição à API HG Brasil
-            url_clima = f"https://api.hgbrasil.com/weather?key={api_key}&lat={latitude}&lon={longitude}&format=json"
+            url_clima = f"https://api.hgbrasil.com/weather?key={
+                api_key}&lat={latitude}&lon={longitude}&format=json"
             response = requests.get(url_clima)
 
             if response.status_code == 200:
@@ -598,7 +609,8 @@ def dashboard(request):
                         "umidade": results.get("humidity"),
                         "vento": results.get("wind_speedy"),
                         "cidade": results.get("city"),
-                        "fase_da_lua": results.get("moon_phase"),  # Fase da Lua
+                        # Fase da Lua
+                        "fase_da_lua": results.get("moon_phase"),
                     }
 
                     previsao_dias = [
@@ -608,7 +620,8 @@ def dashboard(request):
                             "min": prev.get("min"),
                             "max": prev.get("max")
                         }
-                        for prev in results.get("forecast", [])[:5]  # Pega previsão para os próximos 5 dias
+                        # Pega previsão para os próximos 5 dias
+                        for prev in results.get("forecast", [])[:5]
                     ]
 
                     # Retorna os dados JSON
@@ -625,8 +638,6 @@ def dashboard(request):
 
     # Renderiza a página inicial
     return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
-
-
 
     # Renderiza a página inicial
     return render(request, 'dashboard.html')
