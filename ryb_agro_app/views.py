@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .models import Usuario, Planta, Celeiro
+from .models import Usuario, Celeiro, Canteiro, Setor
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -13,14 +13,12 @@ from datetime import date
 from django.conf import settings
 from datetime import datetime
 
-
 import os  # Adicione esta linha para importar o módulo 'os'
 import json
 from django.conf import settings
 from django.shortcuts import render
 from django.http import JsonResponse
 from datetime import date
-from .models import Planta, Cronograma, Etapa
 from django.views.decorators.http import require_POST
 import requests
 
@@ -74,11 +72,9 @@ def cadastro(request):
             login(request, user)  # Autentica o usuário
 
         # Redireciona para o primeiro acesso
-        return redirect('primeiro-acesso')
+        return redirect('cadastrar_setores')
 
     return render(request, 'cadastro.html')
-
-
 
 
 def login_view(request):
@@ -133,25 +129,29 @@ def trocar_senha(request):
     return render(request, 'trocar-senha.html')
 
 
-def cadastrar_terreno(request):
-    if request.method == "POST":
-        cidade = request.POST.get("cidade")
-        estado = request.POST.get("estado")
-        tamanho = request.POST.get("tamanho")
+@login_required
+@csrf_exempt
+def cadastrar_setores(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        setores = data.get('setores', [])
 
-        usuario = request.user  # O usuário logado
-        usuario.cidade = cidade
-        usuario.estado = estado
-        usuario.tamanho = tamanho
-        usuario.save()
+        for index, setor_data in enumerate(setores, start=1):
+            setor_nome = f"Setor {index}"  # Nome automático do setor
+            setor = Setor.objects.create(usuario=request.user, nome=setor_nome)
 
-        messages.success(request, 'Terreno cadastrado com sucesso.')
-        return redirect('planta')
+            for i in range(setor_data['canteiros']):
+                nome_canteiro = f"{setor.nome} Canteiro {
+                    chr(65 + i)}"  # Nome automático do canteiro
+                Canteiro.objects.create(setor=setor, nome=nome_canteiro)
 
-    return render(request, 'primeiro-acesso.html')
+        return JsonResponse({"redirect_url": "/planta/"}, status=201)
 
+    return render(request, 'cadastrar_setores.html')
 
 # View para renderizar e processar dados
+
+
 @login_required  # Garante que o usuário esteja logado para acessar essa view
 @csrf_exempt  # Apenas para testes, remova em produção
 def add_planta(request):
@@ -177,6 +177,16 @@ def add_planta(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
     return JsonResponse({'status': 'invalid method'}, status=405)
+
+
+@login_required
+def get_canteiros(request):
+    canteiros = Canteiro.objects.filter(setor__usuario=request.user)
+    canteiros_data = [
+        {"id": c.id, "name": f"{c.setor.nome} - {c.nome}"}
+        for c in canteiros
+    ]
+    return JsonResponse(canteiros_data, safe=False)
 
 
 def tarefas_do_dia(request):
@@ -234,6 +244,7 @@ def tarefas_do_dia(request):
             tarefas_do_dia[planta.nome] = tarefas
 
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
+
 
 def insumos_view(request):
     # Caminho do arquivo JSON com os insumos
@@ -320,18 +331,19 @@ def registrar_colheita(request):
     return JsonResponse({"message": "Método não permitido."}, status=405)
 
 
-
 @login_required
 def celeiro(request):
     # Recupera todos os celeiros do usuário
     celeiros_usuario = Celeiro.objects.filter(user=request.user)
-    
+
     celeiros_info = []
 
     for celeiro in celeiros_usuario:
         # Soma o peso esperado e o peso colhido total do celeiro
-        peso_esperado_total = sum(planta.peso_previsto for planta in celeiro.plantas.all())
-        peso_colhido_total = sum(planta.peso_colhido for planta in celeiro.plantas.all())
+        peso_esperado_total = sum(
+            planta.peso_previsto for planta in celeiro.plantas.all())
+        peso_colhido_total = sum(
+            planta.peso_colhido for planta in celeiro.plantas.all())
 
         # Armazena informações de cada planta no celeiro
         plantas_info = []
@@ -357,9 +369,6 @@ def celeiro(request):
         celeiros_info.append(celeiro_info)
 
     return render(request, 'celeiro.html', {'celeiros_info': celeiros_info})
-
-
-
 
 
 @login_required
@@ -399,9 +408,11 @@ def adicionar_tarefa(request):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 # @login_required
+
+
 def demandas_comerciais(request):
     demanda_em_edicao = None  # Variável para armazenar a demanda em edição
-    
+
     # Registrar ou editar demanda
     if request.method == 'POST':
         if 'registrar' in request.POST:
@@ -414,50 +425,58 @@ def demandas_comerciais(request):
                 prazo=request.POST.get('prazo'),
                 agricultor=request.user
             )
-            messages.success(request, 'Demanda comercial registrada com sucesso.')
+            messages.success(
+                request, 'Demanda comercial registrada com sucesso.')
             return redirect('demandas_comerciais')
-        
+
         elif 'editar' in request.POST:
             # Edição de demanda existente
-            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get(
+                'demanda_id'), agricultor=request.user)
             demanda.nome = request.POST.get('nome')
             demanda.tipo = request.POST.get('tipo')
             demanda.quantidade = request.POST.get('quantidade')
             demanda.preco = request.POST.get('preco')
             demanda.prazo = request.POST.get('prazo')
             demanda.save()
-            messages.success(request, 'Demanda comercial atualizada com sucesso.')
+            messages.success(
+                request, 'Demanda comercial atualizada com sucesso.')
             return redirect('demandas_comerciais')
 
         elif 'alterar_status' in request.POST:
             # Atualização de status
-            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get(
+                'demanda_id'), agricultor=request.user)
             demanda.status = request.POST.get('status')
             demanda.save()
-            messages.success(request, 'Status da demanda atualizado com sucesso.')
+            messages.success(
+                request, 'Status da demanda atualizado com sucesso.')
             return redirect('demandas_comerciais')
 
     # Preparação para editar uma demanda
     if 'editar_demanda_id' in request.GET:
-        demanda_em_edicao = get_object_or_404(DemandaComercial, id=request.GET['editar_demanda_id'], agricultor=request.user)
+        demanda_em_edicao = get_object_or_404(
+            DemandaComercial, id=request.GET['editar_demanda_id'], agricultor=request.user)
 
     # Exclusão de demanda
     if request.method == 'POST' and 'excluir' in request.POST:
-        demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+        demanda = get_object_or_404(DemandaComercial, id=request.POST.get(
+            'demanda_id'), agricultor=request.user)
         demanda.delete()
         messages.success(request, 'Demanda comercial excluída com sucesso.')
         return redirect('demandas_comerciais')
 
     # Listagem e filtro
-    demandas = DemandaComercial.objects.filter(agricultor=request.user).order_by('-data_criacao')
+    demandas = DemandaComercial.objects.filter(
+        agricultor=request.user).order_by('-data_criacao')
     tipo_filtro = request.GET.get('tipo')
     status_filtro = request.GET.get('status')
-    
+
     if tipo_filtro:
         demandas = demandas.filter(tipo=tipo_filtro)
     if status_filtro:
         demandas = demandas.filter(status=status_filtro)
-        
+
     return render(request, 'demandas_comerciais.html', {
         'demandas': demandas,
         'demanda_em_edicao': demanda_em_edicao,
@@ -465,11 +484,6 @@ def demandas_comerciais(request):
         'status_filtro': status_filtro
     })
 
-import json
-import requests
-from django.http import JsonResponse
-from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def dashboard(request):

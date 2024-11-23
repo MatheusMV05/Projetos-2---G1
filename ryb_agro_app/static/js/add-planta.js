@@ -1,3 +1,5 @@
+console.log('Arquivo add-planta.js carregado com sucesso!');
+
 let SubmitMenu = document.getElementById('menu-abrir');
 let menu = document.getElementById('menu-mobile');
 
@@ -50,6 +52,9 @@ const displayData = (data) => {
 
 			modalTitle.textContent = title;
 			modalImage.src = image;
+
+			console.log('Card clicado, tentando carregar canteiros...');
+			loadCanteiros(); // Carrega os canteiros sempre que o modal é aberto
 
 			// Limpa os campos do modal
 			harvestAmountInput.value = '';
@@ -108,6 +113,7 @@ addPlantButton.addEventListener('click', () => {
 	const harvestAmount = harvestAmountInput.value;
 	const harvestFrequency = harvestFrequencySelect.value;
 	const selectedPlant = modalTitle.textContent;
+	const selectedCanteiro = document.getElementById('selectCanteiro').value;
 
 	if (!harvestAmount) {
 		alert('Por favor, insira uma quantidade válida.');
@@ -129,6 +135,7 @@ addPlantButton.addEventListener('click', () => {
 		name: selectedPlant,
 		amount: harvestAmount,
 		frequency: harvestFrequency,
+		canteiro: selectedCanteiro, // Associa a planta ao canteiro selecionado
 	};
 	savedPlants.push(plant);
 
@@ -141,17 +148,43 @@ addPlantButton.addEventListener('click', () => {
 
 // Atualiza a lista de plantas exibida
 const updatePlantList = () => {
-	plantListContainer.innerHTML = '';
-	savedPlants.forEach((plant, index) => {
-		const plantItem = document.createElement('li');
-		plantItem.innerHTML = `
-            ${plant.name} - ${plant.amount} kg, ${plant.frequency}
-            <button class="remove-plant" data-index="${index}"> X </button>
-        `;
-		plantListContainer.appendChild(plantItem);
+	plantListContainer.innerHTML = ''; // Limpa a lista existente
+
+	// Agrupa as plantas por canteiro
+	const groupedPlants = savedPlants.reduce((acc, plant) => {
+		if (!acc[plant.canteiro]) {
+			acc[plant.canteiro] = [];
+		}
+		acc[plant.canteiro].push(plant);
+		return acc;
+	}, {});
+
+	// Cria elementos separados para cada canteiro
+	Object.keys(groupedPlants).forEach((canteiroId) => {
+		// Obtém o nome completo (Setor - Canteiro) do dropdown
+		const canteiroName =
+			document.querySelector(`#selectCanteiro option[value="${canteiroId}"]`)
+				?.textContent || `Canteiro ${canteiroId}`;
+
+		// Cria título para o canteiro
+		const canteiroSection = document.createElement('div');
+		canteiroSection.innerHTML = `<h4>${canteiroName}</h4>`;
+		plantListContainer.appendChild(canteiroSection);
+
+		// Adiciona as plantas do canteiro
+		const plantList = document.createElement('ul');
+		groupedPlants[canteiroId].forEach((plant, index) => {
+			const plantItem = document.createElement('li');
+			plantItem.innerHTML = `
+                ${plant.name} - ${plant.amount} kg, ${plant.frequency}
+                <button class="remove-plant" data-index="${index}"> X </button>
+            `;
+			plantList.appendChild(plantItem);
+		});
+		canteiroSection.appendChild(plantList);
 	});
 
-	// Adiciona evento de remover planta
+	// Adiciona evento de remoção de planta
 	document.querySelectorAll('.remove-plant').forEach((button) => {
 		button.addEventListener('click', (event) => {
 			const index = event.currentTarget.dataset.index;
@@ -184,7 +217,7 @@ const sendDataToBackend = async (plantas) => {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				'X-CSRFToken': getCSRFToken(), // Adiciona o CSRF token
+				'X-CSRFToken': getCSRFToken(),
 			},
 			body: JSON.stringify({ plantas }),
 		});
@@ -219,3 +252,35 @@ searchInput.addEventListener('keyup', (e) => {
 });
 
 window.addEventListener('load', displayData.bind(null, data));
+
+// Carrega os canteiros para o dropdown do modal
+const loadCanteiros = async () => {
+	try {
+		console.log('Iniciando requisição para carregar canteiros...');
+		const response = await fetch('/get-canteiros/');
+		if (!response.ok) {
+			throw new Error(`Erro ao buscar canteiros: ${response.status}`);
+		}
+
+		const canteiros = await response.json();
+		console.log('Canteiros recebidos:', canteiros);
+
+		const selectCanteiro = document.getElementById('selectCanteiro');
+		if (!selectCanteiro) {
+			console.error('Dropdown de canteiros não encontrado no DOM!');
+			return;
+		}
+
+		selectCanteiro.innerHTML = ''; // Limpa as opções existentes
+
+		canteiros.forEach((canteiro) => {
+			const option = document.createElement('option');
+			option.value = canteiro.id;
+			option.textContent = canteiro.name;
+			selectCanteiro.appendChild(option);
+		});
+		console.log('Canteiros adicionados ao dropdown com sucesso.');
+	} catch (error) {
+		console.error('Erro ao carregar os canteiros:', error);
+	}
+};
