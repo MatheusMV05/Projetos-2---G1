@@ -4,14 +4,16 @@ from datetime import date
 from .models import Planta, Cronograma, Etapa
 from django.conf import settings
 
-def get_tarefas_do_dia():
+def get_tarefas_do_dia(request):
     json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
     with open(json_path, 'r', encoding='utf-8') as file:
         etapas_plantas = json.load(file)
 
     tarefas_do_dia = {}
+    
 
-    for planta in Planta.objects.all():
+    # Filtra apenas plantas do usuário logado
+    for planta in Planta.objects.filter(user=request.user):
         dias_desde_plantio = (date.today() - planta.data_plantio).days
         tarefas = []
 
@@ -30,7 +32,7 @@ def get_tarefas_do_dia():
                         descricao=acao.get('descricao')
                     )
 
-        for cronograma in planta.cronogramas.all():
+        for cronograma in planta.cronogramas.filter(planta__user=request.user):
             for etapa in cronograma.etapas.all():
                 if etapa.intervalo_dias == 0:
                     if dias_desde_plantio >= etapa.dias_após_plantio:

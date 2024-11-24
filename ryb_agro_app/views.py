@@ -189,7 +189,6 @@ def get_canteiros(request):
     return JsonResponse(canteiros_data, safe=False)
 
 
-@login_required
 def tarefas_do_dia(request):
     json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
     with open(json_path, 'r', encoding='utf-8') as file:
@@ -197,8 +196,7 @@ def tarefas_do_dia(request):
 
     tarefas_do_dia = {}
 
-    # Filtra plantas pelo usuário logado
-    for planta in Planta.objects.filter(user=request.user):
+    for planta in Planta.objects.all():
         dias_desde_plantio = (date.today() - planta.data_plantio).days
         tarefas = []
 
@@ -210,6 +208,7 @@ def tarefas_do_dia(request):
         if not planta.cronogramas.exists():
             cronograma = Cronograma.objects.create(planta=planta)
             for acao in acoes:
+                # Verifica se 'acao' é um dicionário
                 if isinstance(acao, dict):
                     Etapa.objects.create(
                         cronograma=cronograma,
@@ -218,6 +217,9 @@ def tarefas_do_dia(request):
                         intervalo_dias=acao.get('intervalo_dias'),
                         descricao=acao.get('descricao')
                     )
+                else:
+                    # Para depuração, remover em produção
+                    print(f"Etapa inesperada: {acao}")
 
         # Verifica etapas já existentes no cronograma da planta
         for cronograma in planta.cronogramas.all():
@@ -242,8 +244,6 @@ def tarefas_do_dia(request):
             tarefas_do_dia[planta.nome] = tarefas
 
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
-
-
 
 
 def insumos_view(request):
@@ -543,56 +543,38 @@ from .api import get_climate_data
 from .chatbot import get_chat_response
 import json
 
-@login_required
-@csrf_exempt
 def dashboard(request):
-    json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
-    with open(json_path, 'r', encoding='utf-8') as file:
-        etapas_plantas = json.load(file)
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
 
-    tarefas_do_dia = {}
+            # Mensagem inicial do chatbot
+            if data.get("is_initial", False):
+                reply = (
+                    "Olá! Eu sou Bento, um especialista em agricultura. "
+                    "Estou aqui para ajudar com suas dúvidas sobre cultivo, práticas agrícolas e sustentabilidade."
+                )
+                return JsonResponse({"reply": reply}, status=200)
 
-    # Filtra apenas plantas do usuário logado
-    for planta in Planta.objects.filter(user=request.user):
-        dias_desde_plantio = (date.today() - planta.data_plantio).days
-        tarefas = []
+            # Lógica para clima
+            if "latitude" in data and "longitude" in data:
+                latitude = data.get("latitude")
+                longitude = data.get("longitude")
+                clima = get_climate_data(latitude, longitude)
+                return JsonResponse(clima, status=200)
 
-        planta_etapas = etapas_plantas.get(planta.nome, {})
-        acoes = planta_etapas.get("acoes", [])
+            # Lógica para chatbot
+            elif "chat_message" in data:
+                chat_message = data.get("chat_message")
+                reply = get_chat_response(chat_message)
+                return JsonResponse({"reply": reply}, status=200)
 
-        if not planta.cronogramas.exists():
-            cronograma = Cronograma.objects.create(planta=planta)
-            for acao in acoes:
-                if isinstance(acao, dict):
-                    Etapa.objects.create(
-                        cronograma=cronograma,
-                        tipo_acao=acao.get('tipo_acao'),
-                        dias_após_plantio=acao.get('dias_após_plantio'),
-                        intervalo_dias=acao.get('intervalo_dias'),
-                        descricao=acao.get('descricao')
-                    )
+            return JsonResponse({"error": "Dados inválidos fornecidos."}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
 
-        for cronograma in planta.cronogramas.filter(planta__user=request.user):
-            for etapa in cronograma.etapas.all():
-                if etapa.intervalo_dias == 0:
-                    if dias_desde_plantio >= etapa.dias_após_plantio:
-                        tarefas.append({
-                            "tipo_acao": etapa.tipo_acao,
-                            "descricao": etapa.descricao,
-                            "planta": planta.nome
-                        })
-                else:
-                    if dias_desde_plantio >= etapa.dias_após_plantio and \
-                       (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
-                        tarefas.append({
-                            "tipo_acao": etapa.tipo_acao,
-                            "descricao": etapa.descricao,
-                            "planta": planta.nome
-                        })
-
-        if tarefas:
-            tarefas_do_dia[planta.nome] = tarefas
-
+    # Renderiza a página inicial
+    tarefas_do_dia = get_tarefas_do_dia(request)
     return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
 
 
