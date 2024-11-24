@@ -1,13 +1,6 @@
-
-
 @font-face {
 	font-family: gojali;
-	src: url(../fontes/gojali/TTF/Gojali-Regular.ttf);
-}
-
-@font-face {
-	font-family: rosemask;
-	src: url(../fontes/rose_mask/RoseMask_Font/RoseMask-TTF-OTF-WOFF-WOFF2/RoseMask.ttf);
+	src: url('static/fontes/Gojali-Regular.ttf') format('truetype');
 }
 
 .gojali-regular {
@@ -17,11 +10,8 @@
 	font-style: normal;
 }
 
-.rosemask-regular {
-	font-family: 'rosemask', system-ui;
-	font-optical-sizing: auto;
-	font-weight: 500;
-	font-style: normal;
+body {
+	font-family: 'gojali', sans-serif;
 }
 
 /* Estilo base para todas as mensagens */

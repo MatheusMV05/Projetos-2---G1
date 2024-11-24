@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .models import Usuario, Planta, Celeiro
+from .models import Usuario, Celeiro, Canteiro, Setor
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -13,16 +13,16 @@ from datetime import date
 from django.conf import settings
 from datetime import datetime
 
-
 import os  # Adicione esta linha para importar o módulo 'os'
 import json
 from django.conf import settings
 from django.shortcuts import render
 from django.http import JsonResponse
 from datetime import date
-from .models import Planta, Cronograma, Etapa
 from django.views.decorators.http import require_POST
 import requests
+
+
 
 
 def landingPage(request):
@@ -72,13 +72,9 @@ def cadastro(request):
             login(request, user)  # Autentica o usuário
 
         # Redireciona para o primeiro acesso
-        return redirect('primeiro-acesso')
+        return redirect('cadastrar_setores')
 
     return render(request, 'cadastro.html')
-
-
-def dashboard(request):
-    return render(request, 'dashboard.html')
 
 
 def login_view(request):
@@ -133,25 +129,29 @@ def trocar_senha(request):
     return render(request, 'trocar-senha.html')
 
 
-def cadastrar_terreno(request):
-    if request.method == "POST":
-        cidade = request.POST.get("cidade")
-        estado = request.POST.get("estado")
-        tamanho = request.POST.get("tamanho")
+@login_required
+@csrf_exempt
+def cadastrar_setores(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        setores = data.get('setores', [])
 
-        usuario = request.user  # O usuário logado
-        usuario.cidade = cidade
-        usuario.estado = estado
-        usuario.tamanho = tamanho
-        usuario.save()
+        for index, setor_data in enumerate(setores, start=1):
+            setor_nome = f"Setor {index}"  # Nome automático do setor
+            setor = Setor.objects.create(usuario=request.user, nome=setor_nome)
 
-        messages.success(request, 'Terreno cadastrado com sucesso.')
-        return redirect('planta')
+            for i in range(setor_data['canteiros']):
+                nome_canteiro = f"{setor.nome} Canteiro {
+                    chr(65 + i)}"  # Nome automático do canteiro
+                Canteiro.objects.create(setor=setor, nome=nome_canteiro)
 
-    return render(request, 'primeiro-acesso.html')
+        return JsonResponse({"redirect_url": "/planta/"}, status=201)
 
+    return render(request, 'cadastrar_setores.html')
 
 # View para renderizar e processar dados
+
+
 @login_required  # Garante que o usuário esteja logado para acessar essa view
 @csrf_exempt  # Apenas para testes, remova em produção
 def add_planta(request):
@@ -179,6 +179,17 @@ def add_planta(request):
     return JsonResponse({'status': 'invalid method'}, status=405)
 
 
+@login_required
+def get_canteiros(request):
+    canteiros = Canteiro.objects.filter(setor__usuario=request.user)
+    canteiros_data = [
+        {"id": c.id, "name": f"{c.setor.nome} - {c.nome}"}
+        for c in canteiros
+    ]
+    return JsonResponse(canteiros_data, safe=False)
+
+
+@login_required
 def tarefas_do_dia(request):
     json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
     with open(json_path, 'r', encoding='utf-8') as file:
@@ -186,7 +197,8 @@ def tarefas_do_dia(request):
 
     tarefas_do_dia = {}
 
-    for planta in Planta.objects.all():
+    # Filtra plantas pelo usuário logado
+    for planta in Planta.objects.filter(user=request.user):
         dias_desde_plantio = (date.today() - planta.data_plantio).days
         tarefas = []
 
@@ -198,7 +210,6 @@ def tarefas_do_dia(request):
         if not planta.cronogramas.exists():
             cronograma = Cronograma.objects.create(planta=planta)
             for acao in acoes:
-                # Verifica se 'acao' é um dicionário
                 if isinstance(acao, dict):
                     Etapa.objects.create(
                         cronograma=cronograma,
@@ -207,9 +218,6 @@ def tarefas_do_dia(request):
                         intervalo_dias=acao.get('intervalo_dias'),
                         descricao=acao.get('descricao')
                     )
-                else:
-                    # Para depuração, remover em produção
-                    print(f"Etapa inesperada: {acao}")
 
         # Verifica etapas já existentes no cronograma da planta
         for cronograma in planta.cronogramas.all():
@@ -234,6 +242,9 @@ def tarefas_do_dia(request):
             tarefas_do_dia[planta.nome] = tarefas
 
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
+
+
+
 
 def insumos_view(request):
     # Caminho do arquivo JSON com os insumos
@@ -320,18 +331,19 @@ def registrar_colheita(request):
     return JsonResponse({"message": "Método não permitido."}, status=405)
 
 
-
 @login_required
 def celeiro(request):
     # Recupera todos os celeiros do usuário
     celeiros_usuario = Celeiro.objects.filter(user=request.user)
-    
+
     celeiros_info = []
 
     for celeiro in celeiros_usuario:
         # Soma o peso esperado e o peso colhido total do celeiro
-        peso_esperado_total = sum(planta.peso_previsto for planta in celeiro.plantas.all())
-        peso_colhido_total = sum(planta.peso_colhido for planta in celeiro.plantas.all())
+        peso_esperado_total = sum(
+            planta.peso_previsto for planta in celeiro.plantas.all())
+        peso_colhido_total = sum(
+            planta.peso_colhido for planta in celeiro.plantas.all())
 
         # Armazena informações de cada planta no celeiro
         plantas_info = []
@@ -357,9 +369,6 @@ def celeiro(request):
         celeiros_info.append(celeiro_info)
 
     return render(request, 'celeiro.html', {'celeiros_info': celeiros_info})
-
-
-
 
 
 @login_required
@@ -399,9 +408,11 @@ def adicionar_tarefa(request):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 # @login_required
+
+
 def demandas_comerciais(request):
     demanda_em_edicao = None  # Variável para armazenar a demanda em edição
-    
+
     # Registrar ou editar demanda
     if request.method == 'POST':
         if 'registrar' in request.POST:
@@ -414,50 +425,58 @@ def demandas_comerciais(request):
                 prazo=request.POST.get('prazo'),
                 agricultor=request.user
             )
-            messages.success(request, 'Demanda comercial registrada com sucesso.')
+            messages.success(
+                request, 'Demanda comercial registrada com sucesso.')
             return redirect('demandas_comerciais')
-        
+
         elif 'editar' in request.POST:
             # Edição de demanda existente
-            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get(
+                'demanda_id'), agricultor=request.user)
             demanda.nome = request.POST.get('nome')
             demanda.tipo = request.POST.get('tipo')
             demanda.quantidade = request.POST.get('quantidade')
             demanda.preco = request.POST.get('preco')
             demanda.prazo = request.POST.get('prazo')
             demanda.save()
-            messages.success(request, 'Demanda comercial atualizada com sucesso.')
+            messages.success(
+                request, 'Demanda comercial atualizada com sucesso.')
             return redirect('demandas_comerciais')
 
         elif 'alterar_status' in request.POST:
             # Atualização de status
-            demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+            demanda = get_object_or_404(DemandaComercial, id=request.POST.get(
+                'demanda_id'), agricultor=request.user)
             demanda.status = request.POST.get('status')
             demanda.save()
-            messages.success(request, 'Status da demanda atualizado com sucesso.')
+            messages.success(
+                request, 'Status da demanda atualizado com sucesso.')
             return redirect('demandas_comerciais')
 
     # Preparação para editar uma demanda
     if 'editar_demanda_id' in request.GET:
-        demanda_em_edicao = get_object_or_404(DemandaComercial, id=request.GET['editar_demanda_id'], agricultor=request.user)
+        demanda_em_edicao = get_object_or_404(
+            DemandaComercial, id=request.GET['editar_demanda_id'], agricultor=request.user)
 
     # Exclusão de demanda
     if request.method == 'POST' and 'excluir' in request.POST:
-        demanda = get_object_or_404(DemandaComercial, id=request.POST.get('demanda_id'), agricultor=request.user)
+        demanda = get_object_or_404(DemandaComercial, id=request.POST.get(
+            'demanda_id'), agricultor=request.user)
         demanda.delete()
         messages.success(request, 'Demanda comercial excluída com sucesso.')
         return redirect('demandas_comerciais')
 
     # Listagem e filtro
-    demandas = DemandaComercial.objects.filter(agricultor=request.user).order_by('-data_criacao')
+    demandas = DemandaComercial.objects.filter(
+        agricultor=request.user).order_by('-data_criacao')
     tipo_filtro = request.GET.get('tipo')
     status_filtro = request.GET.get('status')
-    
+
     if tipo_filtro:
         demandas = demandas.filter(tipo=tipo_filtro)
     if status_filtro:
         demandas = demandas.filter(status=status_filtro)
-        
+
     return render(request, 'demandas_comerciais.html', {
         'demandas': demandas,
         'demanda_em_edicao': demanda_em_edicao,
@@ -465,76 +484,119 @@ def demandas_comerciais(request):
         'status_filtro': status_filtro
     })
 
-# @csrf_exempt
-# def obter_clima(request):
-#     api_key = "6eebaf0af1dfc7fbc708215c92de060c"
-
-#     if request.method == "POST":
-#         try:
-#             data = json.loads(request.body)
-#             latitude = data.get("latitude")
-#             longitude = data.get("longitude")
-
-#             if not latitude or not longitude:
-#                 return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
-
-#             # URL para obter clima e fases da lua
-#             url_clima = f"http://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&units=metric&exclude=minutely,hourly,alerts&lang=pt_br&appid={api_key}"
-#             print("URL gerada para a API OpenWeather:", url_clima)  # Log da URL
-
-#             response = requests.get(url_clima)
-#             print("Resposta da API OpenWeather:", response.status_code, response.text)  # Log da resposta
-
-#             if response.status_code == 200:
-#                 clima_data = response.json()
-#                 clima = {
-#                     "temperatura": clima_data["current"]["temp"],
-#                     "descricao": clima_data["current"]["weather"][0]["description"],
-#                     "umidade": clima_data["current"]["humidity"],
-#                     "vento": clima_data["current"]["wind_speed"],
-#                     "fase_da_lua": clima_data["daily"][0]["moon_phase"],
-#                 }
-#                 return JsonResponse({"clima": clima}, status=200)
-#             else:
-#                 return JsonResponse({"error": "Erro ao obter dados de clima."}, status=500)
-#         except Exception as e:
-#             print("Erro inesperado:", e)  # Log de erro
-#             return JsonResponse({"error": str(e)}, status=500)
-#     return JsonResponse({"error": "Método inválido."}, status=405)
 
 @csrf_exempt
-def obter_clima(request):
-    api_key = "6eebaf0af1dfc7fbc708215c92de060c"
+def dashboard(request):
+    json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
+    with open(json_path, 'r', encoding='utf-8') as file:
+        etapas_plantas = json.load(file)
 
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            latitude = data.get("latitude")
-            longitude = data.get("longitude")
+    tarefas_do_dia = {}
 
-            if not latitude or not longitude:
-                return JsonResponse({"error": "Latitude ou longitude não fornecidas."}, status=400)
+    for planta in Planta.objects.all():
+        dias_desde_plantio = (date.today() - planta.data_plantio).days
+        tarefas = []
 
-            # URL sem exclusões de dados
-            url_clima = f"http://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&units=metric&lang=pt_br&appid={api_key}"
+        planta_etapas = etapas_plantas.get(planta.nome, {})
+        acoes = planta_etapas.get("acoes", [])
 
-            response = requests.get(url_clima)
-            print("Resposta da API OpenWeather:", response.status_code, response.text)  # Log da resposta
+        if not planta.cronogramas.exists():
+            cronograma = Cronograma.objects.create(planta=planta)
+            for acao in acoes:
+                if isinstance(acao, dict):
+                    Etapa.objects.create(
+                        cronograma=cronograma,
+                        tipo_acao=acao.get('tipo_acao'),
+                        dias_após_plantio=acao.get('dias_após_plantio'),
+                        intervalo_dias=acao.get('intervalo_dias'),
+                        descricao=acao.get('descricao')
+                    )
 
-            if response.status_code == 200:
-                clima_data = response.json()
-                clima = {
-                    "temperatura": clima_data["current"]["temp"],
-                    "descricao": clima_data["current"]["weather"][0]["description"],
-                    "umidade": clima_data["current"]["humidity"],
-                    "vento": clima_data["current"]["wind_speed"],
-                    "fase_da_lua": clima_data["daily"][0]["moon_phase"],
-                }
-                return JsonResponse({"clima": clima}, status=200)
-            else:
-                return JsonResponse({"error": "Erro ao obter dados de clima.", "status_code": response.status_code}, status=500)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-    return JsonResponse({"error": "Método inválido."}, status=405)
+        for cronograma in planta.cronogramas.all():
+            for etapa in cronograma.etapas.all():
+                if etapa.intervalo_dias == 0:
+                    if dias_desde_plantio >= etapa.dias_após_plantio:
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
+                else:
+                    if dias_desde_plantio >= etapa.dias_após_plantio and \
+                       (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
+
+        if tarefas:
+            tarefas_do_dia[planta.nome] = tarefas
+
+    return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
+
+
+from django.http import JsonResponse
+from django.shortcuts import render
+from .task import get_tarefas_do_dia
+from .api import get_climate_data
+from .chatbot import get_chat_response
+import json
+
+@login_required
+@csrf_exempt
+def dashboard(request):
+    json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
+    with open(json_path, 'r', encoding='utf-8') as file:
+        etapas_plantas = json.load(file)
+
+    tarefas_do_dia = {}
+
+    # Filtra apenas plantas do usuário logado
+    for planta in Planta.objects.filter(user=request.user):
+        dias_desde_plantio = (date.today() - planta.data_plantio).days
+        tarefas = []
+
+        planta_etapas = etapas_plantas.get(planta.nome, {})
+        acoes = planta_etapas.get("acoes", [])
+
+        if not planta.cronogramas.exists():
+            cronograma = Cronograma.objects.create(planta=planta)
+            for acao in acoes:
+                if isinstance(acao, dict):
+                    Etapa.objects.create(
+                        cronograma=cronograma,
+                        tipo_acao=acao.get('tipo_acao'),
+                        dias_após_plantio=acao.get('dias_após_plantio'),
+                        intervalo_dias=acao.get('intervalo_dias'),
+                        descricao=acao.get('descricao')
+                    )
+
+        for cronograma in planta.cronogramas.filter(planta__user=request.user):
+            for etapa in cronograma.etapas.all():
+                if etapa.intervalo_dias == 0:
+                    if dias_desde_plantio >= etapa.dias_após_plantio:
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
+                else:
+                    if dias_desde_plantio >= etapa.dias_após_plantio and \
+                       (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
+                        tarefas.append({
+                            "tipo_acao": etapa.tipo_acao,
+                            "descricao": etapa.descricao,
+                            "planta": planta.nome
+                        })
+
+        if tarefas:
+            tarefas_do_dia[planta.nome] = tarefas
+
+    return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
+
+
+
+
 
 

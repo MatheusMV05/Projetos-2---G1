@@ -42,16 +42,38 @@ class Usuario(AbstractBaseUser):
 
     def __str__(self):
         return self.email
-    
+
+
+class Setor(models.Model):
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="setores")
+    nome = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nome
+
+
+class Canteiro(models.Model):
+    setor = models.ForeignKey(
+        Setor, on_delete=models.CASCADE, related_name="canteiros")
+    nome = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nome
 
 # Modelo do Celeiro
+
+
 class Celeiro(models.Model):
     nome = models.CharField(max_length=255)
     capacidade = models.IntegerField()
     localizacao = models.CharField(max_length=255)
-    peso_colhido = models.FloatField(default=0)  # Peso real colhido até o momento
-    peso_esperado = models.FloatField(default=0)  # Peso esperado somando todas as plantas
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # Peso real colhido até o momento
+    peso_colhido = models.FloatField(default=0)
+    # Peso esperado somando todas as plantas
+    peso_esperado = models.FloatField(default=0)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.nome} - {self.localizacao}'
@@ -67,13 +89,18 @@ class Celeiro(models.Model):
 
 class Planta(models.Model):
     nome = models.CharField(max_length=255)
-    quantidade = models.FloatField(default=0)  # Quantidade em unidades ou quilogramas disponíveis para plantio
+    # Quantidade em unidades ou quilogramas disponíveis para plantio
+    quantidade = models.FloatField(default=0)
     frequencia = models.CharField(max_length=50)
     data_plantio = models.DateField(auto_now_add=True)
-    peso_previsto = models.FloatField(null=True, blank=True)  # Peso previsto para essa planta ao final da colheita
-    peso_colhido = models.FloatField(null=True, blank=True)  # Peso real colhido dessa planta até o momento
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    celeiro = models.ForeignKey(Celeiro, on_delete=models.CASCADE, related_name="plantas", null=True, blank=True)
+    # Peso previsto para essa planta ao final da colheita
+    peso_previsto = models.FloatField(null=True, blank=True)
+    # Peso real colhido dessa planta até o momento
+    peso_colhido = models.FloatField(null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    celeiro = models.ForeignKey(
+        Celeiro, on_delete=models.CASCADE, related_name="plantas", null=True, blank=True)
 
     def __str__(self):
         return f'{self.nome} - {self.quantidade} kg ({self.frequencia})'
@@ -119,6 +146,7 @@ class Etapa(models.Model):
     def __str__(self):
         return f'{self.nome} ({self.dias_após_plantio} dias após plantio)'
 
+
 class Colheita(models.Model):
     etapa = models.ForeignKey(
         Etapa, on_delete=models.CASCADE, related_name='colheitas')
@@ -129,7 +157,6 @@ class Colheita(models.Model):
 
     def __str__(self):
         return f'Colheita de {self.quantidade} kg em {self.data_colheita}'
-    
 
 
 class DemandaComercial(models.Model):
@@ -143,24 +170,27 @@ class DemandaComercial(models.Model):
         ('concluída', 'Concluída'),
         ('cancelada', 'Cancelada')
     ]
-    
+
     tipo = models.CharField(max_length=20, choices=TIPOS_DEMANDA)
     quantidade = models.PositiveIntegerField()
     preco = models.DecimalField(max_digits=10, decimal_places=2)
     prazo = models.DateField()
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente')
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='pendente')
     data_criacao = models.DateField(auto_now_add=True)
-    agricultor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="demandas_comerciais")
-    
+    agricultor = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="demandas_comerciais")
+
     def prazo_proximo(self):
         return self.prazo <= date.today() + timedelta(days=3)
-    
+
     def __str__(self):
         return f"{self.nome} - {self.tipo.capitalize()} - {self.status}"
 
 
 class Clima(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     temperatura = models.FloatField()
     descricao = models.CharField(max_length=255)
     umidade = models.FloatField()
@@ -170,6 +200,3 @@ class Clima(models.Model):
 
     def __str__(self):
         return f"Clima de {self.user.cidade} em {self.data}"
-
-
-    
