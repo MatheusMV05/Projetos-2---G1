@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insumos Necessários</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/insumos.css' %}">
+</head>
+<body>
+  <div class="insumos-container">
+    <h1>Insumos Necessários para as Plantas</h1>
+    {% for planta, insumos in insumos_por_planta.items %}
+      <div class="planta">
+        <h2>{{ planta }}</h2>
+        <ul>
+          {% for insumo in insumos %}
+            <li>{{ insumo }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>

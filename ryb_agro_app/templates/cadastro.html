@@ -22,7 +22,13 @@
         </h1>
         <form method="post">
             {% csrf_token %}
-
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
             <div class="form_grid">
 
                 <div>
@@ -70,7 +76,7 @@
                 </div>
             </div>
 
-            <a href="{% url 'primeiro-acesso' %}">
+            <a href="{% url 'cadastrar_setores' %}">
                 <button type="submit" class="submit">
                     Cadastrar-se
                 </button>
