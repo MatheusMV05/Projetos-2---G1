@@ -1,3 +1,6 @@
+from .chatbot import get_chat_response
+from .api import get_climate_data
+from .task import get_tarefas_do_dia
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -21,8 +24,6 @@ from django.http import JsonResponse
 from datetime import date
 from django.views.decorators.http import require_POST
 import requests
-
-
 
 
 def landingPage(request):
@@ -183,7 +184,11 @@ def add_planta(request):
 def get_canteiros(request):
     canteiros = Canteiro.objects.filter(setor__usuario=request.user)
     canteiros_data = [
-        {"id": c.id, "name": f"{c.setor.nome} - {c.nome}"}
+        {
+            "id": c.id,
+            "name": f"{c.setor.nome} - {c.nome}",
+            "setor": c.setor.id,  # Inclui o ID do setor
+        }
         for c in canteiros
     ]
     return JsonResponse(canteiros_data, safe=False)
@@ -536,13 +541,6 @@ def dashboard(request):
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
 
 
-from django.http import JsonResponse
-from django.shortcuts import render
-from .task import get_tarefas_do_dia
-from .api import get_climate_data
-from .chatbot import get_chat_response
-import json
-
 def dashboard(request):
     if request.method == "POST":
         try:
@@ -576,9 +574,3 @@ def dashboard(request):
     # Renderiza a página inicial
     tarefas_do_dia = get_tarefas_do_dia(request)
     return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
-
-
-
-
-
-
