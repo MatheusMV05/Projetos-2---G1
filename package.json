@@ -42,7 +42,6 @@
     "common-tags": "^1.8.2",
     "core-util-is": "^1.0.2",
     "cross-spawn": "^7.0.6",
-    "cypress": "^13.16.0",
     "dashdash": "^1.14.1",
     "dayjs": "^1.11.13",
     "debug": "^4.3.7",
@@ -167,5 +166,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^13.16.0"
+  }
 }
