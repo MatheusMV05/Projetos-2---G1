@@ -1,56 +1,207 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Celeiro</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'css/tarefas_do_dia.css' %}">
-  <link rel="stylesheet" href="{% static 'css/celeiro.css' %}">
+    {% load static %} <!-- Carrega a tag static -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Celeiro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #343a40;
+        }
+        .progress-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid #28a745;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        .progress-circle span {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #495057;
+        }
+        .list-group-item {
+            border: none;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            margin-bottom: 5px;
+        }
+        .list-group-item span {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+    </style>
 </head>
 <body>
-  <div class="celeiro-container">
-    <div class="header">
-      <h1>Panorama Mensal</h1>
-      <p id="mes-atual">Novembro</p> <!-- Aqui o JS pode atualizar para o mês atual -->
-      <button class="btn-colheita" onclick="window.location.href='{% url 'insumos_view' %}'">Colheita</button>
+    <div class="container mt-5">
+        <h1 class="text-center">Meu Celeiro</h1>
+
+        <!-- Botão de Reset -->
+        <div class="text-center mb-4">
+            <button class="btn btn-danger" onclick="resetColheita()">Iniciar Novo Ciclo</button>
+        </div>
+
+        <!-- Panorama -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Panorama Mensal</h5>
+                        <div class="progress-circle">
+                            <span>{{ peso_colhido }} kg</span>
+                        </div>
+                        <p class="mt-3">
+                            <span style="color: #6c757d;">Previsto:</span> <strong>{{ peso_previsto }} kg</strong> |
+                            <span style="color: #6c757d;">Colhido:</span> <strong>{{ peso_colhido }} kg</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Relatório de Colheitas -->
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Relatório de Colheitas</h5>
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Plantas -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5 class="card-title">Quanto já colhi</h5>
+                        <ul class="list-group">
+                            {% for planta in plantas %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <img src="{% static 'img/' %}{{ planta.nome|slugify }}.png" alt="{{ planta.nome }}" style="width: 40px; height: 40px; margin-right: 10px;">
+                                    <span>{{ planta.nome }}</span>
+                                </div>
+                                <div>
+                                    <span style="color: #28a745;">{{ planta.peso_colhido|default:0 }} kg / {{ planta.quantidade }} kg</span>
+                                    <input 
+                                        type="number" 
+                                        id="peso-{{ planta.id }}" 
+                                        placeholder="Kg" 
+                                        class="form-control d-inline-block me-2" 
+                                        style="width: 80px;" 
+                                        min="0" 
+                                        max="{{ planta.quantidade|default:0|floatformat:2 }} - {{ planta.peso_colhido|default:0|floatformat:2 }}">
+                                    <button class="btn btn-primary btn-sm" onclick="adicionarColheita('{{ planta.id }}')">Adicionar</button>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="gauge-colheita">
-      <h2>Massa Colhida</h2>
-      <div class="gauge-half-circle">
-        <!-- A representação gráfica pode ser ajustada com JavaScript -->
-      </div>
-      <p id="kg-colhidos">{{ kg_colhidos }} kg</p> <!-- Valor atualizado com Django -->
-    </div>
+    <script>
+        // Gráfico de Progresso
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        const progressChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Colhido', 'Faltante'],
+                datasets: [{
+                    data: [{{ peso_colhido }}, {{ peso_previsto|default:0 }} - {{ peso_colhido|default:0 }}],
+                    backgroundColor: ['#28a745', '#ffc107']
+                }]
+            }
+        });
 
-    <div class="informativos">
-      <div class="info">
-        <h3>Previsto</h3>
-        <p id="kg-previsto">{{ kg_previsto }} kg</p>
-      </div>
-      <div class="info">
-        <h3>Esperado</h3>
-        <p id="kg-esperado">{{ kg_esperado }} kg</p>
-      </div>
-    </div>
+        // Função para adicionar colheita
+        function adicionarColheita(plantaId) {
+            const inputElement = document.getElementById(`peso-${plantaId}`);
+            const peso = parseFloat(inputElement.value || 0);
+            const maxPeso = parseFloat(inputElement.max || 0);
 
-    <div class="relatorio-colheita">
-      <h2>Relatório de Colheita</h2>
-      <div class="grafico-colheita">
-        <!-- Gráfico circular dinâmico pode ser implementado com JavaScript -->
-        <p id="total-colhido">{{ total_colhido }} kg</p>
-      </div>
-      <ul class="legenda">
-        {% for planta, quantidade in tarefas_do_dia.items %}
-          <li><span class="cor-planta"></span> {{ planta }} - {{ quantidade }} kg</li>
-        {% empty %}
-          <li>Não há tarefas para hoje.</li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
+            if (peso > maxPeso) {
+                alert('A quantidade colhida não pode exceder o total cadastrado para esta planta.');
+                return;
+            }
 
-  <script src="{% static 'js/celeiro.js' %}"></script>
+            if (peso > 0) {
+                fetch("{% url 'celeiro' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({ action: 'add_colheita', planta_id: plantaId, peso_colhido: peso })
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            location.reload();
+                        } else {
+                            alert(data.error);
+                        }
+                    });
+            } else {
+                alert('Insira uma quantidade válida para continuar.');
+            }
+        }
+
+        // Função para resetar colheitas
+        function resetColheita() {
+            if (confirm("Tem certeza de que deseja resetar todas as colheitas?")) {
+                fetch("{% url 'celeiro' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({ action: 'reset_colheita' })
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            location.reload();
+                        } else {
+                            alert(data.error);
+                        }
+                    });
+            }
+        }
+    </script>
 </body>
 </html>
