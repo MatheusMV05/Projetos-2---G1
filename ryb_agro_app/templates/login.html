@@ -1,43 +1,266 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		{% load static %}
-		<link rel="stylesheet" href="{% static 'css/login.css' %}" />
-		<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-		<script src="{% static 'js/login.js' %}"></script>
-		<title>Login - Cultiva Fácil</title>
-	</head>
 
-	<body class="gojali-regular">
-		
-		<div class="container">
-			<div class="logo">
-				<a href="{% url 'landingPage' %}"
-					><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt=""
-				/></a>
-			</div>
-			<h1>Login</h1>
-			{% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+	<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+	<script src="{% static 'js/login.js' %}"></script>
+	<title>Login - Cultiva Fácil</title>
+	<style>
+		body {
+			background-color: #f9f9f9;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			width: 100vw;
+			margin: 0;
+		}
+
+		.container {
+			width: 30vw;
+			text-align: center;
+			padding: 20px;
+		}
+
+		.logo {
+			margin-bottom: 7rem;
+			/* Reduced margin to move the image upwards */
+		}
+
+		.logo img {
+			width: 150px;
+		}
+
+		h1 {
+			display: flex;
+			width: 258.293px;
+			height: 48px;
+			flex-direction: column;
+			justify-content: center;
+			flex-shrink: 0;
+
+			color: #000;
+			text-align: center;
+			font-family: Gojali;
+			font-size: 48px;
+			font-style: normal;
+			font-weight: 700;
+			line-height: 48px;
+			/* 100% */
+			letter-spacing: -1.92px;
+		}
+
+		label {
+			display: flex;
+			width: 85.334px;
+			height: 16px;
+			flex-direction: column;
+			justify-content: center;
+			flex-shrink: 0;
+
+			color: #000;
+			font-family: Gojali;
+			font-size: 18px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: 24px;
+			/* 133.333% */
+			letter-spacing: 0.36px;
+		}
+
+		input[type='email'],
+		input[type='password'] {
+			width: 100%;
+			height: auto;
+			flex-shrink: 0;
+
+			border-radius: 16px;
+			border: 1px solid #D9D9D9;
+			background: #FFF;
+		}
+
+		input[type='password'] {
+			margin-bottom: 35px;
+		}
+
+		input::placeholder {
+			color: #9B9B9B;
+			font-family: Gojali;
+			font-size: 16px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: 24px;
+			/* 150% */
+			letter-spacing: 0.32px;
+		}
+
+		.recuperar {
+			display: flex;
+			width: 248px;
+			height: 24px;
+			flex-direction: column;
+			justify-content: center;
+			flex-shrink: 0;
+
+			color: #9B9B9B;
+			font-family: Gojali;
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 700;
+			line-height: 24px;
+			letter-spacing: 0.28px;
+			text-decoration-line: underline;
+			text-decoration-style: solid;
+			text-decoration-skip-ink: none;
+			text-decoration-thickness: auto;
+			text-underline-offset: auto;
+			text-underline-position: from-font;
+		}
+
+		.recuperar strong {
+			color: #9B9B9B;
+			font-family: Gojali;
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 700;
+			line-height: 24px;
+			letter-spacing: 0.28px;
+			text-decoration-line: underline;
+			text-decoration-style: solid;
+			text-decoration-skip-ink: none;
+			text-decoration-thickness: auto;
+			text-underline-offset: auto;
+			text-underline-position: from-font;
+		}
+
+		.submit {
+			width: 328px;
+			height: 56px;
+			flex-shrink: 0;
+
+			border-radius: 16px;
+			background: #1B4A3F;
+		}
+
+		button {
+			width: 100%;
+			height: auto;
+			flex-shrink: 0;
+
+			border-radius: 16px;
+			background: #1B4A3F;
+
+			color: #FFF;
+			text-align: center;
+			font-family: Gojali;
+			font-size: 24px;
+			font-style: normal;
+			font-weight: 700;
+			line-height: 24px;
+			/* 100% */
+			letter-spacing: 0.48px;
+		}
+
+		button:hover {
+			background-color: #fff;
+			color: #1b4a3f;
+		}
+
+		.register-link {
+			color: #9B9B9B;
+			text-align: center;
+			font-family: Gojali;
+			font-size: 16px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: 24px;
+			/* 150% */
+			letter-spacing: 0.32px;
+			text-decoration-line: underline;
+			text-decoration-style: solid;
+			text-decoration-skip-ink: none;
+			text-decoration-thickness: auto;
+			text-underline-offset: auto;
+			text-underline-position: from-font;
+		}
+
+		.register-link strong {
+			color: #9B9B9B;
+			font-family: Gojali;
+			font-size: 16px;
+			font-style: normal;
+			font-weight: 700;
+			line-height: 24px;
+			letter-spacing: 0.32px;
+			text-decoration-line: underline;
+			text-decoration-style: solid;
+			text-decoration-skip-ink: none;
+			text-decoration-thickness: auto;
+			text-underline-offset: auto;
+			text-underline-position: from-font;
+		}
+
+		@media only screen and (max-width: 500px) {
+			.container {
+				width: 75%;
+				display: grid;
+				place-items: center;
+			}
+
+			button {
+				width: 109%;
+			}
+
+			.recuperar {
+				font-size: smaller;
+				margin-top: -1rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.register-link {
+				font-size: smaller;
+			}
+
+			.logo {
+				margin-bottom: 3rem;
+			}
+		}
+	</style>
+</head>
+
+<body class="gojali-regular">
+
+	<div class="container">
+		<div class="logo">
+			<a href="{% url 'landingPage' %}"><img src="{% static 'img/Logomarca Horizontal.svg' %}" alt="" /></a>
+		</div>
+		<h1>Entrar</h1>
+		{% if messages %}
+		<ul class="messages">
+			{% for message in messages %}
+			<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+				{% endfor %}
+		</ul>
+		{% endif %}
 		<form action="{% url 'login' %}" method="post">
 			{% csrf_token %}
 			<label for="email">E-mail</label>
-			<input id="email" name="email" type="email" placeholder="Digite seu E-mail" required />
+			<input id="email" name="email" type="email" placeholder="cultivafacil@gmail.com" required />
 			<label for="password">Senha</label>
-			<input id="password" name="password" type="password" placeholder="Digite sua senha" required />
+			<input id="password" name="password" type="password" placeholder="Sua senha" required />
+			<a href="{% url 'recuperar-senha' %}">
+				<p class="recuperar">Esqueceu sua Senha? <strong>Redefinir</strong></p>
+			</a>
 			<button type="submit">Entrar</button>
 		</form>
-			<div class="register-link">
-				Ainda não possui uma conta?
-				<a href="{% url 'cadastro' %}"> Clique aqui </a>
-			</div>
+		<div class="register-link" style="text-decoration: none;">
+			<a href="{% url 'cadastro' %}">Ainda não está cadastrado? Registrar</a>
 		</div>
-	</body>
+	</div>
+</body>
+
 </html>
