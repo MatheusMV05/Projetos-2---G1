@@ -2,7 +2,7 @@ Cypress.Commands.add('deleteAllUsers', () => {
     cy.exec('python delete_users.py', { failOnNonZeroExit: false });
 });
 
-Cypress.Commands.add('cadastro', (email) => {
+Cypress.Commands.add('cadastro', () => {
     cy.deleteAllUsers();
     cy.visit('/');
     cy.get('.button').click();
