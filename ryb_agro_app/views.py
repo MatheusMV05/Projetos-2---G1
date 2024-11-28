@@ -163,20 +163,25 @@ def add_planta(request):
         try:
             data = json.loads(request.body)
             plantas = data.get('plantas', [])
-
-            # Salvar as plantas com o usuário associado
+            canteiro_id = data.get('canteiro_id')  # Recebe o ID do canteiro
+            canteiro = get_object_or_404(
+                Canteiro, id=canteiro_id)  # Valida o canteiro
+            
+            if not canteiro_id or not plantas:
+                return JsonResponse({'status': 'error', 'message': 'Canteiro ou plantas não fornecidos.'}, status=400)
+            
             for planta in plantas:
                 Planta.objects.create(
                     nome=planta['name'],
                     quantidade=planta['amount'],
                     frequencia=planta['frequency'],
-                    user=request.user  # Associa o usuário logado
+                    user=request.user,
+                    canteiro=canteiro  # Associa ao canteiro
                 )
 
             return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-
     return JsonResponse({'status': 'invalid method'}, status=405)
 
 
@@ -574,3 +579,23 @@ def dashboard(request):
     # Renderiza a página inicial
     tarefas_do_dia = get_tarefas_do_dia(request)
     return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
+
+
+def meu_plantio_view(request):
+    setores = Setor.objects.filter(usuario=request.user)
+    dados_plantio = [
+        {
+            "setor": setor.nome,
+            "canteiros": [
+                {
+                    "id": canteiro.id,
+                    "canteiro": canteiro.nome,
+                    # Acessa o campo "plantas" corretamente
+                    "plantas": list(canteiro.plantas.all().values("nome"))
+                }
+                for canteiro in setor.canteiros.all()
+            ],
+        }
+        for setor in setores
+    ]
+    return render(request, "meu_plantio.html", {"dados_plantio": dados_plantio})

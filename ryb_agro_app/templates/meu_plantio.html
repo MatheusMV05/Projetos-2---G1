@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Meu Plantio</title>
+		<!-- Bootstrap CSS -->
+		{% load static %}
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="{% static 'css/meu_plantio.css' %}" />
+	</head>
+	<body>
+		<!-- Header -->
+		<header class="bg-success text-white text-center py-3">
+			<h1>Meu Plantio</h1>
+		</header>
+
+		<!-- Main Content -->
+		<main class="container my-4">
+			{% for setor in dados_plantio %}
+			<div class="mb-4">
+				<!-- Nome do Setor -->
+				<h5 class="text-success fw-bold">{{ setor.setor }}</h5>
+				<div class="row g-3">
+					{% for canteiro in setor.canteiros %}
+					<!-- Canteiro como Coluna -->
+					<div class="col-6 col-md-4 col-lg-3">
+						<div
+							class="canteiro"
+							data-bs-toggle="modal"
+							data-bs-target="#modalPlantas{{ canteiro.id }}"
+						>
+							<div class="text-center">
+								<h6>{{ canteiro.canteiro }}</h6>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal para Exibir Plantas -->
+					<div
+						class="modal fade"
+						id="modalPlantas{{ canteiro.id }}"
+						tabindex="-1"
+						aria-labelledby="modalLabel{{ canteiro.id }}"
+						aria-hidden="true"
+					>
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="modalLabel{{ canteiro.id }}">
+										Plantas no {{ canteiro.canteiro }}
+									</h5>
+									<button
+										type="button"
+										class="btn-close"
+										data-bs-dismiss="modal"
+										aria-label="Close"
+									></button>
+								</div>
+								<div class="modal-body">
+									{% if canteiro.plantas %}
+									<ul>
+										{% for planta in canteiro.plantas %}
+										<li>{{ planta.nome }}</li>
+										{% endfor %}
+									</ul>
+									{% else %}
+									<p>Nenhuma planta cadastrada neste canteiro.</p>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+			{% endfor %}
+		</main>
+
+		<!-- Bootstrap JS Bundle -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>

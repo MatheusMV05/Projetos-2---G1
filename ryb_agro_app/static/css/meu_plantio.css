@@ -1,0 +1,57 @@
+/* Geral */
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f5f5f5;
+}
+
+/* Título */
+header h1 {
+	font-size: 1.8rem;
+	font-weight: bold;
+	margin: 0;
+}
+
+/* Setores */
+h5 {
+	margin-bottom: 15px;
+}
+
+/* Estilo dos canteiros */
+.canteiro {
+	width: 100%; /* Ajusta automaticamente dentro do grid */
+	height: 160px; /* Altura fixa para consistência */
+	border-radius: 16px;
+	border: 3px solid rgba(155, 155, 155, 0.32);
+	background: #ededed;
+	box-shadow: 41px 48px 66px -48px #fff inset,
+		0px 4px 32px -12px rgba(0, 0, 0, 0.25);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	cursor: pointer;
+	transition: transform 0.2s;
+}
+
+.canteiro:hover {
+	transform: scale(1.05);
+}
+
+/* Modal */
+.modal-body ul {
+	padding: 0;
+	list-style: none;
+}
+
+.modal-body li {
+	font-size: 1rem;
+	padding: 5px 0;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+	.canteiro {
+		width: 140px;
+		height: 140px;
+	}
+}
