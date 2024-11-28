@@ -378,6 +378,15 @@ def celeiro(request):
                     planta.save()
                 return JsonResponse({'success': True, 'message': 'Colheita resetada com sucesso!'})
 
+            elif action == 'delete_colheita':
+                planta_id = data.get('planta_id')
+                planta = Planta.objects.get(id=planta_id, user=request.user)
+                
+                # Resetar o peso colhido da planta para 0
+                planta.peso_colhido = 0
+                planta.save()
+                return JsonResponse({'success': True, 'message': 'Colheita excluída com sucesso!'})
+
         except Planta.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Planta não encontrada.'}, status=404)
         except Exception as e:
@@ -388,6 +397,7 @@ def celeiro(request):
         'peso_previsto': peso_previsto,
         'peso_colhido': peso_colhido,
     })
+
 
 @login_required
 @csrf_exempt
