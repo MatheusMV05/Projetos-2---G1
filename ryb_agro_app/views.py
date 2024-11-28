@@ -155,8 +155,11 @@ def cadastrar_setores(request):
 # View para renderizar e processar dados
 
 
-@login_required  # Garante que o usuário esteja logado para acessar essa view
-@csrf_exempt  # Apenas para testes, remova em produção
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+
+@login_required
+@csrf_exempt
 def add_planta(request):
     if request.method == 'GET':
         return render(request, 'add-planta.html')
@@ -166,12 +169,15 @@ def add_planta(request):
             data = json.loads(request.body)
             plantas = data.get('plantas', [])
             canteiro_id = data.get('canteiro_id')  # Recebe o ID do canteiro
-            canteiro = get_object_or_404(
-                Canteiro, id=canteiro_id)  # Valida o canteiro
             
+            # Valida se o canteiro pertence ao usuário logado
+            canteiro = get_object_or_404(
+                Canteiro, id=canteiro_id, setor__usuario=request.user
+            )
+
             if not canteiro_id or not plantas:
                 return JsonResponse({'status': 'error', 'message': 'Canteiro ou plantas não fornecidos.'}, status=400)
-            
+
             for planta in plantas:
                 Planta.objects.create(
                     nome=planta['name'],
@@ -185,6 +191,7 @@ def add_planta(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     return JsonResponse({'status': 'invalid method'}, status=405)
+
 
 
 @login_required
@@ -264,6 +271,9 @@ def tarefas_do_dia(request):
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
 
 
+
+
+@login_required
 def insumos_view(request):
     # Caminho do arquivo JSON com os insumos
     json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
@@ -272,10 +282,15 @@ def insumos_view(request):
     with open(json_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
-    # Filtrar os insumos de acordo com as plantas
+    # Recuperar as plantas cadastradas pelo usuário autenticado
+    plantas_cadastradas = Planta.objects.filter(user=request.user)
+
+    # Filtrar os insumos de acordo com as plantas do usuário
     insumos_por_planta = {}
-    for planta, detalhes in data.items():
-        insumos_por_planta[planta] = detalhes['insumos_necessarios']
+    for planta in plantas_cadastradas:
+        planta_nome = planta.nome
+        if planta_nome in data:
+            insumos_por_planta[planta_nome] = data[planta_nome]['insumos_necessarios']
 
     # Renderizar o template com os dados de insumos
     return render(request, 'insumos.html', {'insumos_por_planta': insumos_por_planta})
@@ -578,7 +593,7 @@ def dashboard(request):
     tarefas_do_dia = get_tarefas_do_dia(request)
     return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
 
-
+@login_required
 def meu_plantio_view(request):
     setores = Setor.objects.filter(usuario=request.user)
     dados_plantio = [
@@ -588,7 +603,7 @@ def meu_plantio_view(request):
                 {
                     "id": canteiro.id,
                     "canteiro": canteiro.nome,
-                    # Acessa o campo "plantas" corretamente
+                    # Acessa as plantas associadas ao canteiro
                     "plantas": list(canteiro.plantas.all().values("nome"))
                 }
                 for canteiro in setor.canteiros.all()
