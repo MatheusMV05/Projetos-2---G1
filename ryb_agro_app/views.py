@@ -1,7 +1,10 @@
+from .chatbot import get_chat_response
+from .api import get_climate_data
+from .task import get_tarefas_do_dia
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .models import Usuario, Celeiro, Canteiro, Setor
+from .models import Usuario, Celeiro, Canteiro, Setor,Colheita
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -152,8 +155,11 @@ def cadastrar_setores(request):
 # View para renderizar e processar dados
 
 
-@login_required  # Garante que o usuário esteja logado para acessar essa view
-@csrf_exempt  # Apenas para testes, remova em produção
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+
+@login_required
+@csrf_exempt
 def add_planta(request):
     if request.method == 'GET':
         return render(request, 'add-planta.html')
@@ -162,41 +168,60 @@ def add_planta(request):
         try:
             data = json.loads(request.body)
             plantas = data.get('plantas', [])
+            canteiro_id = data.get('canteiro_id')  # Recebe o ID do canteiro
+            
+            # Valida se o canteiro pertence ao usuário logado
+            canteiro = get_object_or_404(
+                Canteiro, id=canteiro_id, setor__usuario=request.user
+            )
 
-            # Salvar as plantas com o usuário associado
+            if not canteiro_id or not plantas:
+                return JsonResponse({'status': 'error', 'message': 'Canteiro ou plantas não fornecidos.'}, status=400)
+
             for planta in plantas:
                 Planta.objects.create(
                     nome=planta['name'],
                     quantidade=planta['amount'],
                     frequencia=planta['frequency'],
-                    user=request.user  # Associa o usuário logado
+                    user=request.user,
+                    canteiro=canteiro  # Associa ao canteiro
                 )
 
             return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-
     return JsonResponse({'status': 'invalid method'}, status=405)
+
 
 
 @login_required
 def get_canteiros(request):
     canteiros = Canteiro.objects.filter(setor__usuario=request.user)
     canteiros_data = [
-        {"id": c.id, "name": f"{c.setor.nome} - {c.nome}"}
+        {
+            "id": c.id,
+            "name": f"{c.setor.nome} - {c.nome}",
+            "setor": c.setor.id,  # Inclui o ID do setor
+        }
         for c in canteiros
     ]
     return JsonResponse(canteiros_data, safe=False)
 
 
+@login_required
 def tarefas_do_dia(request):
+    # Caminho para o arquivo JSON contendo as etapas das plantas
     json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
     with open(json_path, 'r', encoding='utf-8') as file:
         etapas_plantas = json.load(file)
 
+    # Dicionário para armazenar as tarefas do dia
     tarefas_do_dia = {}
 
-    for planta in Planta.objects.all():
+    # Filtra apenas plantas associadas ao usuário logado
+    plantas_usuario = Planta.objects.filter(user=request.user)
+
+    for planta in plantas_usuario:
         dias_desde_plantio = (date.today() - planta.data_plantio).days
         tarefas = []
 
@@ -229,7 +254,7 @@ def tarefas_do_dia(request):
                         tarefas.append({
                             "tipo_acao": etapa.tipo_acao,
                             "descricao": etapa.descricao,
-                            "planta": planta.nome
+                            "planta": planta.nome,
                         })
                 else:
                     if dias_desde_plantio >= etapa.dias_após_plantio and \
@@ -237,7 +262,7 @@ def tarefas_do_dia(request):
                         tarefas.append({
                             "tipo_acao": etapa.tipo_acao,
                             "descricao": etapa.descricao,
-                            "planta": planta.nome
+                            "planta": planta.nome,
                         })
 
         if tarefas:
@@ -246,6 +271,9 @@ def tarefas_do_dia(request):
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
 
 
+
+
+@login_required
 def insumos_view(request):
     # Caminho do arquivo JSON com os insumos
     json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
@@ -254,10 +282,15 @@ def insumos_view(request):
     with open(json_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
-    # Filtrar os insumos de acordo com as plantas
+    # Recuperar as plantas cadastradas pelo usuário autenticado
+    plantas_cadastradas = Planta.objects.filter(user=request.user)
+
+    # Filtrar os insumos de acordo com as plantas do usuário
     insumos_por_planta = {}
-    for planta, detalhes in data.items():
-        insumos_por_planta[planta] = detalhes['insumos_necessarios']
+    for planta in plantas_cadastradas:
+        planta_nome = planta.nome
+        if planta_nome in data:
+            insumos_por_planta[planta_nome] = data[planta_nome]['insumos_necessarios']
 
     # Renderizar o template com os dados de insumos
     return render(request, 'insumos.html', {'insumos_por_planta': insumos_por_planta})
@@ -332,43 +365,83 @@ def registrar_colheita(request):
 
 
 @login_required
+@csrf_exempt
 def celeiro(request):
-    # Recupera todos os celeiros do usuário
-    celeiros_usuario = Celeiro.objects.filter(user=request.user)
+    plantas_usuario = Planta.objects.filter(user=request.user)
+    peso_previsto = sum(planta.quantidade for planta in plantas_usuario)
+    peso_colhido = sum(planta.peso_colhido or 0 for planta in plantas_usuario)
 
-    celeiros_info = []
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            action = data.get('action')
 
-    for celeiro in celeiros_usuario:
-        # Soma o peso esperado e o peso colhido total do celeiro
-        peso_esperado_total = sum(
-            planta.peso_previsto for planta in celeiro.plantas.all())
-        peso_colhido_total = sum(
-            planta.peso_colhido for planta in celeiro.plantas.all())
+            if action == 'add_colheita':
+                planta_id = data.get('planta_id')
+                kg_colhidos = float(data.get('peso_colhido', 0))
+                planta = Planta.objects.get(id=planta_id, user=request.user)
+                
+                # Validação para não exceder o limite
+                if (planta.peso_colhido or 0) + kg_colhidos > planta.quantidade:
+                    return JsonResponse({
+                        'success': False,
+                        'error': 'A quantidade colhida não pode exceder o total cadastrado para esta planta.'
+                    }, status=400)
+                
+                planta.peso_colhido = (planta.peso_colhido or 0) + kg_colhidos
+                planta.save()
+                return JsonResponse({'success': True, 'message': 'Quantidade colhida atualizada com sucesso!'})
 
-        # Armazena informações de cada planta no celeiro
-        plantas_info = []
-        for planta in celeiro.plantas.all():
-            planta_info = {
-                "nome": planta.nome,
-                "quantidade": planta.quantidade,
-                "frequencia": planta.frequencia,
-                "data_plantio": planta.data_plantio,
-                "peso_previsto": planta.peso_previsto,
-                "peso_colhido": planta.peso_colhido,
-            }
-            plantas_info.append(planta_info)
+            elif action == 'reset_colheita':
+                for planta in plantas_usuario:
+                    planta.peso_colhido = 0
+                    planta.save()
+                return JsonResponse({'success': True, 'message': 'Colheita resetada com sucesso!'})
 
-        # Adiciona as informações do celeiro e das plantas
-        celeiro_info = {
-            "nome": celeiro.nome,
-            "localizacao": celeiro.localizacao,
-            "peso_esperado_total": peso_esperado_total,
-            "peso_colhido_total": peso_colhido_total,
-            "plantas_info": plantas_info,
-        }
-        celeiros_info.append(celeiro_info)
+            elif action == 'delete_colheita':
+                planta_id = data.get('planta_id')
+                planta = Planta.objects.get(id=planta_id, user=request.user)
+                
+                # Resetar o peso colhido da planta para 0
+                planta.peso_colhido = 0
+                planta.save()
+                return JsonResponse({'success': True, 'message': 'Colheita excluída com sucesso!'})
 
-    return render(request, 'celeiro.html', {'celeiros_info': celeiros_info})
+        except Planta.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Planta não encontrada.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return render(request, 'celeiro.html', {
+        'plantas': plantas_usuario,
+        'peso_previsto': peso_previsto,
+        'peso_colhido': peso_colhido,
+    })
+
+
+@login_required
+@csrf_exempt
+def atualizar_pesos_celeiro(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        planta_id = data.get('planta_id')
+        peso_colhido = data.get('peso_colhido', 0)
+
+        try:
+            planta = Planta.objects.get(id=planta_id, user=request.user)
+            planta.peso_colhido = planta.peso_colhido + peso_colhido if planta.peso_colhido else peso_colhido
+            planta.save()
+
+            celeiro = planta.celeiro
+            if celeiro:
+                celeiro.atualizar_peso_colhido(peso_colhido)
+
+            return JsonResponse({'success': True, 'peso_colhido': planta.peso_colhido}, status=200)
+        except Planta.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Planta não encontrada.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
 
 
 @login_required
@@ -485,63 +558,6 @@ def demandas_comerciais(request):
     })
 
 
-@csrf_exempt
-def dashboard(request):
-    json_path = os.path.join(settings.BASE_DIR, 'etapas_plantas.json')
-    with open(json_path, 'r', encoding='utf-8') as file:
-        etapas_plantas = json.load(file)
-
-    tarefas_do_dia = {}
-
-    for planta in Planta.objects.all():
-        dias_desde_plantio = (date.today() - planta.data_plantio).days
-        tarefas = []
-
-        planta_etapas = etapas_plantas.get(planta.nome, {})
-        acoes = planta_etapas.get("acoes", [])
-
-        if not planta.cronogramas.exists():
-            cronograma = Cronograma.objects.create(planta=planta)
-            for acao in acoes:
-                if isinstance(acao, dict):
-                    Etapa.objects.create(
-                        cronograma=cronograma,
-                        tipo_acao=acao.get('tipo_acao'),
-                        dias_após_plantio=acao.get('dias_após_plantio'),
-                        intervalo_dias=acao.get('intervalo_dias'),
-                        descricao=acao.get('descricao')
-                    )
-
-        for cronograma in planta.cronogramas.all():
-            for etapa in cronograma.etapas.all():
-                if etapa.intervalo_dias == 0:
-                    if dias_desde_plantio >= etapa.dias_após_plantio:
-                        tarefas.append({
-                            "tipo_acao": etapa.tipo_acao,
-                            "descricao": etapa.descricao,
-                            "planta": planta.nome
-                        })
-                else:
-                    if dias_desde_plantio >= etapa.dias_após_plantio and \
-                       (dias_desde_plantio - etapa.dias_após_plantio) % etapa.intervalo_dias == 0:
-                        tarefas.append({
-                            "tipo_acao": etapa.tipo_acao,
-                            "descricao": etapa.descricao,
-                            "planta": planta.nome
-                        })
-
-        if tarefas:
-            tarefas_do_dia[planta.nome] = tarefas
-
-    return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
-
-
-from django.http import JsonResponse
-from django.shortcuts import render
-from .task import get_tarefas_do_dia
-from .api import get_climate_data
-from .chatbot import get_chat_response
-import json
 
 def dashboard(request):
     if request.method == "POST":
@@ -577,8 +593,25 @@ def dashboard(request):
     tarefas_do_dia = get_tarefas_do_dia(request)
     return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
 
-
-
+@login_required
+def meu_plantio_view(request):
+    setores = Setor.objects.filter(usuario=request.user)
+    dados_plantio = [
+        {
+            "setor": setor.nome,
+            "canteiros": [
+                {
+                    "id": canteiro.id,
+                    "canteiro": canteiro.nome,
+                    # Acessa as plantas associadas ao canteiro
+                    "plantas": list(canteiro.plantas.all().values("nome"))
+                }
+                for canteiro in setor.canteiros.all()
+            ],
+        }
+        for setor in setores
+    ]
+    return render(request, "meu_plantio.html", {"dados_plantio": dados_plantio})
 
 
 

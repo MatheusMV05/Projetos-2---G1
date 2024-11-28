@@ -18,7 +18,9 @@ urlpatterns = [
     path('registrar_colheita/', views.registrar_colheita, name='registrar_colheita'),
     path('buscar_planta/', views.buscar_planta, name='buscar_planta'),
     path('celeiro/', views.celeiro, name='celeiro'),
+    path('celeiro/atualizar_pesos/', views.atualizar_pesos_celeiro, name='atualizar_pesos_celeiro'),
     path('adicionar_tarefa/', views.adicionar_tarefa, name='adicionar_tarefa'),
     path('insumos/', views.insumos_view, name='insumos_view'),
     path('demandas/', views.demandas_comerciais, name='demandas_comerciais'),
+    path('meu_plantio/', views.meu_plantio_view, name='meu_plantio'),
 ]
