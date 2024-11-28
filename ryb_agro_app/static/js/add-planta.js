@@ -222,26 +222,31 @@ saveAndContinueButton.addEventListener('click', () => {
 
 // Função para enviar os dados ao backend
 const sendDataToBackend = async (plantas) => {
-	try {
-		const response = await fetch('/planta/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'X-CSRFToken': getCSRFToken(),
-			},
-			body: JSON.stringify({ plantas }),
-		});
+    try {
+        const selectedCanteiro = document.getElementById('selectCanteiro').value;
+        console.log('Canteiro ID enviado:', selectedCanteiro);
 
-		if (!response.ok) {
-			throw new Error('Erro ao salvar os dados!');
-		}
+        const response = await fetch('/planta/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify({ plantas, canteiro_id: selectedCanteiro }),
+        });
 
-		alert('Plantas salvas com sucesso!');
-		window.location.href = '/tarefas_do_dia/';
-	} catch (error) {
-		console.error(error);
-		alert('Erro ao tentar salvar as plantas.');
-	}
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            console.error('Erro do backend:', errorMessage);
+            throw new Error(`Erro ao salvar os dados: ${errorMessage}`);
+        }
+
+        alert('Plantas salvas com sucesso!');
+        window.location.href = '/tarefas_do_dia/';
+    } catch (error) {
+        console.error('Erro durante o envio das plantas:', error);
+        alert('Erro ao tentar salvar as plantas. Consulte o console para mais detalhes.');
+    }
 };
 
 // Função para pegar o CSRF token

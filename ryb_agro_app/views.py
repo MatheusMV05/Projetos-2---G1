@@ -546,41 +546,6 @@ def dashboard(request):
     return render(request, 'tarefas_do_dia.html', {'tarefas_do_dia': tarefas_do_dia})
 
 
-def dashboard(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-
-            # Mensagem inicial do chatbot
-            if data.get("is_initial", False):
-                reply = (
-                    "Olá! Eu sou Bento, um especialista em agricultura. "
-                    "Estou aqui para ajudar com suas dúvidas sobre cultivo, práticas agrícolas e sustentabilidade."
-                )
-                return JsonResponse({"reply": reply}, status=200)
-
-            # Lógica para clima
-            if "latitude" in data and "longitude" in data:
-                latitude = data.get("latitude")
-                longitude = data.get("longitude")
-                clima = get_climate_data(latitude, longitude)
-                return JsonResponse(clima, status=200)
-
-            # Lógica para chatbot
-            elif "chat_message" in data:
-                chat_message = data.get("chat_message")
-                reply = get_chat_response(chat_message)
-                return JsonResponse({"reply": reply}, status=200)
-
-            return JsonResponse({"error": "Dados inválidos fornecidos."}, status=400)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-
-    # Renderiza a página inicial
-    tarefas_do_dia = get_tarefas_do_dia(request)
-    return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
-
-
 def meu_plantio_view(request):
     setores = Setor.objects.filter(usuario=request.user)
     dados_plantio = [
