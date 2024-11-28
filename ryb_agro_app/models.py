@@ -89,6 +89,8 @@ class Celeiro(models.Model):
 
 class Planta(models.Model):
     nome = models.CharField(max_length=255)
+    canteiro = models.ForeignKey(
+        Canteiro, on_delete=models.CASCADE, related_name="plantas", null=True, blank=True)
     # Quantidade em unidades ou quilogramas disponíveis para plantio
     quantidade = models.FloatField(default=0)
     frequencia = models.CharField(max_length=50)

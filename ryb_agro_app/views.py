@@ -1,3 +1,6 @@
+from .chatbot import get_chat_response
+from .api import get_climate_data
+from .task import get_tarefas_do_dia
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -21,13 +24,6 @@ from django.http import JsonResponse
 from datetime import date
 from django.views.decorators.http import require_POST
 import requests
-
-from django.http import JsonResponse
-from django.shortcuts import render
-from .task import get_tarefas_do_dia
-from .api import get_climate_data
-from .chatbot import get_chat_response
-import json
 
 
 
@@ -169,20 +165,25 @@ def add_planta(request):
         try:
             data = json.loads(request.body)
             plantas = data.get('plantas', [])
-
-            # Salvar as plantas com o usuário associado
+            canteiro_id = data.get('canteiro_id')  # Recebe o ID do canteiro
+            canteiro = get_object_or_404(
+                Canteiro, id=canteiro_id)  # Valida o canteiro
+            
+            if not canteiro_id or not plantas:
+                return JsonResponse({'status': 'error', 'message': 'Canteiro ou plantas não fornecidos.'}, status=400)
+            
             for planta in plantas:
                 Planta.objects.create(
                     nome=planta['name'],
                     quantidade=planta['amount'],
                     frequencia=planta['frequency'],
-                    user=request.user  # Associa o usuário logado
+                    user=request.user,
+                    canteiro=canteiro  # Associa ao canteiro
                 )
 
             return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-
     return JsonResponse({'status': 'invalid method'}, status=405)
 
 
@@ -190,7 +191,11 @@ def add_planta(request):
 def get_canteiros(request):
     canteiros = Canteiro.objects.filter(setor__usuario=request.user)
     canteiros_data = [
-        {"id": c.id, "name": f"{c.setor.nome} - {c.nome}"}
+        {
+            "id": c.id,
+            "name": f"{c.setor.nome} - {c.nome}",
+            "setor": c.setor.id,  # Inclui o ID do setor
+        }
         for c in canteiros
     ]
     return JsonResponse(canteiros_data, safe=False)

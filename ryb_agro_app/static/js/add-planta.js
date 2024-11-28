@@ -88,22 +88,26 @@ const conflictingPlants = {
 };
 
 // Função para verificar se há conflito entre plantas e retornar as plantas conflitantes
-const checkConflictingPlants = (newPlant) => {
+const checkConflictingPlants = (newPlant, setorId) => {
 	let conflictingList = new Set(); // Usamos um Set para evitar duplicatas
 
-	for (let i = 0; i < savedPlants.length; i++) {
-		const savedPlant = savedPlants[i].name;
+	// Filtra plantas do mesmo setor
+	const plantsInSameSector = savedPlants.filter(
+		(plant) => plant.setor === setorId
+	);
 
-		// Verifica se a nova planta é conflitante com as plantas já salvas
-		if (conflictingPlants[newPlant].includes(savedPlant)) {
-			conflictingList.add(savedPlant); // Adiciona ao Set, que não permite duplicatas
+	// Verifica conflitos apenas dentro do mesmo setor
+	plantsInSameSector.forEach((plant) => {
+		// Planta nova é conflitante com uma salva
+		if (conflictingPlants[newPlant]?.includes(plant.name)) {
+			conflictingList.add(plant.name);
 		}
 
-		// Verifica se as plantas já salvas são conflitantes com a nova planta
-		if (conflictingPlants[savedPlant].includes(newPlant)) {
-			conflictingList.add(savedPlant); // Adiciona ao Set
+		// Planta salva é conflitante com a nova
+		if (conflictingPlants[plant.name]?.includes(newPlant)) {
+			conflictingList.add(plant.name);
 		}
-	}
+	});
 
 	return Array.from(conflictingList); // Converte o Set de volta para array
 };
@@ -115,27 +119,33 @@ addPlantButton.addEventListener('click', () => {
 	const selectedPlant = modalTitle.textContent;
 	const selectedCanteiro = document.getElementById('selectCanteiro').value;
 
-	if (!harvestAmount) {
-		alert('Por favor, insira uma quantidade válida.');
+	if (!harvestAmount || !selectedCanteiro) {
+		alert('Por favor, insira uma quantidade válida e selecione um canteiro.');
 		return;
 	}
 
-	// Verifica se há plantas conflitantes e exibe aviso, mas permite adicionar
-	const conflicts = checkConflictingPlants(selectedPlant);
+	// Obtém o setor do dropdown do canteiro
+	const setorId = document.querySelector(
+		`#selectCanteiro option[value="${selectedCanteiro}"]`
+	)?.dataset.setor;
+
+	// Verifica se há plantas conflitantes no mesmo setor
+	const conflicts = checkConflictingPlants(selectedPlant, setorId);
 	if (conflicts.length > 0) {
 		alert(
-			`Atenção: A planta ${selectedPlant} pode entrar em conflito com as seguintes plantas já selecionadas: ${conflicts.join(
+			`Atenção: A planta ${selectedPlant} pode entrar em conflito com as seguintes plantas no mesmo setor: ${conflicts.join(
 				', '
 			)}.`
 		);
 	}
 
-	// Adiciona a planta na lista, independentemente do aviso
+	// Adiciona a planta na lista
 	const plant = {
 		name: selectedPlant,
 		amount: harvestAmount,
 		frequency: harvestFrequency,
-		canteiro: selectedCanteiro, // Associa a planta ao canteiro selecionado
+		canteiro: selectedCanteiro,
+		setor: setorId, // Inclui o setor associado
 	};
 	savedPlants.push(plant);
 
@@ -212,26 +222,31 @@ saveAndContinueButton.addEventListener('click', () => {
 
 // Função para enviar os dados ao backend
 const sendDataToBackend = async (plantas) => {
-	try {
-		const response = await fetch('/planta/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'X-CSRFToken': getCSRFToken(),
-			},
-			body: JSON.stringify({ plantas }),
-		});
+    try {
+        const selectedCanteiro = document.getElementById('selectCanteiro').value;
+        console.log('Canteiro ID enviado:', selectedCanteiro);
 
-		if (!response.ok) {
-			throw new Error('Erro ao salvar os dados!');
-		}
+        const response = await fetch('/planta/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify({ plantas, canteiro_id: selectedCanteiro }),
+        });
 
-		alert('Plantas salvas com sucesso!');
-		window.location.href = '/tarefas_do_dia/';
-	} catch (error) {
-		console.error(error);
-		alert('Erro ao tentar salvar as plantas.');
-	}
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            console.error('Erro do backend:', errorMessage);
+            throw new Error(`Erro ao salvar os dados: ${errorMessage}`);
+        }
+
+        alert('Plantas salvas com sucesso!');
+        window.location.href = '/tarefas_do_dia/';
+    } catch (error) {
+        console.error('Erro durante o envio das plantas:', error);
+        alert('Erro ao tentar salvar as plantas. Consulte o console para mais detalhes.');
+    }
 };
 
 // Função para pegar o CSRF token
@@ -277,8 +292,10 @@ const loadCanteiros = async () => {
 			const option = document.createElement('option');
 			option.value = canteiro.id;
 			option.textContent = canteiro.name;
+			option.dataset.setor = canteiro.setor; // Armazena o ID do setor
 			selectCanteiro.appendChild(option);
 		});
+
 		console.log('Canteiros adicionados ao dropdown com sucesso.');
 	} catch (error) {
 		console.error('Erro ao carregar os canteiros:', error);
