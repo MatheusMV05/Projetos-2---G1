@@ -579,7 +579,24 @@ def dashboard(request):
     return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
 
 
-
+def meu_plantio_view(request):
+    setores = Setor.objects.filter(usuario=request.user)
+    dados_plantio = [
+        {
+            "setor": setor.nome,
+            "canteiros": [
+                {
+                    "id": canteiro.id,
+                    "canteiro": canteiro.nome,
+                    # Acessa o campo "plantas" corretamente
+                    "plantas": list(canteiro.plantas.all().values("nome"))
+                }
+                for canteiro in setor.canteiros.all()
+            ],
+        }
+        for setor in setores
+    ]
+    return render(request, "meu_plantio.html", {"dados_plantio": dados_plantio})
 
 
 
