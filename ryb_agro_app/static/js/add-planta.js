@@ -242,7 +242,7 @@ const sendDataToBackend = async (plantas) => {
         }
 
         alert('Plantas salvas com sucesso!');
-        window.location.href = '/tarefas_do_dia/';
+        window.location.href = '/dashboard/';
     } catch (error) {
         console.error('Erro durante o envio das plantas:', error);
         alert('Erro ao tentar salvar as plantas. Consulte o console para mais detalhes.');
