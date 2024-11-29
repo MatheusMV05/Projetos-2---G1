@@ -10,6 +10,59 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="{% static 'css/meu_plantio.css' %}" />
+        <style>
+            .sector-card {
+                width: 100%;
+                padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                background-color: #fff;
+            }
+
+            .sector-card-header {
+                font-weight: bold;
+                color: #4a964f;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .sector-card-body {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                gap: 10px;
+            }
+
+            .plant-card {
+                width: 60px;
+                height: 60px;
+                background-color: #f0f0f0;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.8rem;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .add-sector-button {
+                width: 80px;
+                height: 80px;
+                border-radius: 10px;
+                border: 2px dashed #4a964f;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .add-sector-button:hover {
+                background-color: #e8f5e9;
+            }
+			
+        </style>
     </head>
     <body>
         <header class="bg-success text-white text-center py-3">
@@ -17,14 +70,288 @@
         </header>
 
         <main class="container my-4">
-            <!-- Botão para Adicionar Novo Setor -->
-            <button
-                class="btn btn-success mb-4"
-                data-bs-toggle="modal"
-                data-bs-target="#modalNovoSetor"
-            >
-                Adicionar Novo Setor
-            </button>
+            <div class="row">
+                {% for setor in dados_plantio %}
+                <div class="col-6 col-md-4 mb-4">
+                    <div class="sector-card">
+                        <div class="sector-card-header">
+                            Setor {{ setor.setor }}
+                            <div>
+                                <button
+                                    class="btn btn-sm btn-primary me-2"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalRenomearSetor{{ setor.setor_id }}"
+                                >
+                                    Renomear
+                                </button>
+                                <button
+                                    class="btn btn-sm btn-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalApagarSetor{{ setor.setor_id }}"
+                                >
+                                    Apagar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="sector-card-body">
+                            {% for canteiro in setor.canteiros %}
+                            <div class="plant-card" data-bs-toggle="modal" data-bs-target="#modalPlantas{{ canteiro.id }}">
+                                {{ canteiro.canteiro }}
+                            </div>
+
+                            <!-- Modal de Plantas -->
+                            <div
+                                class="modal fade"
+                                id="modalPlantas{{ canteiro.id }}"
+                                tabindex="-1"
+                                aria-labelledby="modalLabel{{ canteiro.id }}"
+                                aria-hidden="true"
+                            >
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalLabel{{ canteiro.id }}">
+                                                Plantas no {{ canteiro.canteiro }}
+                                            </h5>
+                                            <button
+                                                type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"
+                                            ></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Lista de Plantas já Cadastradas -->
+                                            <h6>Plantas já cadastradas:</h6>
+                                            {% if canteiro.plantas %}
+                                            <ul class="list-group">
+                                                {% for planta in canteiro.plantas %}
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    {{ planta.nome }}
+                                                    <form
+                                                        method="POST"
+                                                        action="{% url 'remover_planta' planta.id %}"
+                                                        onsubmit="return confirm('Tem certeza que deseja remover esta planta?');"
+                                                    >
+                                                        {% csrf_token %}
+                                                        <button class="btn btn-danger btn-sm">Remover</button>
+                                                    </form>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                            {% else %}
+                                            <p>Nenhuma planta cadastrada neste canteiro.</p>
+                                            {% endif %}
+
+                                            <hr />
+
+                                            <!-- Formulário para Adicionar Novas Plantas -->
+                                            <h6>Adicionar nova planta:</h6>
+                                            <form
+                                                method="POST"
+                                                action="{% url 'adicionar_planta' canteiro.id %}"
+                                            >
+                                                {% csrf_token %}
+                                                <div class="mb-3">
+                                                    <label for="planta{{ canteiro.id }}" class="form-label">
+                                                        Selecione uma planta
+                                                    </label>
+                                                    <select
+                                                        id="planta{{ canteiro.id }}"
+                                                        name="planta_nome"
+                                                        class="form-select"
+                                                        required
+                                                    >
+                                                        <option value="" disabled selected>Escolha uma planta</option>
+                                                        <option value="Milho">Milho</option>
+                                                        <option value="Inhame">Inhame</option>
+                                                        <option value="Batata Doce">Batata Doce</option>
+                                                        <option value="Abóbora">Abóbora</option>
+                                                        <option value="Cenoura">Cenoura</option>
+                                                    </select>
+                                                </div>
+                                                <button type="submit" class="btn btn-success w-100">
+                                                    Adicionar Planta
+                                                </button>
+                                            </form>
+
+                                            <hr />
+
+                                            <!-- Botão para Apagar o Canteiro -->
+                                            <div class="mt-4">
+                                                <form
+                                                    method="POST"
+                                                    action="{% url 'apagar_canteiro' canteiro.id %}"
+                                                    onsubmit="return confirm('Tem certeza que deseja apagar este canteiro?');"
+                                                >
+                                                    {% csrf_token %}
+                                                    <button class="btn btn-danger w-100">Apagar Canteiro</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <div
+                                class="plant-card"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalNovoCanteiro{{ setor.setor_id }}"
+                            >
+                                +
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para Renomear Setor -->
+                <div
+                    class="modal fade"
+                    id="modalRenomearSetor{{ setor.setor_id }}"
+                    tabindex="-1"
+                    aria-labelledby="modalRenomearSetorLabel{{ setor.setor_id }}"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalRenomearSetorLabel{{ setor.setor_id }}">
+                                    Renomear Setor
+                                </h5>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <form method="POST" action="{% url 'renomear_setor' setor.setor_id %}">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="novoNomeSetor{{ setor.setor_id }}" class="form-label">Novo Nome</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="novoNomeSetor{{ setor.setor_id }}"
+                                            name="novo_nome"
+                                            value="{{ setor.setor }}"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Salvar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para Apagar Setor -->
+                <div
+                    class="modal fade"
+                    id="modalApagarSetor{{ setor.setor_id }}"
+                    tabindex="-1"
+                    aria-labelledby="modalApagarSetorLabel{{ setor.setor_id }}"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalApagarSetorLabel{{ setor.setor_id }}">
+                                    Apagar Setor
+                                </h5>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <form method="POST" action="{% url 'apagar_setor' setor.setor_id %}">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <p>Tem certeza de que deseja apagar o setor "{{ setor.setor }}"?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" class="btn btn-danger">Apagar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para Adicionar Novo Canteiro -->
+                <div
+                    class="modal fade"
+                    id="modalNovoCanteiro{{ setor.setor_id }}"
+                    tabindex="-1"
+                    aria-labelledby="modalNovoCanteiroLabel{{ setor.setor_id }}"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalNovoCanteiroLabel{{ setor.setor_id }}">
+                                    Novo Canteiro no Setor {{ setor.setor }}
+                                </h5>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <form method="POST" action="{% url 'adicionar_canteiro' setor.setor_id %}">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="nomeCanteiro" class="form-label">Nome do Canteiro</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="nomeCanteiro"
+                                            name="nome"
+                                            placeholder="Digite o nome do canteiro"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" class="btn btn-success">Salvar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+                <!-- Botão Adicionar Setor -->
+                <div class="col-6 col-md-4 mb-4">
+                    <div
+                        class="add-sector-button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalNovoSetor"
+                    >
+                        +
+                    </div>
+                </div>
+            </div>
 
             <!-- Modal para Adicionar Novo Setor -->
             <div
@@ -61,20 +388,6 @@
                                         required
                                     />
                                 </div>
-                                <div class="mb-3">
-                                    <label for="quantidadeCanteiros" class="form-label">
-                                        Quantidade de Canteiros
-                                    </label>
-                                    <input
-                                        type="number"
-                                        class="form-control"
-                                        id="quantidadeCanteiros"
-                                        name="quantidade_canteiros"
-                                        placeholder="Digite o número de canteiros"
-                                        min="1"
-                                        required
-                                    />
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button
@@ -90,226 +403,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Renderização dos Setores -->
-            {% for setor in dados_plantio %}
-            <div class="mb-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="text-success fw-bold">{{ setor.setor }}</h5>
-                    <div>
-                        <!-- Botão Renomear -->
-                        <button
-                            class="btn btn-sm btn-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalRenomearSetor{{ setor.setor_id }}"
-                        >
-                            Renomear
-                        </button>
-                        <!-- Botão Apagar -->
-                        <button
-                            class="btn btn-sm btn-danger"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalApagarSetor{{ setor.setor_id }}"
-                        >
-                            Apagar
-                        </button>
-                    </div>
-                </div>
-                <div class="row g-3">
-                    {% for canteiro in setor.canteiros %}
-                    <!-- Canteiro -->
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div
-                            class="canteiro"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalPlantas{{ canteiro.id }}"
-                        >
-                            <div class="text-center">
-                                <h6>{{ canteiro.canteiro }}</h6>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Modal de Plantas -->
-							<div
-								class="modal fade"
-								id="modalPlantas{{ canteiro.id }}"
-								tabindex="-1"
-								aria-labelledby="modalLabel{{ canteiro.id }}"
-								aria-hidden="true"
-							>
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h5 class="modal-title" id="modalLabel{{ canteiro.id }}">
-												Plantas no {{ canteiro.canteiro }}
-											</h5>
-											<button
-												type="button"
-												class="btn-close"
-												data-bs-dismiss="modal"
-												aria-label="Close"
-											></button>
-										</div>
-										<div class="modal-body">
-											<!-- Lista de Plantas já Cadastradas -->
-											<h6>Plantas já cadastradas:</h6>
-											{% if canteiro.plantas %}
-											<ul class="list-group">
-												{% for planta in canteiro.plantas %}
-												<li class="list-group-item d-flex justify-content-between align-items-center">
-													{{ planta.nome }}
-													<form
-														method="POST"
-														action="{% url 'remover_planta' planta.id %}"
-														onsubmit="return confirm('Tem certeza que deseja remover esta planta?');"
-													>
-														{% csrf_token %}
-														<button class="btn btn-danger btn-sm">Remover</button>
-													</form>
-												</li>
-												{% endfor %}
-											</ul>
-											{% else %}
-											<p>Nenhuma planta cadastrada neste canteiro.</p>
-											{% endif %}
-
-											<hr />
-
-											<!-- Formulário para Adicionar Novas Plantas -->
-											<h6>Adicionar nova planta:</h6>
-											<form
-												method="POST"
-												action="{% url 'adicionar_planta' canteiro.id %}"
-											>
-												{% csrf_token %}
-												<div class="mb-3">
-													<label for="planta{{ canteiro.id }}" class="form-label">
-														Selecione uma planta
-													</label>
-													<select
-														id="planta{{ canteiro.id }}"
-														name="planta_nome"
-														class="form-select"
-														required
-													>
-														<option value="" disabled selected>Escolha uma planta</option>
-														<option value="Milho">Milho</option>
-														<option value="Inhame">Inhame</option>
-														<option value="Batata Doce">Batata Doce</option>
-														<option value="Abóbora">Abóbora</option>
-														<option value="Cenoura">Cenoura</option>
-													</select>
-												</div>
-												<button type="submit" class="btn btn-success w-100">
-													Adicionar Planta
-												</button>
-											</form>
-										</div>
-									</div>
-								</div>
-							</div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Modal Renomear Setor -->
-            <div
-                class="modal fade"
-                id="modalRenomearSetor{{ setor.setor_id }}"
-                tabindex="-1"
-                aria-labelledby="modalRenomearSetorLabel{{ setor.setor_id }}"
-                aria-hidden="true"
-            >
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalRenomearSetorLabel{{ setor.setor_id }}">
-                                Renomear Setor
-                            </h5>
-                            <button
-                                type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <form method="POST" action="{% url 'renomear_setor' setor.setor_id %}">
-                            {% csrf_token %}
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label
-                                        for="novoNomeSetor{{ setor.setor_id }}"
-                                        class="form-label"
-                                    >
-                                        Novo Nome
-                                    </label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="novoNomeSetor{{ setor.setor_id }}"
-                                        name="novo_nome"
-                                        value="{{ setor.setor }}"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button
-                                    type="button"
-                                    class="btn btn-secondary"
-                                    data-bs-dismiss="modal"
-                                >
-                                    Cancelar
-                                </button>
-                                <button type="submit" class="btn btn-primary">Salvar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Apagar Setor -->
-            <div
-                class="modal fade"
-                id="modalApagarSetor{{ setor.setor_id }}"
-                tabindex="-1"
-                aria-labelledby="modalApagarSetorLabel{{ setor.setor_id }}"
-                aria-hidden="true"
-            >
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalApagarSetorLabel{{ setor.setor_id }}">
-                                Apagar Setor
-                            </h5>
-                            <button
-                                type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <form method="POST" action="{% url 'apagar_setor' setor.setor_id %}">
-                            {% csrf_token %}
-                            <div class="modal-body">
-                                <p>Tem certeza de que deseja apagar o setor "{{ setor.setor }}"?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button
-                                    type="button"
-                                    class="btn btn-secondary"
-                                    data-bs-dismiss="modal"
-                                >
-                                    Cancelar
-                                </button>
-                                <button type="submit" class="btn btn-danger">Apagar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
         </main>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

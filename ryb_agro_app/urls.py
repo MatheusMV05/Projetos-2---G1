@@ -28,5 +28,7 @@ urlpatterns = [
     path("apagar-setor/<int:setor_id>/", views.apagar_setor, name="apagar_setor"),
     path("adicionar-planta/<int:canteiro_id>/", views.adicionar_planta, name="adicionar_planta"),
     path('remover-planta/<int:planta_id>/', views.remover_planta, name='remover_planta'),
+    path('apagar-canteiro/<int:canteiro_id>/', views.apagar_canteiro, name='apagar_canteiro'),
+    path('adicionar_canteiro/<int:setor_id>/', views.adicionar_canteiro, name='adicionar_canteiro'),
 
 ]

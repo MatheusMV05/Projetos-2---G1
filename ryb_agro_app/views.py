@@ -703,4 +703,23 @@ def remover_planta(request, planta_id):
     # Redireciona de volta para a página principal
     return redirect('meu_plantio')
 
+def apagar_canteiro(request, canteiro_id):
+    # Obtém o canteiro pelo ID e verifica o usuário autenticado
+    canteiro = get_object_or_404(Canteiro, id=canteiro_id, setor__usuario=request.user)
+    
+    # Apaga o canteiro
+    canteiro.delete()
+
+    # Redireciona de volta para a página principal
+    return redirect('meu_plantio')
+
+def adicionar_canteiro(request, setor_id):
+    setor = get_object_or_404(Setor, id=setor_id)
+    if request.method == 'POST':
+        nome_canteiro = request.POST.get('nome')
+        if nome_canteiro:
+            Canteiro.objects.create(nome=nome_canteiro, setor=setor)
+        return redirect('meu_plantio_view')  # Redirecionar para a página desejada após adicionar o canteiro.
+    return render(request, 'meu_plantio.html')  # Ou outra página de sua escolha
+
 
