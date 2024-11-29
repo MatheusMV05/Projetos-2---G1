@@ -10,6 +10,7 @@
 		crossorigin="anonymous">
 	<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 	<link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+	<script src="https://kit.fontawesome.com/8bd07f7496.js" crossorigin="anonymous"></script>
 	<style>
 		.card-clickable {
 			cursor: pointer;
@@ -25,6 +26,49 @@
 			position: absolute;
 			top: 180px;
 			right: 20px;
+		}
+
+		/* Bottom Navigation Styles */
+		.bottom-nav {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			height: 54px;
+			background-color: #fff;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			box-shadow: 0px -3px 24px -6px rgba(0, 0, 0, 0.25);
+			z-index: 1000;
+			/* Ensure it stays above other content */
+			padding: 5px 0;
+		}
+
+		.nav-item {
+			color: #1b4a3f;
+			/* White text color */
+			text-align: center;
+			text-decoration: none;
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.nav-item i {
+			font-size: 1.125rem;
+			/* Icon size */
+		}
+
+		.nav-item span {
+			font-size: 0.625rem;
+			/* Label text size */
+			text-align: center;
+			font-style: normal;
+			font-weight: 500;
+			line-height: 24px;
+			/* 240% */
+			letter-spacing: -0.4px;
 		}
 	</style>
 </head>
@@ -66,8 +110,8 @@
 
 	<!-- Clima Atual -->
 	<div class="card card-clickable card-clima-atual shadow-sm" role="button" data-bs-toggle="modal"
-		data-bs-target="#modalPrevisao">
-		<div class="card-header bg-primary text-white">
+		data-bs-target="#modalPrevisao" style="margin-right: 60px;">
+		<div class="card-header bg-primary text-white" style="background-color: #1b4a3f !important;">
 			<h4 class="mb-0 text-center">🌡️ Clima Atual</h4>
 		</div>
 		<div class="card-body text-center">
@@ -100,6 +144,12 @@
 	</div>
 	</div>
 
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
 	<h2>Minhas tarefas</h2>
 	<br>
 	<div id="pendentes-section">
@@ -140,33 +190,81 @@
 	<br>
 	<h2>Meu plantio</h2>
 	<br>
+	<div class="modal-body">
+		<!-- Lista de Plantas já Cadastradas -->
+		<h6>Plantas já cadastradas:</h6>
+		{% if canteiro.plantas %}
+		<ul class="list-group">
+			{% for planta in canteiro.plantas %}
+			<li class="list-group-item d-flex justify-content-between align-items-center">
+				{{ planta.nome }}
+				<form
+					method="POST"
+					action="{% url 'remover_planta' planta.id %}"
+					onsubmit="return confirm('Tem certeza que deseja remover esta planta?');"
+				>
+					{% csrf_token %}
+					<button class="btn btn-danger btn-sm">Remover</button>
+				</form>
+			</li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<p>Nenhuma planta cadastrada neste canteiro.</p>
+		{% endif %}
+	</div>	
 	<h2>Meu celeiro</h2>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
 	<!-- Botão Fixo para o Chat -->
-<button id="gemini-chat-btn" class="btn btn-primary" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
-    💬 Fale com o Bento
-</button>
+	<button id="gemini-chat-btn" class="btn btn-primary"
+		style="position: fixed; bottom: 80px; right: 20px; z-index: 1000; background-color: #1b4a3f; border-color: transparent;">
+		💬 Fale com o Bento
+	</button>
 
-<!-- Modal para o Chat -->
-<div id="gemini-chat-modal" class="modal" tabindex="-1" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Bento chat</h5>
-                <button type="button" class="btn-close" onclick="closeChat()"></button>
-            </div>
-            <div class="modal-body">
-                <div id="chat-messages" style="height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;"></div>
-                <div class="input-group mt-3">
-                    <input id="chat-input" type="text" class="form-control" placeholder="Digite sua mensagem">
-                    <button class="btn btn-success" onclick="sendMessage()">Enviar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+	<!-- Modal para o Chat -->
+	<div id="gemini-chat-modal" class="modal" tabindex="-1" style="display: none;">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Bento chat</h5>
+					<button type="button" class="btn-close" onclick="closeChat()"></button>
+				</div>
+				<div class="modal-body">
+					<div id="chat-messages"
+						style="height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;"></div>
+					<div class="input-group mt-3">
+						<input id="chat-input" type="text" class="form-control" placeholder="Digite sua mensagem">
+						<button class="btn btn-success" onclick="sendMessage()">Enviar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<nav class="bottom-nav">
+		<a href="{% url 'dashboard' %}" class="nav-item">
+			<i class="fa-solid fa-table-cells-large"></i>
+			<span>Home</span>
+		</a>
+		<a href="{% url 'tarefas_do_dia' %}" class="nav-item">
+			<i class="fa-solid fa-clipboard-list"></i>
+			<span>Minhas tarefas</span>
+		</a>
+		<a href="{% url 'meu_plantio' %}" class="nav-item">
+			<i class="fa-solid fa-seedling"></i>
+			<span>Meu Plantio</span>
+		</a>
+		<a href="{% url 'celeiro' %}" class="nav-item">
+			<i class="fa-solid fa-house"></i>
+			<span>Meu Celeiro</span>
+		</a>
+	</nav>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		crossorigin="anonymous"></script>
 	<script>
 		function obterLocalizacao() {
 			if (navigator.geolocation) {
@@ -235,92 +333,92 @@
 		window.onload = obterLocalizacao;
 	</script>
 
-<script>
-    const chatBtn = document.getElementById('gemini-chat-btn');
-	const chatModal = document.getElementById('gemini-chat-modal');
-	const chatMessages = document.getElementById('chat-messages');
-	const chatInput = document.getElementById('chat-input');
+	<script>
+		const chatBtn = document.getElementById('gemini-chat-btn');
+		const chatModal = document.getElementById('gemini-chat-modal');
+		const chatMessages = document.getElementById('chat-messages');
+		const chatInput = document.getElementById('chat-input');
 
-// Função para rolar para o final do chat
-function scrollToBottom() {
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
+		// Função para rolar para o final do chat
+		function scrollToBottom() {
+			chatMessages.scrollTop = chatMessages.scrollHeight;
+		}
 
-// Função para abrir o chat
-chatBtn.onclick = async () => {
-    chatModal.style.display = 'block';
-    chatInput.focus();
+		// Função para abrir o chat
+		chatBtn.onclick = async () => {
+			chatModal.style.display = 'block';
+			chatInput.focus();
 
-    // Solicitar a mensagem inicial do Bento
-    try {
-        const response = await fetch("{% url 'dashboard' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}",
-            },
-            body: JSON.stringify({ is_initial: true }), // Envia o sinalizador para a mensagem inicial
-        });
+			// Solicitar a mensagem inicial do Bento
+			try {
+				const response = await fetch("{% url 'dashboard' %}", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"X-CSRFToken": "{{ csrf_token }}",
+					},
+					body: JSON.stringify({ is_initial: true }), // Envia o sinalizador para a mensagem inicial
+				});
 
-        if (response.ok) {
-            const data = await response.json();
-            if (data.reply) {
-                chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> ${data.reply}</div>`;
-                scrollToBottom();
-            }
-        } else {
-            console.error(`Erro ao carregar mensagem inicial: ${response.status} - ${response.statusText}`);
-        }
-    } catch (error) {
-        console.error("Erro ao carregar mensagem inicial:", error);
-        chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Não consegui iniciar a conversa.</div>`;
-    }
-};
+				if (response.ok) {
+					const data = await response.json();
+					if (data.reply) {
+						chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> ${data.reply}</div>`;
+						scrollToBottom();
+					}
+				} else {
+					console.error(`Erro ao carregar mensagem inicial: ${response.status} - ${response.statusText}`);
+				}
+			} catch (error) {
+				console.error("Erro ao carregar mensagem inicial:", error);
+				chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Não consegui iniciar a conversa.</div>`;
+			}
+		};
 
-// Função para fechar o chat
-function closeChat() {
-    chatModal.style.display = 'none';
-}
+		// Função para fechar o chat
+		function closeChat() {
+			chatModal.style.display = 'none';
+		}
 
-// Função para enviar mensagem
-async function sendMessage() {
-    const message = chatInput.value.trim();
-    if (!message) return;
+		// Função para enviar mensagem
+		async function sendMessage() {
+			const message = chatInput.value.trim();
+			if (!message) return;
 
-    // Mostra a mensagem do usuário
-    chatMessages.innerHTML += `<div class="chat-message user"><strong>Você:</strong> ${message}</div>`;
-    chatInput.value = '';
+			// Mostra a mensagem do usuário
+			chatMessages.innerHTML += `<div class="chat-message user"><strong>Você:</strong> ${message}</div>`;
+			chatInput.value = '';
 
-    // Envia a mensagem para o backend
-    try {
-        const response = await fetch("{% url 'dashboard' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}",
-            },
-            body: JSON.stringify({ chat_message: message }),
-        });
+			// Envia a mensagem para o backend
+			try {
+				const response = await fetch("{% url 'dashboard' %}", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"X-CSRFToken": "{{ csrf_token }}",
+					},
+					body: JSON.stringify({ chat_message: message }),
+				});
 
-        if (response.ok) {
-            const data = await response.json();
-            if (data.reply) {
-                chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> ${data.reply}</div>`;
-            } else {
-                chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Não consegui entender sua mensagem.</div>`;
-            }
-        } else {
-            chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Houve um problema ao processar sua mensagem.</div>`;
-            console.error(`Erro ao enviar mensagem: ${response.status} - ${response.statusText}`);
-        }
-    } catch (error) {
-        chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Erro ao se comunicar com o servidor.</div>`;
-        console.error("Erro ao enviar mensagem:", error);
-    }
+				if (response.ok) {
+					const data = await response.json();
+					if (data.reply) {
+						chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> ${data.reply}</div>`;
+					} else {
+						chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Não consegui entender sua mensagem.</div>`;
+					}
+				} else {
+					chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Houve um problema ao processar sua mensagem.</div>`;
+					console.error(`Erro ao enviar mensagem: ${response.status} - ${response.statusText}`);
+				}
+			} catch (error) {
+				chatMessages.innerHTML += `<div class="chat-message bento"><strong>Bento:</strong> Erro ao se comunicar com o servidor.</div>`;
+				console.error("Erro ao enviar mensagem:", error);
+			}
 
-    scrollToBottom(); // Rola para o final após cada mensagem
-}
-</script>
+			scrollToBottom(); // Rola para o final após cada mensagem
+		}
+	</script>
 
 
 	<script src="{% static 'js/dashboard.js' %}"></script>
