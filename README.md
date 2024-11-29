@@ -247,7 +247,7 @@
 
 - <strong>Diagrama de Atividades</strong>
 
-![diagrama]()
+![diagrama](https://imgur.com/xd0ewKx.png)
 
 <br>
 
