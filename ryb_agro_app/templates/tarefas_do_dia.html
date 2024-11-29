@@ -352,19 +352,19 @@
 		</div>
 		<!-- Bottom Navigation Bar -->
 		<nav class="bottom-nav">
-			<a href="#home" class="nav-item">
+			<a href="{% url 'dashboard' %}" class="nav-item">
 				<i class="fa-solid fa-table-cells-large"></i>
 				<span>Home</span>
 			</a>
-			<a href="#minhas-tarefas" class="nav-item">
+			<a href="{% url 'tarefas_do_dia' %}" class="nav-item">
 				<i class="fa-solid fa-clipboard-list"></i>
 				<span>Minhas tarefas</span>
 			</a>
-			<a href="#meu-plantio" class="nav-item">
+			<a href="{% url 'meu_plantio' %}" class="nav-item">
 				<i class="fa-solid fa-seedling"></i>
 				<span>Meu Plantio</span>
 			</a>
-			<a href="#meu-celeiro" class="nav-item">
+			<a href="{% url 'celeiro' %}" class="nav-item">
 				<i class="fa-solid fa-house"></i>
 				<span>Meu Celeiro</span>
 			</a>
