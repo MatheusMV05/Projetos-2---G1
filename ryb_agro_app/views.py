@@ -144,8 +144,7 @@ def cadastrar_setores(request):
             setor = Setor.objects.create(usuario=request.user, nome=setor_nome)
 
             for i in range(setor_data['canteiros']):
-                nome_canteiro = f"{setor.nome} Canteiro {
-                    chr(65 + i)}"  # Nome automático do canteiro
+                nome_canteiro = f"{setor.nome} Canteiro {chr(65 + i)}"  # Nome automático do canteiro
                 Canteiro.objects.create(setor=setor, nome=nome_canteiro)
 
         return JsonResponse({"redirect_url": "/planta/"}, status=201)
