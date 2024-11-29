@@ -160,7 +160,7 @@
   <img src="https://img.shields.io/badge/screencast dos testes-C4A000?style=for-the-badge&logo=youtube&logoColor=black" height="35px"/>
 </a>
 
-<a href="https://docs.google.com/document/d/18NOUklwlPUHPYoXYBvkR8hp8xUGy1oOvBzqqz7yVbRM/edit?usp=sharing">
+<a href="https://docs.google.com/document/d/1CTdH4KScu2_aoF6t_cYpeq7---v7txc7X3GmHufF0NM/edit?tab=t.0">
   <img src="https://img.shields.io/badge/relatório programação em par-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
 </a>
 
@@ -168,12 +168,8 @@
   <img src="https://img.shields.io/badge/site na azure-C4A000?style=for-the-badge&logo=microsoft-azure&logoColor=black" height="35px"/>
 </a>
 
-<a href="https://www.figma.com/design/0cuK26YcZAQFn6WInb5wPB/Prototipa%C3%A7%C3%A3o-Interativa-Projeto-02?node-id=0-1&t=HpVSODTXwnFXblFG-1">
+<a href="https://www.figma.com/design/Qjx5Om7cYYP9PL5lPufPBC/Cultiva-Fácil---Medium-Prototype?node-id=0-1&node-type=canvas&t=htjtF004KdLrmhr9-0">
 <img src="https://img.shields.io/badge/figma com os protótipos de média-006400?style=for-the-badge&logo=figma&logoColor=white" height="35px"/>
-</a>
-
-<a href="https://www.figma.com/board/ASOQFjfb6QsIUk4RQ92xiB/Hist%C3%B3rias?node-id=0-1&t=LbHTbQHpqApD4gBu-1">
-<img src="https://img.shields.io/badge/figma com as histórias-C4A000?style=for-the-badge&logo=figma&logoColor=black" height="35px"/>
 </a>
 
 </p>
