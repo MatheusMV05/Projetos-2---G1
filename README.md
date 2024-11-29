@@ -224,12 +224,6 @@
 ![H9](https://imgur.com/UQnOaC8.png)
 ![H9](https://imgur.com/tuIiKsz.png)
 
-<br>
-
-![H10](https://imgur.com/qOGS44w.png)
-![H10](https://imgur.com/sr4Ri5V.png)
-
-
 
 <br>
 
