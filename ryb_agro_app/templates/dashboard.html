@@ -12,7 +12,17 @@
 	<link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
 	<script src="https://kit.fontawesome.com/8bd07f7496.js" crossorigin="anonymous"></script>
 	<style>
-		
+		@font-face {
+			font-family: 'Gojali';
+			src: url("{% static 'fontes/gojali-regular.ttf' %}") format('truetype');
+			font-weight: normal;
+			font-style: normal;
+		}
+
+		body {
+			font-family: 'Gojali', Arial, sans-serif;
+		}
+
 		.card-clickable {
 			cursor: pointer;
 			transition: transform 0.2s;
@@ -71,7 +81,6 @@
 			/* 240% */
 			letter-spacing: -0.4px;
 		}
-		
 	</style>
 </head>
 
@@ -156,8 +165,8 @@
 	<br>
 	<div id="pendentes-section" style="display: flex; flex-wrap: wrap; gap: 16px;">
 		{% for planta, tarefas in tarefas_do_dia.items %}
-			{% for tarefa in tarefas %}
-				<div class="list-group-item" style="
+		{% for tarefa in tarefas %}
+		<div class="list-group-item" style="
 					display: inline-block;
 					height: 112px;
 					width: 128px;
@@ -168,17 +177,17 @@
 					text-align: center;
 					vertical-align: top;
 				">
-					<span class="task-title"
-						  onclick="showTaskDetails('{{ tarefa.tipo_acao }}', '{{ tarefa.descricao }}', '{{ tarefa.planta }}')">
-						{{ tarefa.tipo_acao }} <br />
-						{{ tarefa.planta }}
-					</span>
-					<input type="checkbox" class="checkbox" onclick="toggleTaskCompletion(this)" />
-				</div>
-			{% endfor %}
+			<span class="task-title"
+				onclick="showTaskDetails('{{ tarefa.tipo_acao }}', '{{ tarefa.descricao }}', '{{ tarefa.planta }}')">
+				{{ tarefa.tipo_acao }} <br />
+				{{ tarefa.planta }}
+			</span>
+			<input type="checkbox" class="checkbox" onclick="toggleTaskCompletion(this)" />
+		</div>
+		{% endfor %}
 		{% endfor %}
 	</div>
-	
+
 
 	<br>
 	<h2>Meu plantio</h2>
@@ -191,11 +200,8 @@
 			{% for planta in canteiro.plantas %}
 			<li class="list-group-item d-flex justify-content-between align-items-center">
 				{{ planta.nome }}
-				<form
-					method="POST"
-					action="{% url 'remover_planta' planta.id %}"
-					onsubmit="return confirm('Tem certeza que deseja remover esta planta?');"
-				>
+				<form method="POST" action="{% url 'remover_planta' planta.id %}"
+					onsubmit="return confirm('Tem certeza que deseja remover esta planta?');">
 					{% csrf_token %}
 					<button class="btn btn-danger btn-sm">Remover</button>
 				</form>
@@ -205,7 +211,7 @@
 		{% else %}
 		<p>Nenhuma planta cadastrada neste canteiro.</p>
 		{% endif %}
-	</div>	
+	</div>
 	<h2>Meu celeiro</h2>
 	<br>
 	<br>
