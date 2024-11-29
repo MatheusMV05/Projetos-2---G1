@@ -9,4 +9,4 @@ gunicorn
 whitenoise
 requests
 google-cloud-aiplatform
--U google-generativeai
+google-generativeai
