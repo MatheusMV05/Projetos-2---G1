@@ -1,230 +1,280 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Celeiro</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            background-color: #f5f7fa;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            padding: 20px;
-            max-width: 400px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #333333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .list-group-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: none;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            margin-bottom: 10px;
-        }
-        .btn {
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 8px 15px;
-        }
-        .btn-primary {
-            background-color: #28a745;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-        }
-        .spinner-border {
-            vertical-align: middle;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Meu Celeiro</h1>
+	<head>
+		{% load static %}
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Meu Celeiro</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<style>
+			body {
+				font-family: 'Roboto', Arial, sans-serif;
+				background-color: #f5f7fa;
+				margin: 0;
+				padding: 0;
+			}
+			.container {
+				padding: 20px;
+				max-width: 400px;
+				margin: 0 auto;
+				background-color: #ffffff;
+				border-radius: 15px;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			}
+			h1 {
+				font-size: 1.5rem;
+				font-weight: 700;
+				color: #333333;
+				text-align: center;
+				margin-bottom: 20px;
+			}
 
-        <!-- Panorama Mensal -->
-        <div class="text-center">
-            <h5 class="card-title" id="month-display"></h5>
-            <div class="progress-circle">
-                <canvas id="progressChart"></canvas>
-            </div>
-            <p class="mt-3">
-                <strong>Total Esperado: </strong><span id="total-expected"></span> kg
-            </p>
-        </div>
+			#month-display {
+				text-align: left;
+				color: #000;
+				font-size: 20px;
+				font-style: normal;
+				font-weight: 400;
+				line-height: 24px;
+				letter-spacing: -0.8px;
+			}
 
-        <!-- Lista de Plantas -->
-        <div>
-            <h5 class="mt-4 mb-3 text-center">Quanto já colhi</h5>
-            <ul class="list-group">
-                {% for planta in plantas %}
-                <li class="list-group-item">
-                    <div>
-                        <img src="{% static 'img/' %}{{ planta.nome|slugify }}.png" alt="{{ planta.nome }}" width="40">
-                        <span>{{ planta.nome }}</span>
-                    </div>
-                    <div>
-                        <span>{{ planta.peso_colhido|default:0 }} / {{ planta.quantidade }} kg</span>
-                        <input 
-                            type="number" 
-                            id="peso-{{ planta.id }}" 
-                            placeholder="Kg" 
-                            class="form-control d-inline-block me-2" 
-                            style="width: 80px;" 
-                            min="0" 
-                            max="{{ planta.quantidade|default:0|floatformat:2 }} - {{ planta.peso_colhido|default:0|floatformat:2 }}">
-                        <button class="btn btn-primary btn-sm" onclick="adicionarColheita('{{ planta.id }}')">
-                            <span class="spinner-border spinner-border-sm d-none" id="spinner-{{ planta.id }}"></span> Adicionar
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deletarColheita('{{ planta.id }}')">Excluir</button>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+			#month-display strong {
+				font-size: 32px;
+				font-weight: 700;
+			}
 
-        <!-- Botão de Reset -->
-        <div class="text-center mt-4">
-            <button class="btn btn-danger" onclick="resetColheita()">Iniciar Novo Ciclo</button>
-        </div>
-    </div>
+			h5 {
+				font-size: 24px;
+				font-style: normal;
+				font-weight: 500;
+				line-height: 24px;
+			}
 
-    <script>
-        const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        const now = new Date();
-        document.getElementById('month-display').textContent = `Panorama Mensal - ${monthNames[now.getMonth()]}`;
+			.list-group-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				border: none;
+				border-radius: 32px;
+				background: #f3f3f3;
+				box-shadow: 0px 4px 16px -8px rgba(0, 0, 0, 0.25);
+				margin-bottom: 10px;
+			}
+			.btn {
+				border-radius: 20px;
+				font-size: 0.9rem;
+				font-weight: 500;
+				padding: 8px 15px;
+			}
+			.btn-primary {
+				background-color: #28a745;
+			}
+			.btn-danger {
+				background-color: #dc3545;
+			}
+			.spinner-border {
+				vertical-align: middle;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Meu Celeiro</h1>
 
-        const plantNames = [{% for planta in plantas %}"{{ planta.nome }}"{% if not forloop.last %}, {% endif %}{% endfor %}];
-        const plantData = [{% for planta in plantas %}{{ planta.peso_colhido|default:0 }}{% if not forloop.last %}, {% endif %}{% endfor %}];
-        const totalExpected = [{% for planta in plantas %}{{ planta.quantidade|default:0 }}{% if not forloop.last %}+{% endif %}{% endfor %}];
+			<!-- Panorama Mensal -->
+			<div class="text-center">
+				<h5 class="card-title" id="month-display"></h5>
+				<div class="progress-circle">
+					<canvas id="progressChart"></canvas>
+				</div>
+				<p class="mt-3">
+					<strong>Total Esperado: </strong><span id="total-expected"></span> kg
+				</p>
+			</div>
 
-        const totalExpectedValue = eval(totalExpected);
-        const remainingToHarvest = totalExpectedValue - plantData.reduce((a, b) => a + b, 0);
+			<!-- Lista de Plantas -->
+			<div>
+				<h5 class="mt-4 mb-3 text-center">Quanto já colhi</h5>
+				<ul class="list-group">
+					{% for planta in plantas %}
+					<li class="list-group-item">
+						<div>
+							<img
+								src="{% static 'img/' %}{{ planta.nome|slugify }}.png"
+								alt="{{ planta.nome }}"
+								width="40"
+							/>
+							<span>{{ planta.nome }}</span>
+						</div>
+						<div>
+							<span
+								>{{ planta.peso_colhido|default:0 }} / {{ planta.quantidade }}
+								kg</span
+							>
+							<input
+								type="number"
+								id="peso-{{ planta.id }}"
+								placeholder="Kg"
+								class="form-control d-inline-block me-2"
+								style="width: 80px"
+								min="0"
+								max="{{ planta.quantidade|default:0|floatformat:2 }} - {{ planta.peso_colhido|default:0|floatformat:2 }}"
+							/>
+							<button
+								class="btn btn-primary btn-sm"
+								onclick="adicionarColheita('{{ planta.id }}')"
+							>
+								<span
+									class="spinner-border spinner-border-sm d-none"
+									id="spinner-{{ planta.id }}"
+								></span>
+								Adicionar
+							</button>
+							<button
+								class="btn btn-danger btn-sm"
+								onclick="deletarColheita('{{ planta.id }}')"
+							>
+								Excluir
+							</button>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
 
-        document.getElementById('total-expected').textContent = totalExpectedValue;
+			<!-- Botão de Reset -->
+			<div class="text-center mt-4">
+				<button class="btn btn-danger" onclick="resetColheita()">
+					Iniciar Novo Ciclo
+				</button>
+			</div>
+		</div>
 
-        const ctx = document.getElementById('progressChart').getContext('2d');
+		<script>
+			const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+			const now = new Date();
+			document.getElementById('month-display').innerHTML = `Panorama Mensal <br> <strong> ${monthNames[now.getMonth()]} </strong>`;
 
-        const backgroundColors = [
-            '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6f42c1', '#e83e8c', '#fd7e14', '#20c997', '#6610f2', '#007bff',
-            '#6c757d', '#adb5bd', '#ff6f61', '#c71585', '#00ced1', '#ff4500', '#8a2be2', '#deb887', '#5f9ea0', '#ff1493',
-            '#808080' // cinza para o restante
-        ];
+			const plantNames = [{% for planta in plantas %}"{{ planta.nome }}"{% if not forloop.last %}, {% endif %}{% endfor %}];
+			const plantData = [{% for planta in plantas %}{{ planta.peso_colhido|default:0 }}{% if not forloop.last %}, {% endif %}{% endfor %}];
+			const totalExpected = [{% for planta in plantas %}{{ planta.quantidade|default:0 }}{% if not forloop.last %}+{% endif %}{% endfor %}];
 
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: [...plantNames, 'Restante'],
-                datasets: [{
-                    data: [...plantData, remainingToHarvest],
-                    backgroundColor: backgroundColors.slice(0, plantNames.length + 1),
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: true, position: 'bottom' },
-                    tooltip: {
-                        callbacks: {
-                            label: function (tooltipItem) {
-                                const value = tooltipItem.raw;
-                                const percentage = ((value / totalExpectedValue) * 100).toFixed(2);
-                                return `${tooltipItem.label}: ${value} kg (${percentage}%)`;
-                            }
-                        }
-                    }
-                },
-                cutout: '70%'
-            }
-        });
+			const totalExpectedValue = eval(totalExpected);
+			const remainingToHarvest = totalExpectedValue - plantData.reduce((a, b) => a + b, 0);
 
-        function adicionarColheita(plantaId) {
-            const inputElement = document.getElementById(`peso-${plantaId}`);
-            const spinnerElement = document.getElementById(`spinner-${plantaId}`);
-            const peso = parseFloat(inputElement.value || 0);
-            const maxPeso = parseFloat(inputElement.max || 0);
+			document.getElementById('total-expected').textContent = totalExpectedValue;
 
-            if (peso > maxPeso) {
-                alert('A quantidade colhida não pode exceder o total cadastrado.');
-                return;
-            }
+			const ctx = document.getElementById('progressChart').getContext('2d');
 
-            if (peso > 0) {
-                spinnerElement.classList.remove("d-none");
-                fetch("{% url 'celeiro' %}", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
-                    body: JSON.stringify({ action: 'add_colheita', planta_id: plantaId, peso_colhido: peso })
-                }).then(response => response.json())
-                    .then(data => {
-                        spinnerElement.classList.add("d-none");
-                        if (data.success) {
-                            alert(data.message);
-                            location.reload();
-                        } else {
-                            alert(data.error);
-                        }
-                    });
-            } else {
-                alert('Insira uma quantidade válida.');
-            }
-        }
+			const backgroundColors = [
+			    '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6f42c1', '#e83e8c', '#fd7e14', '#20c997', '#6610f2', '#007bff',
+			    '#6c757d', '#adb5bd', '#ff6f61', '#c71585', '#00ced1', '#ff4500', '#8a2be2', '#deb887', '#5f9ea0', '#ff1493',
+			    '#808080' // cinza para o restante
+			];
 
-        function deletarColheita(plantaId) {
-            if (confirm("Tem certeza de que deseja excluir esta colheita?")) {
-                fetch("{% url 'celeiro' %}", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
-                    body: JSON.stringify({ action: 'delete_colheita', planta_id: plantaId })
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                            location.reload();
-                        } else {
-                            alert(data.error);
-                        }
-                    });
-            }
-        }
+			new Chart(ctx, {
+			    type: 'doughnut',
+			    data: {
+			        labels: [...plantNames, 'Restante'],
+			        datasets: [{
+			            data: [...plantData, remainingToHarvest],
+			            backgroundColor: backgroundColors.slice(0, plantNames.length + 1),
+			        }]
+			    },
+			    options: {
+			        responsive: true,
+			        plugins: {
+			            legend: { display: true, position: 'bottom' },
+			            tooltip: {
+			                callbacks: {
+			                    label: function (tooltipItem) {
+			                        const value = tooltipItem.raw;
+			                        const percentage = ((value / totalExpectedValue) * 100).toFixed(2);
+			                        return `${tooltipItem.label}: ${value} kg (${percentage}%)`;
+			                    }
+			                }
+			            }
+			        },
+			        cutout: '70%'
+			    }
+			});
 
-        function resetColheita() {
-            if (confirm("Tem certeza de que deseja resetar todas as colheitas?")) {
-                fetch("{% url 'celeiro' %}", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
-                    body: JSON.stringify({ action: 'reset_colheita' })
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                            location.reload();
-                        } else {
-                            alert(data.error);
-                        }
-                    });
-            }
-        }
-    </script>
-</body>
+			function adicionarColheita(plantaId) {
+			    const inputElement = document.getElementById(`peso-${plantaId}`);
+			    const spinnerElement = document.getElementById(`spinner-${plantaId}`);
+			    const peso = parseFloat(inputElement.value || 0);
+			    const maxPeso = parseFloat(inputElement.max || 0);
+
+			    if (peso > maxPeso) {
+			        alert('A quantidade colhida não pode exceder o total cadastrado.');
+			        return;
+			    }
+
+			    if (peso > 0) {
+			        spinnerElement.classList.remove("d-none");
+			        fetch("{% url 'celeiro' %}", {
+			            method: "POST",
+			            headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
+			            body: JSON.stringify({ action: 'add_colheita', planta_id: plantaId, peso_colhido: peso })
+			        }).then(response => response.json())
+			            .then(data => {
+			                spinnerElement.classList.add("d-none");
+			                if (data.success) {
+			                    alert(data.message);
+			                    location.reload();
+			                } else {
+			                    alert(data.error);
+			                }
+			            });
+			    } else {
+			        alert('Insira uma quantidade válida.');
+			    }
+			}
+
+			function deletarColheita(plantaId) {
+			    if (confirm("Tem certeza de que deseja excluir esta colheita?")) {
+			        fetch("{% url 'celeiro' %}", {
+			            method: "POST",
+			            headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
+			            body: JSON.stringify({ action: 'delete_colheita', planta_id: plantaId })
+			        }).then(response => response.json())
+			            .then(data => {
+			                if (data.success) {
+			                    alert(data.message);
+			                    location.reload();
+			                } else {
+			                    alert(data.error);
+			                }
+			            });
+			    }
+			}
+
+			function resetColheita() {
+			    if (confirm("Tem certeza de que deseja resetar todas as colheitas?")) {
+			        fetch("{% url 'celeiro' %}", {
+			            method: "POST",
+			            headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
+			            body: JSON.stringify({ action: 'reset_colheita' })
+			        }).then(response => response.json())
+			            .then(data => {
+			                if (data.success) {
+			                    alert(data.message);
+			                    location.reload();
+			                } else {
+			                    alert(data.error);
+			                }
+			            });
+			    }
+			}
+		</script>
+	</body>
 </html>
