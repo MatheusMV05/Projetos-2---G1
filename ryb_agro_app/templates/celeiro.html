@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 	<head>
 		{% load static %}
@@ -98,16 +98,16 @@
 		<div class="container">
 			<h1>Meu Celeiro</h1>
 
-			<!-- Panorama Mensal -->
-			<div class="text-center">
-				<h5 class="card-title" id="month-display"></h5>
-				<div class="progress-circle">
-					<canvas id="progressChart"></canvas>
-				</div>
-				<p class="mt-3">
-					<strong>Total Esperado: </strong><span id="total-expected"></span> kg
-				</p>
-			</div>
+        <!-- Panorama Mensal -->
+        <div class="text-center">
+            <h5 class="card-title" id="month-display"></h5>
+            <div class="progress-circle">
+                <canvas id="progressChart"></canvas>
+            </div>
+            <p class="mt-3">
+                <strong>Total Esperado: </strong><span id="total-expected"></span> kg
+            </p>
+        </div>
 
 			<!-- Lista de Plantas -->
 			<div>
@@ -176,95 +176,95 @@
 			const plantData = [{% for planta in plantas %}{{ planta.peso_colhido|default:0 }}{% if not forloop.last %}, {% endif %}{% endfor %}];
 			const totalExpected = [{% for planta in plantas %}{{ planta.quantidade|default:0 }}{% if not forloop.last %}+{% endif %}{% endfor %}];
 
-			const totalExpectedValue = eval(totalExpected);
-			const remainingToHarvest = totalExpectedValue - plantData.reduce((a, b) => a + b, 0);
+        const totalExpectedValue = eval(totalExpected);
+        const remainingToHarvest = totalExpectedValue - plantData.reduce((a, b) => a + b, 0);
 
-			document.getElementById('total-expected').textContent = totalExpectedValue;
+        document.getElementById('total-expected').textContent = totalExpectedValue;
 
-			const ctx = document.getElementById('progressChart').getContext('2d');
+        const ctx = document.getElementById('progressChart').getContext('2d');
 
-			const backgroundColors = [
-			    '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6f42c1', '#e83e8c', '#fd7e14', '#20c997', '#6610f2', '#007bff',
-			    '#6c757d', '#adb5bd', '#ff6f61', '#c71585', '#00ced1', '#ff4500', '#8a2be2', '#deb887', '#5f9ea0', '#ff1493',
-			    '#808080' // cinza para o restante
-			];
+        const backgroundColors = [
+            '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6f42c1', '#e83e8c', '#fd7e14', '#20c997', '#6610f2', '#007bff',
+            '#6c757d', '#adb5bd', '#ff6f61', '#c71585', '#00ced1', '#ff4500', '#8a2be2', '#deb887', '#5f9ea0', '#ff1493',
+            '#808080' // cinza para o restante
+        ];
 
-			new Chart(ctx, {
-			    type: 'doughnut',
-			    data: {
-			        labels: [...plantNames, 'Restante'],
-			        datasets: [{
-			            data: [...plantData, remainingToHarvest],
-			            backgroundColor: backgroundColors.slice(0, plantNames.length + 1),
-			        }]
-			    },
-			    options: {
-			        responsive: true,
-			        plugins: {
-			            legend: { display: true, position: 'bottom' },
-			            tooltip: {
-			                callbacks: {
-			                    label: function (tooltipItem) {
-			                        const value = tooltipItem.raw;
-			                        const percentage = ((value / totalExpectedValue) * 100).toFixed(2);
-			                        return `${tooltipItem.label}: ${value} kg (${percentage}%)`;
-			                    }
-			                }
-			            }
-			        },
-			        cutout: '70%'
-			    }
-			});
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [...plantNames, 'Restante'],
+                datasets: [{
+                    data: [...plantData, remainingToHarvest],
+                    backgroundColor: backgroundColors.slice(0, plantNames.length + 1),
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true, position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                const value = tooltipItem.raw;
+                                const percentage = ((value / totalExpectedValue) * 100).toFixed(2);
+                                return `${tooltipItem.label}: ${value} kg (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
 
-			function adicionarColheita(plantaId) {
-			    const inputElement = document.getElementById(`peso-${plantaId}`);
-			    const spinnerElement = document.getElementById(`spinner-${plantaId}`);
-			    const peso = parseFloat(inputElement.value || 0);
-			    const maxPeso = parseFloat(inputElement.max || 0);
+        function adicionarColheita(plantaId) {
+            const inputElement = document.getElementById(`peso-${plantaId}`);
+            const spinnerElement = document.getElementById(`spinner-${plantaId}`);
+            const peso = parseFloat(inputElement.value || 0);
+            const maxPeso = parseFloat(inputElement.max || 0);
 
-			    if (peso > maxPeso) {
-			        alert('A quantidade colhida não pode exceder o total cadastrado.');
-			        return;
-			    }
+            if (peso > maxPeso) {
+                alert('A quantidade colhida não pode exceder o total cadastrado.');
+                return;
+            }
 
-			    if (peso > 0) {
-			        spinnerElement.classList.remove("d-none");
-			        fetch("{% url 'celeiro' %}", {
-			            method: "POST",
-			            headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
-			            body: JSON.stringify({ action: 'add_colheita', planta_id: plantaId, peso_colhido: peso })
-			        }).then(response => response.json())
-			            .then(data => {
-			                spinnerElement.classList.add("d-none");
-			                if (data.success) {
-			                    alert(data.message);
-			                    location.reload();
-			                } else {
-			                    alert(data.error);
-			                }
-			            });
-			    } else {
-			        alert('Insira uma quantidade válida.');
-			    }
-			}
+            if (peso > 0) {
+                spinnerElement.classList.remove("d-none");
+                fetch("{% url 'celeiro' %}", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
+                    body: JSON.stringify({ action: 'add_colheita', planta_id: plantaId, peso_colhido: peso })
+                }).then(response => response.json())
+                    .then(data => {
+                        spinnerElement.classList.add("d-none");
+                        if (data.success) {
+                            alert(data.message);
+                            location.reload();
+                        } else {
+                            alert(data.error);
+                        }
+                    });
+            } else {
+                alert('Insira uma quantidade válida.');
+            }
+        }
 
-			function deletarColheita(plantaId) {
-			    if (confirm("Tem certeza de que deseja excluir esta colheita?")) {
-			        fetch("{% url 'celeiro' %}", {
-			            method: "POST",
-			            headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
-			            body: JSON.stringify({ action: 'delete_colheita', planta_id: plantaId })
-			        }).then(response => response.json())
-			            .then(data => {
-			                if (data.success) {
-			                    alert(data.message);
-			                    location.reload();
-			                } else {
-			                    alert(data.error);
-			                }
-			            });
-			    }
-			}
+        function deletarColheita(plantaId) {
+            if (confirm("Tem certeza de que deseja excluir esta colheita?")) {
+                fetch("{% url 'celeiro' %}", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
+                    body: JSON.stringify({ action: 'delete_colheita', planta_id: plantaId })
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            location.reload();
+                        } else {
+                            alert(data.error);
+                        }
+                    });
+            }
+        }
 
 			function resetColheita() {
 			    if (confirm("Tem certeza de que deseja resetar todas as colheitas?")) {
