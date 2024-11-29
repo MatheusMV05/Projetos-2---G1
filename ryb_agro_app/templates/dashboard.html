@@ -81,6 +81,66 @@
 			/* 240% */
 			letter-spacing: -0.4px;
 		}
+
+		.header-container {
+			display: flex;
+			justify-content: space-between;
+			/* Espaça o nome e o clima */
+			align-items: center;
+			padding: 10px 20px;
+			background-color: #f9f9f9;
+		}
+
+		.user-info {
+			font-size: 1.5rem;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.clima-container {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			max-width: 150px;
+			/* Limita o espaço ocupado pelo clima */
+			font-size: 1rem;
+			text-align: right;
+		}
+
+		.card-clima-atual {
+			display: inline-block;
+			padding: 5px;
+			background-color: #e8f5e9;
+			/* Fundo sutil para clima */
+			border-radius: 8px;
+		}
+
+
+		@media (max-width: 768px) {
+			.header-container {
+				flex-direction: row;
+				/* Mantém o layout em linha */
+				padding: 10px;
+			}
+
+			.user-info h2 {
+				font-size: 1.2rem;
+				/* Reduz o tamanho da fonte */
+			}
+
+			.clima-container {
+				max-width: 100px;
+				/* Ajusta o espaço para o clima */
+			}
+
+			.card-clima-atual {
+				font-size: 0.9rem;
+				/* Ajusta o tamanho do texto */
+				padding: 2px 5px;
+				/* Reduz o padding */
+			}
+		}
 	</style>
 </head>
 
@@ -116,23 +176,29 @@
 			</nav>
 		</header>
 	</div>
-	<h2>Bem-vindo,<br><span>{{ user.nome }}</span></h2>
-	<br>
-
-	<!-- Clima Atual -->
-	<div class="card card-clickable card-clima-atual shadow-sm" role="button" data-bs-toggle="modal"
-		data-bs-target="#modalPrevisao" style="margin-right: 60px;">
-		<div class="card-header bg-primary text-white" style="background-color: #1b4a3f !important;">
-			<h4 class="mb-0 text-center">🌡️ Clima Atual</h4>
-		</div>
-		<div class="card-body text-center">
-			<p id="temperatura"><strong>Temperatura:</strong> --</p>
-			<p id="descricao"><strong>Descrição:</strong> --</p>
-			<img id="imagem-lua" src="{% static 'img/new.png' %}" alt="Fase da Lua" class="img-fluid"
-				style="max-width: 50px;" />
-			<p id="nome-fase"></p>
-		</div>
+	<div class="header-container">
+		<header>
+			<div class="user-info">
+				<h2>Bem-vindo,<br><span>{{ user.nome }}</span></h2>
+			</div>
+			<div class="clima-container">
+				<div class="card card-clickable card-clima-atual shadow-sm" role="button" data-bs-toggle="modal"
+					data-bs-target="#modalPrevisao">
+					<div class="card-header bg-primary text-white" style="background-color: #1b4a3f !important;">
+						<h4 class="mb-0 text-center">🌡️ Clima Atual</h4>
+					</div>
+					<div class="card-body text-center">
+						<p id="temperatura"><strong>Temperatura:</strong> --</p>
+						<p id="descricao"><strong>Descrição:</strong> --</p>
+						<img id="imagem-lua" src="{% static 'img/new.png' %}" alt="Fase da Lua" class="img-fluid"
+							style="max-width: 50px;" />
+						<p id="nome-fase"></p>
+					</div>
+				</div>
+			</div>
+		</header>
 	</div>
+
 
 	<!-- Modal para Previsão dos Próximos Dias -->
 	<div class="modal fade" id="modalPrevisao" tabindex="-1" aria-labelledby="modalPrevisaoLabel" aria-hidden="true">
