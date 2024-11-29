@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demandas Comerciais</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    {% if messages %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert"
+        style="opacity: 1 !important; visibility: visible !important">
+        {% for message in messages %}
+        <strong>Aviso:</strong> {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!-- Barra de navegação -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Gestão Comercial</a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Registro de Demandas Comerciais</h1>
+
+        <!-- Formulário de Registro/Edição de Demanda Comercial -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ demanda_em_edicao|default:"Registrar Nova Demanda" }}</h5>
+                <form method="post" class="row g-3">
+                    {% csrf_token %}
+                    {% if demanda_em_edicao %}
+                        <input type="hidden" name="editar" value="1">
+                        <input type="hidden" name="demanda_id" value="{{ demanda_em_edicao.id }}">
+                    {% else %}
+                        <input type="hidden" name="registrar" value="1">
+                    {% endif %}
+                    
+                    <div class="col-md-3">
+                        <label for="nome" class="form-label">Nome</label>
+                        <input type="text" id="nome" name="nome" class="form-control" value="{{ demanda_em_edicao.nome|default_if_none:'' }}" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="tipo" class="form-label">Tipo de Demanda</label>
+                        <select id="tipo" name="tipo" class="form-select">
+                            <option value="compra" {% if demanda_em_edicao and demanda_em_edicao.tipo == "compra" %}selected{% endif %}>Compra</option>
+                            <option value="venda" {% if demanda_em_edicao and demanda_em_edicao.tipo == "venda" %}selected{% endif %}>Venda</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="quantidade" class="form-label">Quantidade</label>
+                        <input type="number" id="quantidade" name="quantidade" class="form-control" value="{{ demanda_em_edicao.quantidade|default_if_none:'' }}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="preco" class="form-label">Preço</label>
+                        <input type="number" id="preco" name="preco" class="form-control" step="0.01" value="{{ demanda_em_edicao.preco|default_if_none:'' }}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="prazo" class="form-label">Prazo</label>
+                        <input type="date" id="prazo" name="prazo" class="form-control" value="{{ demanda_em_edicao.prazo|date:'Y-m-d'|default_if_none:'' }}" required>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">{{ demanda_em_edicao|default:"Registrar" }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Filtros de Demandas</h5>
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="tipo_filtro" class="form-label">Filtrar por Tipo</label>
+                        <select id="tipo_filtro" name="tipo" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="compra" {% if tipo_filtro == "compra" %}selected{% endif %}>Compra</option>
+                            <option value="venda" {% if tipo_filtro == "venda" %}selected{% endif %}>Venda</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="status_filtro" class="form-label">Filtrar por Status</label>
+                        <select id="status_filtro" name="status" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="pendente" {% if status_filtro == "pendente" %}selected{% endif %}>Pendente</option>
+                            <option value="concluída" {% if status_filtro == "concluída" %}selected{% endif %}>Concluída</option>
+                            <option value="cancelada" {% if status_filtro == "cancelada" %}selected{% endif %}>Cancelada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-secondary w-100">Aplicar Filtros</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de Demandas Comerciais -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Lista de Demandas Comerciais</h5>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Quantidade</th>
+                            <th>Preço</th>
+                            <th>Prazo</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for demanda in demandas %}
+                            <tr>
+                                <td>{{ demanda.nome }}</td>
+                                <td>{{ demanda.tipo }}</td>
+                                <td>{{ demanda.quantidade }}</td>
+                                <td>{{ demanda.preco }}</td>
+                                <td>{{ demanda.prazo }}</td>
+                                <td>{{ demanda.status }}</td>
+                                <td>
+                                    <!-- Link para editar (na mesma página) -->
+                                    <a href="?editar_demanda_id={{ demanda.id }}" class="btn btn-warning btn-sm">Editar</a>
+
+                                    <!-- Form para alterar o status -->
+                                    <form method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="alterar_status" value="1">
+                                        <input type="hidden" name="demanda_id" value="{{ demanda.id }}">
+                                        <select name="status" class="form-select form-select-sm d-inline-block w-auto">
+                                            <option value="pendente" {% if demanda.status == "pendente" %}selected{% endif %}>Pendente</option>
+                                            <option value="concluída" {% if demanda.status == "concluída" %}selected{% endif %}>Concluída</option>
+                                            <option value="cancelada" {% if demanda.status == "cancelada" %}selected{% endif %}>Cancelada</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-info btn-sm">Atualizar</button>
+                                    </form>
+
+                                    <!-- Form para exclusão -->
+                                    <form method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="demanda_id" value="{{ demanda.id }}">
+                                        <button type="submit" name="excluir" value="true" class="btn btn-danger">Excluir</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">Nenhuma demanda registrada.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

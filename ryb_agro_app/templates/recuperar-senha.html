@@ -1,44 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Recuperar senha - Cultiva Fácil</title>
+		{% load static %}
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/recuperar-senha.css' %}" />
+		<script src="{% static 'js/recuperar-senha.js' %}"></script>
+	</head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperar senha - Cultiva Fácil</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'css/recuperar-senha.css' %}">
-    <script src="{% static 'js/recuperar-senha.js' %}"></script>
-</head>
+	<body class="gojali-regular">
+		<div class="logo">
+			<a
+				href="{% url 'landingPage' %}"
+				aria-label="Página inicial"
+				tabindex="0"
+			>
+				<img
+					src="{% static 'img/Logomarca Horizontal.svg' %}"
+					alt="Logomarca da empresa"
+				/>
+			</a>
+		</div>
+		<main role="main">
+			<h1>Recuperar senha</h1>
+			<p>Insira seu e-mail para receber um link de redefinição de senha.</p>
+			<form id="forgot-password-form">
+				<div class="email-recuperacao">
+					<label for="email">Digite seu e-mail:</label>
+					<input type="email" id="email" name="email" required tabindex="1" />
+				</div>
 
-<body class="gojali-regular">
-
-    <div class="logo">
-        <a href="{% url 'landingPage' %}" aria-label="Página inicial" tabindex="0">
-            <img src="{% static 'img/Logomarca Horizontal.svg' %}" alt="Logomarca da empresa">
-        </a>
-    </div>
-    <main role="main">
-        <h1>
-            Recuperar senha
-        </h1>
-        <p>Insira seu e-mail para receber um link de redefinição de senha.</p>
-        <form id="forgot-password-form">
-
-            <div class="email-recuperacao">
-                <label for="email">Digite seu e-mail:</label>
-                <input type="email" id="email" name="email" required tabindex="1">
-            </div>
-
-            <button type="submit" tabindex="2">Enviar Link de Redefinição</button>
-
-        </form>
-        <p id="error-message" role="alert" aria-live="assertive"></p>
-    </main>
-    <footer>
-        <p>&copy; 2024 Cultiva Fácil</p>
-    </footer>
-
-</body>
-
+				<button type="submit" tabindex="2">Enviar Link de Redefinição</button>
+			</form>
+			<p id="error-message" role="alert" aria-live="assertive"></p>
+		</main>
+		<footer>
+			<p>&copy; 2024 Cultiva Fácil</p>
+		</footer>
+	</body>
 </html>

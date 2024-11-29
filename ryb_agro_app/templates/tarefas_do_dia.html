@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Minhas tarefas</title>
+
+		{% load static %}
+
+		<link
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/tarefas_do_dia.css' %}" />
+		<script
+			src="https://kit.fontawesome.com/8bd07f7496.js"
+			crossorigin="anonymous"
+		></script>
+
+		<style>
+			/* Scroll Snap Layout */
+			.scroll-snap-container {
+				display: flex;
+				overflow-x: scroll;
+				scroll-snap-type: x mandatory;
+				width: 100vw;
+			}
+
+			.screen {
+				scroll-snap-align: start;
+				flex: 0 0 100vw;
+				width: 100vw;
+				padding: 20px;
+				box-sizing: border-box;
+			}
+
+			/* Screen Indicator Bar */
+			.screen-indicator-bar {
+				display: flex;
+				justify-content: space-around;
+				align-items: flex-end; /* Aligns icons and bar in the same vertical block */
+				gap: 10px;
+				margin-bottom: 10px;
+				position: relative;
+				width: 95vw;
+				margin: 0 auto; /* Centers the indicator bar and icons */
+			}
+
+			/* Indicator Button Styles */
+			.screen-indicator-bar button {
+				padding: 10px;
+				font-weight: bold;
+				background-color: transparent;
+				border: none;
+				cursor: pointer;
+				font-size: 1.5rem;
+				color: #666;
+			}
+
+			/* Active Indicator Bar */
+			.active-indicator-bar {
+				position: absolute;
+				bottom: -8px; /* Slightly below the icons */
+				left: 0;
+				width: 100%;
+				height: 4px;
+				margin-top: 8px;
+			}
+
+			/* Gray background for inactive screen */
+			.indicator-background {
+				background-color: #d9d9d9;
+				width: 100%;
+				height: 8px;
+				position: absolute;
+				top: 0;
+				left: 0;
+				border-radius: 2px;
+			}
+
+			/* Green overlay for active screen */
+			.indicator-foreground {
+				background-color: #1b4a3f;
+				width: 50%;
+				height: 8px;
+				position: absolute;
+				top: 0;
+				left: 0; /* Start at the left initially */
+				transition: left 0.3s ease; /* Smooth transition */
+				border-radius: 2px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container my-4">
+			<h1 class="text-center mb-4">Minhas tarefas</h1>
+
+			<div class="screen-indicator-bar">
+				<button onclick="scrollToScreen(0)" id="screen-1-indicator">
+					<i class="fa-solid fa-list-ul"></i>
+				</button>
+				<button onclick="scrollToScreen(1)" id="screen-2-indicator">
+					<i class="fa-regular fa-calendar"></i>
+				</button>
+
+				<!-- Full-width Active Indicator Bar positioned under icons -->
+				<div class="active-indicator-bar">
+					<div class="indicator-background"></div>
+					<div class="indicator-foreground" id="activeIndicator"></div>
+				</div>
+			</div>
+
+			<div class="scroll-snap-container">
+				<!-- First Screen -->
+				<div class="screen">
+					<!-- Weekly Calendar -->
+					<div
+						id="dias-semana"
+						class="dias-semana d-flex justify-content-center mb-4"
+					></div>
+
+					<div class="search-container d-flex align-items-center">
+						<div class="busca">
+							<input
+								type="search"
+								id="search-plant"
+								class="form-control"
+								placeholder="&#xf002; Buscar planta"
+								style="font-family: Arial, FontAwesome"
+								oninput="aplicarFiltros()"
+							/>
+						</div>
+
+						<select
+							id="tipo-acao-filter"
+							class="form-control ml-2"
+							onchange="aplicarFiltros()"
+						>
+							<option value="">Todos</option>
+							<option value="Preparo do Solo">Preparo do Solo</option>
+							<option value="Plantio">Plantio</option>
+							<option value="Irrigação">Irrigação</option>
+							<option value="Inspeção">Inspeção</option>
+							<option value="Biofertilização">Biofertilização</option>
+							<option value="Colheita">Colheita</option>
+						</select>
+						<i class="fa-solid fa-filter ml-2"></i>
+					</div>
+
+					<!-- Seção para Tarefas Pendentes -->
+					<div id="pendentes-section">
+						{% for planta, tarefas in tarefas_do_dia.items %}
+						<div class="planta-section mb-3">
+							<ul class="list-group" id="pendentes-list">
+								{% for tarefa in tarefas %}
+								<li
+									class="list-group-item d-flex justify-content-between align-items-center"
+									style="
+										height: 104px;
+										border-radius: 16px;
+										background: #fff;
+										box-shadow: 0px 0px 16px -4px rgba(0, 0, 0, 0.25);
+									"
+								>
+									<span
+										class="task-title"
+										onclick="showTaskDetails('{{ tarefa.tipo_acao }}', '{{ tarefa.descricao }}', '{{ tarefa.planta }}')"
+									>
+										{{ tarefa.tipo_acao }} <br />
+										{{ tarefa.planta }}
+									</span>
+									<input
+										type="checkbox"
+										class="checkbox"
+										onclick="toggleTaskCompletion(this)"
+									/>
+								</li>
+								{% endfor %}
+							</ul>
+						</div>
+						{% empty %}
+						<p class="text-muted">Não há tarefas programadas para hoje.</p>
+						{% endfor %}
+					</div>
+
+					<!-- Seção para Tarefas Concluídas -->
+					<div id="concluidas-container" class="concluidas-bar mt-5">
+						<h2
+							class="h4 text-success d-flex justify-content-between align-items-center"
+						>
+							Concluídas
+							<i
+								id="toggle-concluidas-btn"
+								class="fa-solid fa-angle-down toggle-arrow"
+							></i>
+						</h2>
+						<ul class="list-group" id="concluidas-list">
+							<!-- Tarefas concluídas aparecerão aqui -->
+						</ul>
+					</div>
+
+					<!-- Modal para exibir mais informações sobre a tarefa -->
+					<div
+						class="modal fade"
+						id="taskModal"
+						tabindex="-1"
+						aria-labelledby="taskModalLabel"
+						aria-hidden="true"
+					>
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="taskModalLabel">
+										Detalhes da Tarefa
+									</h5>
+									<button
+										type="button"
+										class="close"
+										data-dismiss="modal"
+										aria-label="Close"
+									>
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<p id="taskDetails"></p>
+								</div>
+								<div class="modal-footer">
+									<button
+										type="button"
+										class="btn btn-secondary"
+										data-dismiss="modal"
+									>
+										Fechar
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Botão de adicionar tarefa
+		<button
+			id="add-task-btn"
+			class="btn btn-primary"
+			onclick="abrirModalTarefa()"
+			style="
+				position: fixed;
+				bottom: 1.5rem;
+				right: 1.5rem;
+				width: 4.5rem;
+				height: 4.5rem;
+				border-radius: 50%;
+				background-color: #1b4a3f;
+				color: white;
+				font-size: 2rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			"
+		>
+			+
+		</button> -->
+
+				<!-- Modal para adicionar nova tarefa
+		<div
+			class="modal fade"
+			id="addTaskModal"
+			tabindex="-1"
+			aria-labelledby="addTaskModalLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="addTaskModalLabel">
+							Adicionar Nova Tarefa
+						</h5>
+						<button
+							type="button"
+							class="close"
+							data-dismiss="modal"
+							aria-label="Close"
+						>
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form id="add-task-form" onsubmit="adicionarTarefa(event)">
+						<div class="modal-body">
+							<div class="form-group">
+								<label for="tipo-acao">Tipo de Ação</label>
+								<select id="tipo-acao" class="form-control" required>
+									<option value="Preparo do Solo">Preparo do Solo</option>
+									<option value="Plantio">Plantio</option>
+									<option value="Irrigação">Irrigação</option>
+									<option value="Inspeção">Inspeção</option>
+									<option value="Biofertilização">Biofertilização</option>
+									<option value="Controle de Pragas">Controle de Pragas</option>
+									<option value="Colheita">Colheita</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="descricao">Descrição</label>
+								<textarea
+									class="form-control"
+									id="descricao"
+									rows="3"
+									required
+								></textarea>
+							</div>
+							<div class="form-group">
+								<label for="planta">Planta</label>
+								<input type="text" class="form-control" id="planta" required />
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-dismiss="modal"
+							>
+								Cancelar
+							</button>
+							<button type="submit" class="btn btn-primary">Salvar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div> -->
+				<!-- Second Screen -->
+				<div class="screen">
+					<div class="calendar-container">
+						<!-- Trimester Display -->
+						<div class="trimester-display" id="trimester-display">
+							<!-- Month buttons for the trimester will be dynamically added here -->
+						</div>
+						<!-- Calendar Grid -->
+						<div class="calendar-grid" id="calendar-grid">
+							<div class="day-header">D</div>
+							<div class="day-header">S</div>
+							<div class="day-header">T</div>
+							<div class="day-header">Q</div>
+							<div class="day-header">Q</div>
+							<div class="day-header">S</div>
+							<div class="day-header">S</div>
+							<!-- Date Cells will be generated dynamically -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Bottom Navigation Bar -->
+		<nav class="bottom-nav">
+			<a href="{% url 'dashboard' %}" class="nav-item">
+				<i class="fa-solid fa-table-cells-large"></i>
+				<span>Home</span>
+			</a>
+			<a href="{% url 'tarefas_do_dia' %}" class="nav-item">
+				<i class="fa-solid fa-clipboard-list"></i>
+				<span>Minhas tarefas</span>
+			</a>
+			<a href="{% url 'meu_plantio' %}" class="nav-item">
+				<i class="fa-solid fa-seedling"></i>
+				<span>Meu Plantio</span>
+			</a>
+			<a href="{% url 'celeiro' %}" class="nav-item">
+				<i class="fa-solid fa-house"></i>
+				<span>Meu Celeiro</span>
+			</a>
+		</nav>
+		<!-- Closing container div -->
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="{% static 'js/tarefas_do_dia.js' %}" defer></script>
+		<script>
+			// JavaScript functions to manage task completion and toggling visibility of completed tasks
+			$(document).ready(function () {
+				carregarDiasSemana(); // Call the function to load the days of the week
+			});
+
+			function toggleCompletedTasks() {
+				$('#concluidas-list').toggle();
+				$('#toggle-concluidas-btn').toggleClass('closed');
+			}
+		</script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const container = document.querySelector('.scroll-snap-container');
+				const activeIndicator = document.getElementById('activeIndicator');
+
+				function updateActiveScreen() {
+					const screenWidth = window.innerWidth;
+					const isFirstScreen = container.scrollLeft < screenWidth / 2;
+					activeIndicator.style.left = isFirstScreen ? '0%' : '50%';
+				}
+
+				window.scrollToScreen = function (screenIndex) {
+					const screenWidth = window.innerWidth;
+					container.scrollTo({
+						left: screenIndex * screenWidth,
+						behavior: 'smooth',
+					});
+					updateActiveScreen();
+				};
+
+				container.addEventListener('scroll', updateActiveScreen);
+
+				// Recalculate on resize
+				window.addEventListener('resize', updateActiveScreen);
+
+				updateActiveScreen(); // Initial setup
+			});
+		</script>
+		
+		
+	</body>
+</html>
