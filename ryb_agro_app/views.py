@@ -169,10 +169,14 @@ def add_planta(request):
             data = json.loads(request.body)
             plantas = data.get('plantas', [])
             canteiro_id = data.get('canteiro_id')  # Recebe o ID do canteiro
+            setor_id = data.get('setor_id')
             
             # Valida se o canteiro pertence ao usuário logado
             canteiro = get_object_or_404(
                 Canteiro, id=canteiro_id, setor__usuario=request.user
+            )
+            setor = get_object_or_404(
+                Setor, id=setor_id, usuario=request.user
             )
 
             if not canteiro_id or not plantas:
@@ -184,7 +188,8 @@ def add_planta(request):
                     quantidade=planta['amount'],
                     frequencia=planta['frequency'],
                     user=request.user,
-                    canteiro=canteiro  # Associa ao canteiro
+                    canteiro=canteiro,  # Associa ao canteiro
+                    setor=setor,
                 )
 
             return JsonResponse({'status': 'success'})
@@ -595,23 +600,107 @@ def dashboard(request):
 
 @login_required
 def meu_plantio_view(request):
+    # Lista fixa de plantas suportadas no sistema
+    plantas_suportadas = [
+        {"id": 1, "nome": "Milho"},
+        {"id": 2, "nome": "Inhame"},
+        {"id": 3, "nome": "Batata Doce"},
+        {"id": 4, "nome": "Abóbora"},
+        {"id": 5, "nome": "Cenoura"},
+    ]
+
+    # Carrega os setores e canteiros do usuário
     setores = Setor.objects.filter(usuario=request.user)
     dados_plantio = [
         {
+            "setor_id": setor.id,
             "setor": setor.nome,
             "canteiros": [
                 {
                     "id": canteiro.id,
                     "canteiro": canteiro.nome,
-                    # Acessa as plantas associadas ao canteiro
-                    "plantas": list(canteiro.plantas.all().values("nome"))
+                    "plantas": list(canteiro.plantas.all()),
                 }
                 for canteiro in setor.canteiros.all()
             ],
         }
         for setor in setores
     ]
-    return render(request, "meu_plantio.html", {"dados_plantio": dados_plantio})
 
+    return render(
+        request,
+        "meu_plantio.html",
+        {
+            "dados_plantio": dados_plantio,
+            "plantas_disponiveis": plantas_suportadas,
+        },
+    )
+
+
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Setor, Canteiro
+
+
+@login_required
+def adicionar_setor(request):
+    if request.method == "POST":
+        nome = request.POST.get("nome")
+        quantidade_canteiros = int(request.POST.get("quantidade_canteiros", 0))
+
+        if nome and quantidade_canteiros > 0:
+            # Cria o setor
+            setor = Setor.objects.create(nome=nome, usuario=request.user)
+
+            # Cria os canteiros
+            for i in range(1, quantidade_canteiros + 1):
+                Canteiro.objects.create(nome=f"Canteiro {i}", setor=setor)
+
+    return redirect("meu_plantio")
+
+@login_required
+def renomear_setor(request, setor_id):
+    setor = get_object_or_404(Setor, id=setor_id, usuario=request.user)
+    if request.method == "POST":
+        novo_nome = request.POST.get("novo_nome")
+        if novo_nome:
+            setor.nome = novo_nome
+            setor.save()
+    return redirect("meu_plantio")
+
+@login_required
+def apagar_setor(request, setor_id):
+    setor = get_object_or_404(Setor, id=setor_id, usuario=request.user)
+    if request.method == "POST":
+        setor.delete()
+    return redirect("meu_plantio")
+
+from django.shortcuts import get_object_or_404, redirect
+from .models import Canteiro, Planta
+
+@login_required
+def adicionar_planta(request, canteiro_id):
+    if request.method == "POST":
+        canteiro = get_object_or_404(Canteiro, id=canteiro_id)
+        planta_nome = request.POST.get("planta_nome")
+
+        # Verifica se a planta já existe no banco e a associa ao canteiro
+        planta, created = Planta.objects.get_or_create(
+            nome=planta_nome, defaults={"user": request.user}
+        )
+        planta.canteiro = canteiro
+        planta.save()
+
+        return redirect("meu_plantio")
+    
+def remover_planta(request, planta_id):
+    # Obtém a planta pelo ID e verifica o usuário autenticado
+    planta = get_object_or_404(Planta, id=planta_id, user=request.user)
+
+    # Remove a planta
+    planta.delete()
+
+    # Redireciona de volta para a página principal
+    return redirect('meu_plantio')
 
 

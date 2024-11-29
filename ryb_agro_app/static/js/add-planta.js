@@ -114,94 +114,77 @@ const checkConflictingPlants = (newPlant, setorId) => {
 
 // Evento para adicionar a planta na lista
 addPlantButton.addEventListener('click', () => {
-	const harvestAmount = harvestAmountInput.value;
-	const harvestFrequency = harvestFrequencySelect.value;
-	const selectedPlant = modalTitle.textContent;
-	const selectedCanteiro = document.getElementById('selectCanteiro').value;
+    const harvestAmount = harvestAmountInput.value;
+    const harvestFrequency = harvestFrequencySelect.value;
+    const selectedPlant = modalTitle.textContent;
+    const selectedCanteiro = document.getElementById('selectCanteiro').value;
 
-	if (!harvestAmount || !selectedCanteiro) {
-		alert('Por favor, insira uma quantidade válida e selecione um canteiro.');
-		return;
-	}
+    if (!harvestAmount || !selectedCanteiro) {
+        alert('Por favor, insira uma quantidade válida e selecione um canteiro.');
+        return;
+    }
 
-	// Obtém o setor do dropdown do canteiro
-	const setorId = document.querySelector(
-		`#selectCanteiro option[value="${selectedCanteiro}"]`
-	)?.dataset.setor;
+    // Obtém o setor do dropdown do canteiro
+    const setorId = document.querySelector(
+        `#selectCanteiro option[value="${selectedCanteiro}"]`
+    )?.dataset.setor;
 
-	// Verifica se há plantas conflitantes no mesmo setor
-	const conflicts = checkConflictingPlants(selectedPlant, setorId);
-	if (conflicts.length > 0) {
-		alert(
-			`Atenção: A planta ${selectedPlant} pode entrar em conflito com as seguintes plantas no mesmo setor: ${conflicts.join(
-				', '
-			)}.`
-		);
-	}
-
-	// Adiciona a planta na lista
-	const plant = {
-		name: selectedPlant,
-		amount: harvestAmount,
-		frequency: harvestFrequency,
-		canteiro: selectedCanteiro,
-		setor: setorId, // Inclui o setor associado
-	};
-	savedPlants.push(plant);
-
-	// Atualiza a lista de plantas exibida
-	updatePlantList();
-
-	// Fecha o modal
-	modal.style.display = 'none';
+    const plant = {
+        name: selectedPlant,
+        amount: harvestAmount,
+        frequency: harvestFrequency,
+        canteiro: selectedCanteiro,
+        setor: setorId, // Inclui o setor associado
+    };
+    savedPlants.push(plant);
+    updatePlantList();
+    modal.style.display = 'none';
 });
 
 // Atualiza a lista de plantas exibida
 const updatePlantList = () => {
-	plantListContainer.innerHTML = ''; // Limpa a lista existente
+    plantListContainer.innerHTML = ''; // Limpa a lista existente
 
-	// Agrupa as plantas por canteiro
-	const groupedPlants = savedPlants.reduce((acc, plant) => {
-		if (!acc[plant.canteiro]) {
-			acc[plant.canteiro] = [];
-		}
-		acc[plant.canteiro].push(plant);
-		return acc;
-	}, {});
+    // Agrupa as plantas por canteiro
+    const groupedPlants = savedPlants.reduce((acc, plant) => {
+        if (!acc[plant.canteiro]) {
+            acc[plant.canteiro] = [];
+        }
+        acc[plant.canteiro].push(plant);
+        return acc;
+    }, {});
 
-	// Cria elementos separados para cada canteiro
-	Object.keys(groupedPlants).forEach((canteiroId) => {
-		// Obtém o nome completo (Setor - Canteiro) do dropdown
-		const canteiroName =
-			document.querySelector(`#selectCanteiro option[value="${canteiroId}"]`)
-				?.textContent || `Canteiro ${canteiroId}`;
+    // Cria elementos separados para cada canteiro
+    Object.keys(groupedPlants).forEach((canteiroId) => {
+        const canteiroOption = document.querySelector(`#selectCanteiro option[value="${canteiroId}"]`);
+        const canteiroName = canteiroOption?.textContent || `Canteiro ${canteiroId}`;
+        const setorName = canteiroOption?.dataset.setor || "Setor desconhecido";
 
-		// Cria título para o canteiro
-		const canteiroSection = document.createElement('div');
-		canteiroSection.innerHTML = `<h4>${canteiroName}</h4>`;
-		plantListContainer.appendChild(canteiroSection);
+        const canteiroSection = document.createElement('div');
+        canteiroSection.innerHTML = `<h4>${setorName} - ${canteiroName}</h4>`;
+        plantListContainer.appendChild(canteiroSection);
 
-		// Adiciona as plantas do canteiro
-		const plantList = document.createElement('ul');
-		groupedPlants[canteiroId].forEach((plant, index) => {
-			const plantItem = document.createElement('li');
-			plantItem.innerHTML = `
+        const plantList = document.createElement('ul');
+        groupedPlants[canteiroId].forEach((plant, index) => {
+            const plantItem = document.createElement('li');
+            plantItem.innerHTML = `
                 ${plant.name} - ${plant.amount} kg, ${plant.frequency}
                 <button class="remove-plant" data-index="${index}"> X </button>
             `;
-			plantList.appendChild(plantItem);
-		});
-		canteiroSection.appendChild(plantList);
-	});
+            plantList.appendChild(plantItem);
+        });
+        canteiroSection.appendChild(plantList);
+    });
 
-	// Adiciona evento de remoção de planta
-	document.querySelectorAll('.remove-plant').forEach((button) => {
-		button.addEventListener('click', (event) => {
-			const index = event.currentTarget.dataset.index;
-			removePlant(index);
-		});
-	});
+    // Adiciona evento para remover plantas
+    document.querySelectorAll('.remove-plant').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            const index = event.currentTarget.dataset.index;
+            removePlant(index);
+        });
+    });
 };
+
 
 // Remove a planta da lista
 const removePlant = (index) => {
@@ -217,14 +200,30 @@ saveAndContinueButton.addEventListener('click', () => {
 		return;
 	}
 
-	sendDataToBackend(savedPlants); // Envia a lista de plantas para o backend
+	// Agrupa as plantas por canteiro
+	const groupedPlants = savedPlants.reduce((acc, plant) => {
+		if (!acc[plant.canteiro]) {
+			acc[plant.canteiro] = [];
+		}
+		acc[plant.canteiro].push(plant);
+		return acc;
+	}, {});
+
+	// Envia os dados agrupados por canteiro para o backend
+	Object.keys(groupedPlants).forEach((canteiroId) => {
+		sendDataToBackend(groupedPlants[canteiroId], canteiroId);
+	});
 });
 
 // Função para enviar os dados ao backend
-const sendDataToBackend = async (plantas) => {
+const sendDataToBackend = async (plantas, canteiroId) => {
     try {
-        const selectedCanteiro = document.getElementById('selectCanteiro').value;
-        console.log('Canteiro ID enviado:', selectedCanteiro);
+        const canteiroOption = document.querySelector(`#selectCanteiro option[value="${canteiroId}"]`);
+        const setorId = canteiroOption?.dataset.setor; // Captura o setor do dropdown
+
+        if (!setorId) {
+            throw new Error('Setor não encontrado para o canteiro selecionado.');
+        }
 
         const response = await fetch('/planta/', {
             method: 'POST',
@@ -232,7 +231,7 @@ const sendDataToBackend = async (plantas) => {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken(),
             },
-            body: JSON.stringify({ plantas, canteiro_id: selectedCanteiro }),
+            body: JSON.stringify({ plantas, canteiro_id: canteiroId, setor_id: setorId }),
         });
 
         if (!response.ok) {
@@ -270,34 +269,25 @@ window.addEventListener('load', displayData.bind(null, data));
 
 // Carrega os canteiros para o dropdown do modal
 const loadCanteiros = async () => {
-	try {
-		console.log('Iniciando requisição para carregar canteiros...');
-		const response = await fetch('/get-canteiros/');
-		if (!response.ok) {
-			throw new Error(`Erro ao buscar canteiros: ${response.status}`);
-		}
+    try {
+        const response = await fetch('/get-canteiros/');
+        if (!response.ok) {
+            throw new Error(`Erro ao buscar canteiros: ${response.status}`);
+        }
 
-		const canteiros = await response.json();
-		console.log('Canteiros recebidos:', canteiros);
+        const canteiros = await response.json();
+        const selectCanteiro = document.getElementById('selectCanteiro');
+        selectCanteiro.innerHTML = '';
 
-		const selectCanteiro = document.getElementById('selectCanteiro');
-		if (!selectCanteiro) {
-			console.error('Dropdown de canteiros não encontrado no DOM!');
-			return;
-		}
-
-		selectCanteiro.innerHTML = ''; // Limpa as opções existentes
-
-		canteiros.forEach((canteiro) => {
-			const option = document.createElement('option');
-			option.value = canteiro.id;
-			option.textContent = canteiro.name;
-			option.dataset.setor = canteiro.setor; // Armazena o ID do setor
-			selectCanteiro.appendChild(option);
-		});
-
-		console.log('Canteiros adicionados ao dropdown com sucesso.');
-	} catch (error) {
-		console.error('Erro ao carregar os canteiros:', error);
-	}
+        canteiros.forEach((canteiro) => {
+            const option = document.createElement('option');
+            option.value = canteiro.id;
+            option.textContent = `${canteiro.setor} - ${canteiro.name}`;
+            option.dataset.setor = canteiro.setor;
+            selectCanteiro.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Erro ao carregar os canteiros:', error);
+    }
 };
+

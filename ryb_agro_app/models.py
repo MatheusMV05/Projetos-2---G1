@@ -92,6 +92,8 @@ class Planta(models.Model):
     canteiro = models.ForeignKey(
         Canteiro, on_delete=models.CASCADE, related_name="plantas", null=True, blank=True)
     # Quantidade em unidades ou quilogramas disponíveis para plantio
+    setor = models.ForeignKey(
+        Setor, on_delete=models.CASCADE, related_name="plantas", null=True, blank=True)
     quantidade = models.FloatField(default=0)
     frequencia = models.CharField(max_length=50)
     data_plantio = models.DateField(auto_now_add=True)
