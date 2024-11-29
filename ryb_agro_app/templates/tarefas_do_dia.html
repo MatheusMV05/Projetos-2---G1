@@ -19,6 +19,17 @@
 		></script>
 
 		<style>
+			@font-face {
+				font-family: 'Gojali';
+				src: url("{% static 'fontes/gojali-regular.ttf' %}") format('truetype');
+				font-weight: normal;
+				font-style: normal;
+			}
+
+			body {
+				font-family: 'Gojali', Arial, sans-serif;
+			}
+
 			/* Scroll Snap Layout */
 			.scroll-snap-container {
 				display: flex;
@@ -412,7 +423,5 @@
 				updateActiveScreen(); // Initial setup
 			});
 		</script>
-		
-		
 	</body>
 </html>
