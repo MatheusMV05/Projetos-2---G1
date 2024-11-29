@@ -82,6 +82,15 @@
 </style>
 
 <body>
+    {% if messages %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert"
+        style="opacity: 1 !important; visibility: visible !important">
+        {% for message in messages %}
+        <strong>Aviso:</strong> {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {% endfor %}
+    </div>
+    {% endif %}
     <!-- Barra de navegação -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
         <div class="container">
@@ -186,6 +195,7 @@
                     </thead>
                     <tbody>
                         {% for demanda in demandas %}
+
                         <tr>
                             <td>{{ demanda.nome }}</td>
                             <td>{{ demanda.tipo }}</td>
@@ -219,6 +229,7 @@
                                 </form>
                             </td>
                         </tr>
+
                         {% empty %}
                         <tr>
                             <td colspan="7" class="text-center">Nenhuma demanda registrada.</td>

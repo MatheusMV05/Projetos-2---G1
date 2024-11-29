@@ -48,8 +48,8 @@ Cypress.Commands.add('add_plantas', () => {
     cy.get('#saveAndContinueButton').click()
 });
 
-describe('Plantas', () => {
-    it('Plantas compativeis', () => {
+describe('previsao', () => {
+    it('validar', () => {
         //steps do cenario1
         cy.cadastro()
         cy.setores()
@@ -57,7 +57,7 @@ describe('Plantas', () => {
 
         })
 
-    it('Plantas incopativeis', () => {
+    it('cenario2', () => {
         //steps do cenario2
         cy.cadastro()
         cy.setores()

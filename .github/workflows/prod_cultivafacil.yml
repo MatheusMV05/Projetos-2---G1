@@ -1,8 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
-
-name: Build and deploy Python app to Azure Web App - cultivafacil
+name: Build and deploy Python app to Azure Web App - whichteacher
 
 on:
   push:
@@ -28,9 +24,33 @@ jobs:
           source venv/bin/activate
       
       - name: Install dependencies
-        run: pip install -r requirements.txt
-        
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+        run: |
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      # Configura o Node.js
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      # Instala Cypress e dependências
+      - name: Install Cypress dependencies
+        run: |
+          npm ci
+          npm install cypress wait-on
+
+      # Inicia o servidor Django e executa os testes Cypress
+      - name: Run Django server and Cypress tests
+        run: |
+          source venv/bin/activate
+          python manage.py makemigrations
+          python manage.py migrate
+          python manage.py runserver 0.0.0.0:8000 &
+          npx wait-on http://127.0.0.1:8000
+          npx cypress run
+        env:
+          CYPRESS_BASE_URL: http://127.0.0.1:8000
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r

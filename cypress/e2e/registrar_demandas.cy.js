@@ -24,6 +24,30 @@ Cypress.Commands.add('setores', () => {
     cy.get('.btn-primary').click()
 });
 
+Cypress.Commands.add('add_plantas', () => {
+    cy.get('[data-title="Abóbora"]').click()
+    cy.get('#selectCanteiro').should('exist')
+    cy.get('#selectCanteiro option').should('have.length.greaterThan', 0).contains('Setor 1 - Setor 1 Canteiro B')
+    .then(($option) => {
+        const value = $option.val();
+        cy.get('#selectCanteiro').select(value);
+    });
+    cy.get('#harvestAmount').type('50')
+    cy.get('#harvestFrequency').select('semanalmente')
+    cy.get('#addPlantButton').click()
+    cy.get('[data-title="Milho"]').click()
+    cy.get('#selectCanteiro option').should('have.length.greaterThan', 0).contains('Setor 2 - Setor 2 Canteiro C')
+    .then(($option) => {
+        const value = $option.val();
+        cy.get('#selectCanteiro').select(value);
+        
+    });
+    cy.get('#harvestAmount').type('30')
+    cy.get('#harvestFrequency').select('uma vez')
+    cy.get('#addPlantButton').click()
+    cy.get('#saveAndContinueButton').click()
+});
+
 Cypress.Commands.add('registrar_demanda', () => {
     cy.get('#nome').type('demanda')
     cy.get('#tipo').select('venda')
@@ -76,9 +100,10 @@ describe('demandas', () => {
         //steps do cenario1
         cy.cadastro();
         cy.setores()
-        cy.wait(500)
-        cy.visit('demandas/')
-        cy.wait(500)
+        cy.add_plantas()
+        cy.wait(1000)
+        cy.get('#menu-abrir').click()
+        cy.get(':nth-child(2) > a').click()
         cy.registrar_demanda()
         cy.contains('venda').should('be.visible')
         cy.contains('10').should('be.visible')
@@ -90,12 +115,13 @@ describe('demandas', () => {
     })
 
     it('editar demanda', () => {
-        //steps do cenario3
+        //steps do cenario2
         cy.cadastro()
         cy.setores()
-        cy.wait(500)
-        cy.visit('demandas/')
-        cy.wait(500)
+        cy.add_plantas()
+        cy.wait(1000)
+        cy.get('#menu-abrir').click()
+        cy.get(':nth-child(2) > a').click()
         cy.registrar_demanda()
         cy.get('.btn-warning').click()
         cy.get('#preco').clear().type('300')
@@ -105,12 +131,13 @@ describe('demandas', () => {
     })
     
     it('filtrar demandas', () => {
-        //steps do cenario4
+        //steps do cenario3
         cy.cadastro()
         cy.setores()
-        cy.wait(500)
-        cy.visit('demandas/')
-        cy.wait(500)
+        cy.add_plantas()
+        cy.wait(1000)
+        cy.get('#menu-abrir').click()
+        cy.get(':nth-child(2) > a').click()
         cy.registrar_demanda()
         cy.registrar_demanda2()
         cy.registrar_demanda3()
@@ -123,33 +150,18 @@ describe('demandas', () => {
     })
     
     it('excluir demanda', () => {
-        //steps do cenario5
+        //steps do cenario4
         cy.cadastro()
         cy.setores()
-        cy.wait(500)
-        cy.visit('demandas/')
-        cy.wait(500)
+        cy.add_plantas()
+        cy.wait(1000)
+        cy.get('#menu-abrir').click()
+        cy.get(':nth-child(2) > a').click()
         cy.registrar_demanda()
-        cy.registrar_demanda2()
-        cy.registrar_demanda3()
-        cy.registrar_demanda4()
         cy.get(':nth-child(1) > :nth-child(7) > :nth-child(3) > .btn').click()
+        cy.get('.alert').contains('Demanda comercial excluída com sucesso.');
 
     })
     
-    it('notificar demanda', () => {
-        //steps do cenario6
-        cy.cadastro()
-        cy.setores()
-        cy.wait(500)
-        cy.visit('demandas/')
-        cy.wait(500)
-        cy.get('#nome').type('demanda')
-        cy.get('#tipo').select('venda')
-        cy.get('#quantidade').type('10')
-        cy.get('.row > :nth-child(6)').type('100')
-        cy.get('#prazo').type(dataFormatada);
-        cy.get(':nth-child(2) > .card-body > .row > .d-flex > .btn').click()
-    })
 
 })
