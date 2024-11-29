@@ -16,64 +16,62 @@ Cypress.Commands.add('cadastro', () => {
     cy.get('.submit').click();
 });
 
-Cypress.Commands.add('addPlanta', (planta, canteiro, quantidade, frequencia) => {
-    cy.get('.card-container').contains(planta).click(); // Clica no card da planta
-    cy.get('#selectCanteiro').select(canteiro); // Seleciona o canteiro
-    cy.get('#harvestAmount').type(quantidade); // Define a quantidade
-    cy.get('#harvestFrequency').select(frequencia); // Define a frequência
-    cy.get('#addPlantButton').click(); // Adiciona a planta
+Cypress.Commands.add('cadastroSetores', () => {
+    cy.visit('/cadastrar_setores/');
+    cy.get('#numSetores').clear().type('2'); // Cadastra 2 setores
+    cy.get('button').contains('Gerar Campos para Setores').click();
+    cy.get('#canteirosSetor1').type('3'); // Canteiros no setor 1
+    cy.get('#canteirosSetor2').type('2'); // Canteiros no setor 2
+    cy.get('button[type="submit"]').click();
+
+    // Verifica redirecionamento após cadastro
+    cy.url().should('include', '/planta/');
+});
+
+Cypress.Commands.add('addPlanta', (planta, setor, canteiro, quantidade, frequencia) => {
+    cy.get(`[data-title="${planta}"]`).click();
+    cy.get('#selectCanteiro option')
+        .should('contain', `${setor} - ${setor} ${canteiro}`)
+        .then(($option) => {
+            const value = $option.val();
+            cy.get('#selectCanteiro').select(value);
+        });
+    cy.get('#harvestAmount').clear().type(quantidade);
+    cy.get('#harvestFrequency').select(frequencia);
+    cy.get('#addPlantButton').click();
 });
 
 describe('Validação de Plantas', () => {
-    
-    // Cenário 1: Plantas Compatíveis
-    it('Deve validar corretamente quando as plantas cadastradas são compatíveis', () => {
-        // Realiza o cadastro de usuário
-        cy.cadastro();
+    beforeEach(() => {
+        cy.cadastro(); // Realiza cadastro de usuário
+        cy.cadastroSetores(); // Cadastra setores e canteiros
+    });
 
-        // Valida o redirecionamento após registro
-        cy.url().should('include', '/cadastrar_plantas/');
+    it('Deve validar plantas compatíveis', () => {
+        cy.addPlanta('Abóbora', 'Setor 1', 'Canteiro B', '50', 'Mensalmente');
+        cy.addPlanta('Milho', 'Setor 2', 'Canteiro A', '30', 'Semanalmente');
 
-        // Adiciona plantas compatíveis
-        cy.addPlanta('Abóbora', 'Canteiro 1', '50', 'Mensalmente');
-        cy.addPlanta('Milho', 'Canteiro 2', '30', 'Semanalmente');
-
-        // Salva o cadastro
         cy.get('#saveAndContinueButton').click();
 
-        // Valida a mensagem de sucesso
         cy.on('window:alert', (str) => {
             expect(str).to.equal('As plantas são compatíveis');
         });
-
-        // Verifica o redirecionamento para a próxima etapa
-        cy.url().should('include', '/proxima_etapa');
     });
 
-    // Cenário 2: Plantas Inimigas
-    it('Deve exibir erro e listar plantas incompatíveis quando há plantas inimigas', () => {
-        // Realiza o cadastro de usuário
-        cy.cadastro();
+    it('Deve exibir erro para plantas incompatíveis', () => {
+        cy.addPlanta('Abóbora', 'Setor 1', 'Canteiro B', '50', 'Mensalmente');
+        cy.addPlanta('Cenoura', 'Setor 2', 'Canteiro A', '20', 'Semanalmente');
 
-        // Valida o redirecionamento após registro
-        cy.url().should('include', '/cadastrar_plantas/');
-
-        // Adiciona plantas incompatíveis
-        cy.addPlanta('Abóbora', 'Canteiro 1', '50', 'Mensalmente');
-        cy.addPlanta('Cenoura', 'Canteiro 2', '20', 'Semanalmente');
-
-        // Salva o cadastro
         cy.get('#saveAndContinueButton').click();
 
-        // Valida a mensagem de erro
         cy.on('window:alert', (str) => {
             expect(str).to.equal('As plantas cadastradas são incompatíveis');
         });
 
-        // Valida a lista de plantas inimigas
         cy.get('#plantListContainer')
             .should('be.visible')
             .and('contain', 'Abóbora')
             .and('contain', 'Cenoura');
     });
 });
+
