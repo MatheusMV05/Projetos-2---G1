@@ -7,6 +7,50 @@
     <title>Demandas Comerciais</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
     {% load static %}
+    <script
+			src="https://kit.fontawesome.com/8bd07f7496.js"
+			crossorigin="anonymous"
+	></script>
+    <style>
+        /* Bottom Navigation Styles */
+.bottom-nav {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 54px;
+	background-color: #fff;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	box-shadow: 0px -3px 24px -6px rgba(0, 0, 0, 0.25);
+	z-index: 1000; /* Ensure it stays above other content */
+	padding: 5px 0;
+}
+
+.nav-item {
+	color: #1b4a3f; /* White text color */
+	text-align: center;
+	text-decoration: none;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.nav-item i {
+	font-size: 1.125rem; /* Icon size */
+}
+
+.nav-item span {
+	font-size: 0.625rem; /* Label text size */
+	text-align: center;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 24px; /* 240% */
+	letter-spacing: -0.4px;
+}
+
+    </style>
 </head>
 <style>
     .bg-custom {
@@ -173,6 +217,26 @@
             </div>
         </div>
     </div>
+
+    <!-- Bottom Navigation Bar -->
+		<nav class="bottom-nav">
+			<a href="{% url 'dashboard' %}" class="nav-item">
+				<i class="fa-solid fa-table-cells-large"></i>
+				<span>Home</span>
+			</a>
+			<a href="{% url 'tarefas_do_dia' %}" class="nav-item">
+				<i class="fa-solid fa-clipboard-list"></i>
+				<span>Minhas tarefas</span>
+			</a>
+			<a href="{% url 'meu_plantio' %}" class="nav-item">
+				<i class="fa-solid fa-seedling"></i>
+				<span>Meu Plantio</span>
+			</a>
+			<a href="{% url 'celeiro' %}" class="nav-item">
+				<i class="fa-solid fa-house"></i>
+				<span>Meu Celeiro</span>
+			</a>
+		</nav>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
