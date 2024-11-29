@@ -23,4 +23,12 @@ urlpatterns = [
     path('insumos/', views.insumos_view, name='insumos_view'),
     path('demandas/', views.demandas_comerciais, name='demandas_comerciais'),
     path('meu_plantio/', views.meu_plantio_view, name='meu_plantio'),
+    path("adicionar-setor/", views.adicionar_setor, name="adicionar_setor"),
+    path("renomear-setor/<int:setor_id>/", views.renomear_setor, name="renomear_setor"),
+    path("apagar-setor/<int:setor_id>/", views.apagar_setor, name="apagar_setor"),
+    path("adicionar-planta/<int:canteiro_id>/", views.adicionar_planta, name="adicionar_planta"),
+    path('remover-planta/<int:planta_id>/', views.remover_planta, name='remover_planta'),
+    path('apagar-canteiro/<int:canteiro_id>/', views.apagar_canteiro, name='apagar_canteiro'),
+    path('adicionar_canteiro/<int:setor_id>/', views.adicionar_canteiro, name='adicionar_canteiro'),
+
 ]
