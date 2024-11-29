@@ -178,20 +178,24 @@
 - <strong> Instruções de acesso</strong>
 
 <p align="center" style="">
-<a href="https://scribehow.com/shared/Avaliacao_do_servico__-_yjD5QpRguPbuyxeI9UOA?referrer=documents">
-  <img src="https://img.shields.io/badge/Reabertura de serviço-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
+<a href="https://scribehow.com/shared/Registro_de_terreno_para_cadastro_agricola__RHYTZlC-RT2RZOnng0Wxpw">
+  <img src="https://img.shields.io/badge/Registro de terreno-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
 </a>
   
-<a href="https://scribehow.com/shared/Reabertura_de_servico__A9Vu1PloSKmxt7ieLhSl8Q?referrer=documents">
-  <img src="https://img.shields.io/badge/Avaliação do serviço-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
+<a href="https://scribehow.com/shared/Fornecimento_de_lista_de_afazeres_baseado_no_cadastro_de_plantas__uLLXcdG2TMG5PoQXyzQrFg">
+  <img src="https://img.shields.io/badge/Fornecimento da lista de afazeres-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
 </a>
 
-<a href="https://scribehow.com/shared/Acompanhamento_de_status__Z_90ZlmzQU-wk3aWYA_Ayg?editmode=true">
-  <img src="https://img.shields.io/badge/Acompanhamento de status-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
+<a href="https://scribehow.com/shared/Visualizacao_do_celeiro__TU-TPXznS6yL2oWPbO0M-Q">
+  <img src="https://img.shields.io/badge/Vizualização do celeiro-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
 </a>
 
-<a href="https://scribehow.com/shared/Personalizacao_de_lista_de_servicos_como_cliente__wn0Uhk_uS5yWaqpFk0dRJw?referrer=documents">
-  <img src="https://img.shields.io/badge/Personalização de lista de serviço como cliente-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
+<a href="https://scribehow.com/shared/Quantidade_de_insumos_necessarios_para_o_plantio_mensal__QfUonhkLTmST8hcgxSGzNw">
+  <img src="https://img.shields.io/badge/Verificação dos insumos-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
+</a>
+
+<a href="https://scribehow.com/shared/Visualizacao_do_plantio__ifHWfA2JRACb26xvOrLWwA">
+  <img src="https://img.shields.io/badge/Vizualização do plantio-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
 </a>
 
 </p>
