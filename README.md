@@ -198,6 +198,18 @@
   <img src="https://img.shields.io/badge/Vizualização do plantio-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
 </a>
 
+<a href="https://scribehow.com/shared/Assistente_virtual_para_tirar_duvidas_sobre_o_plantio__AMuPvEibSECYTEDOFgmx2Q">
+  <img src="https://img.shields.io/badge/Assistente Virtual para tirar duvidas-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
+</a>
+
+<a href="https://scribehow.com/shared/Registro_de_demandas_comerciais_para_organizacao_dos_dados__fUNRJWpES2y9CNqZ8_ta9g">
+  <img src="https://img.shields.io/badge/Registro de demandas-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
+</a>
+
+<a href="https://scribehow.com/shared/Visualizacao_dos_indicativos_meteorologicos_e_lunares__7GDiDiVLTf-gusC4az3jsg">
+  <img src="https://img.shields.io/badge/Indicativos metereologicos-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
+</a>
+
 </p>
 
 <br/>
