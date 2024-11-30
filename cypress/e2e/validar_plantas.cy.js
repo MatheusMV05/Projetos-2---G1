@@ -1,19 +1,19 @@
 Cypress.Commands.add('deleteAllUsers', () => {
-    cy.exec('python delete_users.py', { failOnNonZeroExit: false })
+    cy.exec('python delete_users.py', { failOnNonZeroExit: false });
 });
 
 Cypress.Commands.add('cadastro', () => {
-    cy.deleteAllUsers()
-    cy.visit('/')
-    cy.get('.button').click()
-    cy.get('.register-link > a').click()
-    cy.get('#nome').type("Monkey D. Luffy")
-    cy.get('#celular').type('987654321')
-    cy.get('#email').type('reidospiratas@gmail.com')
-    cy.get('#confirmar_email').type('reidospiratas@gmail.com')
-    cy.get('#password').type('carne')
-    cy.get('#confirmar_senha').type('carne')
-    cy.get('.submit').click()
+    cy.deleteAllUsers();
+    cy.visit('/');
+    cy.get('.button').click();
+    cy.get('.register-link > a').click();
+    cy.get('#nome').type('Ana');
+    cy.get('#celular').type('987654321');
+    cy.get('#email').type('aa@gmail.com');
+    cy.get('#confirmar_email').type('aa@gmail.com');
+    cy.get('#password').type('123');
+    cy.get('#confirmar_senha').type('123');
+    cy.get('.submit').click();
 });
 
 Cypress.Commands.add('setores', () => {
@@ -40,33 +40,42 @@ Cypress.Commands.add('add_plantas', () => {
     .then(($option) => {
         const value = $option.val();
         cy.get('#selectCanteiro').select(value);
-        
+        cy.get('#harvestAmount').type('30')
+        cy.get('#harvestFrequency').select('uma vez')
+        cy.get('#addPlantButton').click()
+        cy.get('#saveAndContinueButton').click()
+
     });
-    cy.get('#harvestAmount').type('30')
-    cy.get('#harvestFrequency').select('uma vez')
-    cy.get('#addPlantButton').click()
-    cy.get('#saveAndContinueButton').click()
 });
 
-describe('Plantas', () => {
-    it('Plantas compativeis', () => {
-        //steps do cenario1
-        cy.cadastro()
+describe('Validação de Plantas', () => {
+    
+    // Cenário 1: Plantas Compatíveis
+    it('Deve validar corretamente quando as plantas cadastradas são compatíveis', () => {
+        // Realiza o cadastro de usuário
+        cy.cadastro();
+        cy.setores()
+        cy.add_plantas()
+        cy.on('window:alert', (alertText) => {
+            // Verifica se o texto do alert é o esperado
+            expect(alertText).to.equal('Plantas salvas com sucesso');
+          });
+        
+    });
+
+    // Cenário 2: Plantas Inimigas
+    it('Deve exibir erro e listar plantas incompatíveis quando há plantas inimigas', () => {
+        // Realiza o cadastro de usuário
+        cy.cadastro();
         cy.setores()
         cy.add_plantas()
 
-        })
-
-    it('Plantas incopativeis', () => {
-        //steps do cenario2
-        cy.cadastro()
-        cy.setores()
-        cy.add_plantas()
-        cy.get('.card-clickable > .card-body').click()
-        cy.get('.card-clima-atual').click({ force: true });
+        cy.on('window:alert', (alertText) => {
+            // Verifica se o texto do alert é o esperado
+            expect(alertText).to.equal('As plantas cadastradas são incompatíveis');
+          });
 
         
-        });
-
-    })
+    });
+});
 

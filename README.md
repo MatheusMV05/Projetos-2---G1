@@ -90,33 +90,26 @@
 ### Histórias de Usuário
 ---
 
-- <strong>H1 - Registrar as características do terreno </strong>
-
-![H1](https://imgur.com/YPRMhm7.png)
+![H1](https://imgur.com/g2yDf97.png)
 
 <br>
 
-- <strong>H2 - Validar quais plantas podem ser cultivadas juntas </strong>
 
-![H2](https://imgur.com/qxE9Lvg.png)
-
-<br>
-
-- <strong>H3 - Lista de afazeres em forma de calendário </strong>
-
-![H3](https://imgur.com/TRdI9uY.png)
+![H2](https://imgur.com/7L4lqQM.png)
 
 <br>
 
-- <strong>H4 - Salvar quanto de cada planta foi colhido </strong>
-
-![H4](https://imgur.com/YBiWxIU.png)
+![H3](https://imgur.com/nyaI8XM.png)
+![H3](https://imgur.com/oNGdVbR.png)
 
 <br>
 
-- <strong>H5 -Aviso para preservar a qualidade da terra</strong>
+![H4](https://imgur.com/S75OpKP.png)
 
-![H5](https://imgur.com/Puk7T3Y.png)
+<br>
+
+![H5](https://imgur.com/XdSozdK.png)
+![H5](https://imgur.com/Po4lKZd.png)
 
 
 
@@ -146,6 +139,114 @@
 - <strong>Diagrama de Atividades</strong>
 
 ![Diagrama de atividade (4)](https://imgur.com/2xMP24I.png)
+# Status Report 2
+<br>
+
+<br/>
+<p align="center" style="">
+<a href="https://www.youtube.com/watch?v=phdG_BgOgNI">
+  <img src="https://img.shields.io/badge/screencast das histórias implementadas-006400?style=for-the-badge&logo=youtube&logoColor=white" height="35px"/>
+</a>
+
+<a href="https://www.youtube.com/watch?v=C7f81SoSSjQ">
+  <img src="https://img.shields.io/badge/screencast dos protótipos-C4A000?style=for-the-badge&logo=youtube&logoColor=black" height="35px"/>
+</a>
+
+<a href="https://youtu.be/Yrs4vnt5XBI?si=iNwdKYPTcT6-KOd5">
+  <img src="https://img.shields.io/badge/CI/CD com Build e Deployment Automatizado-006400?style=for-the-badge&logo=youtube&logoColor=white" height="35px"/>
+</a>
+
+<a href="https://youtu.be/Rc_jRnigqS8?si=HTr25LMDazJT7kng">
+  <img src="https://img.shields.io/badge/screencast dos testes-C4A000?style=for-the-badge&logo=youtube&logoColor=black" height="35px"/>
+</a>
+
+<a href="https://docs.google.com/document/d/1CTdH4KScu2_aoF6t_cYpeq7---v7txc7X3GmHufF0NM/edit?tab=t.0">
+  <img src="https://img.shields.io/badge/relatório programação em par-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
+</a>
+
+<a href="https://cultivafacil.azurewebsites.net">
+  <img src="https://img.shields.io/badge/site na azure-C4A000?style=for-the-badge&logo=microsoft-azure&logoColor=black" height="35px"/>
+</a>
+
+<a href="https://www.figma.com/design/Qjx5Om7cYYP9PL5lPufPBC/Cultiva-Fácil---Medium-Prototype?node-id=0-1&node-type=canvas&t=htjtF004KdLrmhr9-0">
+<img src="https://img.shields.io/badge/figma com os protótipos de média-006400?style=for-the-badge&logo=figma&logoColor=white" height="35px"/>
+</a>
+
+</p>
+
+
+- <strong> Instruções de acesso</strong>
+
+<p align="center" style="">
+<a href="https://scribehow.com/shared/Registro_de_terreno_para_cadastro_agricola__RHYTZlC-RT2RZOnng0Wxpw">
+  <img src="https://img.shields.io/badge/Registro de terreno-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
+</a>
+  
+<a href="https://scribehow.com/shared/Fornecimento_de_lista_de_afazeres_baseado_no_cadastro_de_plantas__uLLXcdG2TMG5PoQXyzQrFg">
+  <img src="https://img.shields.io/badge/Fornecimento da lista de afazeres-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
+</a>
+
+<a href="https://scribehow.com/shared/Visualizacao_do_celeiro__TU-TPXznS6yL2oWPbO0M-Q">
+  <img src="https://img.shields.io/badge/Vizualização do celeiro-006400?style=for-the-badge&logo=googledocs&logoColor=white" height="35px"/>
+</a>
+
+<a href="https://scribehow.com/shared/Quantidade_de_insumos_necessarios_para_o_plantio_mensal__QfUonhkLTmST8hcgxSGzNw">
+  <img src="https://img.shields.io/badge/Verificação dos insumos-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
+</a>
+
+<a href="https://scribehow.com/shared/Visualizacao_do_plantio__ifHWfA2JRACb26xvOrLWwA">
+  <img src="https://img.shields.io/badge/Vizualização do plantio-C4A000?style=for-the-badge&logo=googledocs&logoColor=black" height="35px"/>
+</a>
+
+</p>
+
+<br/>
+
+### Histórias de Usuário
+---
+
+![H6](https://imgur.com/2xdZ8o7.png)
+![H6](https://imgur.com/GL6oaRd.png)
+
+<br>
+
+
+![H7](https://imgur.com/h9vtXXn.png)
+![H7](https://imgur.com/Wmm5k55.png)
+
+<br>
+
+![H8](https://imgur.com/HWneaqF.png)
+![H8](https://imgur.com/J6fY57A.png)
+
+<br>
+
+![H9](https://imgur.com/UQnOaC8.png)
+![H9](https://imgur.com/tuIiKsz.png)
+
+
+<br>
+
+![H11](https://imgur.com/x4CQ6q6.png)
+![H11](https://imgur.com/Q4cve87.png)
+
+<br>
+
+- <strong>Issue/Bug tracker</strong>
+![issue-bug-tracker-1](https://imgur.com/XZfDCal.png)
+
+
+
+<br>
+
+- <strong>Diagrama de Atividades</strong>
+
+![diagrama](https://imgur.com/xd0ewKx.png)
+
+<br>
+
+---
+
 
 ## Contribuidores
 <a href="https://github.com/MatheusMV05/Projetos-2---G1/graphs/contributors">

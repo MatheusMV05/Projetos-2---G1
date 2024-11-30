@@ -53,7 +53,9 @@ describe('insumos', () => {
         cy.cadastro()
         cy.setores()
         cy.add_plantas()
-        cy.visit('insumos/')
+        cy.wait(500)
+        cy.get('#menu-abrir').click()
+        cy.get(':nth-child(2) > a').click()
         cy.get('.card-body').contains('Abóbora').parent().contains('Composto orgânico');
         cy.get('.card-body').contains('Abóbora').parent().contains('Cobertura vegetal');
         cy.get('.card-body').contains('Abóbora').parent().contains('Biofertilizante');
@@ -67,7 +69,9 @@ describe('insumos', () => {
     it('erro', () => {
         //steps do cenario2
         cy.cadastro()
+        cy.setores()
         cy.visit('insumos/')
+        cy.contains('Não há insumos cadastrados para nenhuma planta.').should('be.visible');
     })
 
     it('novos insumos', () => {
@@ -75,7 +79,9 @@ describe('insumos', () => {
         cy.cadastro()
         cy.setores()
         cy.add_plantas()
-        cy.visit('insumos/')
+        cy.wait(500)
+        cy.get('#menu-abrir').click()
+        cy.get(':nth-child(2) > a').click()
         cy.wait(1000)
         cy.visit('planta/')
         cy.get('[data-title="Inhame"]').click()
@@ -88,7 +94,9 @@ describe('insumos', () => {
     cy.get('#harvestFrequency').select('bimestralmente')
     cy.get('#addPlantButton').click()
     cy.get('#saveAndContinueButton').click()
-    cy.visit('insumos/')
+    cy.wait(500)
+    cy.get('#menu-abrir').click()
+    cy.get(':nth-child(2) > a').click()
     cy.get('.card-body').contains('Inhame').parent().contains('Adubação orgânica');
     cy.get('.card-body').contains('Inhame').parent().contains('Cobertura verde');
     cy.get('.card-body').contains('Inhame').parent().contains('Ferramentas para capina e controle de pragas');
