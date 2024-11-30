@@ -40,9 +40,16 @@
 
 ## Apis utilizadas
 
-* OpenWeatherMap API: Para fornecer previsões meteorológicas precisas e em tempo real.
+* HG Weather API: Para fornecer previsões meteorológicas precisas e em tempo real.
 
-* Twilio API: Para envio de alertas e notificações via SMS.
+* GeminiAPI: Para criação do chatbot "Bento".
+
+## Usuário Padrão para Testes
+
+Durante o desenvolvimento ou testes do sistema, você pode usar as seguintes credenciais para acessar as funcionalidades:
+
+- **Email:** teste@gmail.com
+- **Senha:** 123
 
 # Status Report 1
 <br>
