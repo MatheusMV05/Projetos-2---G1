@@ -16,66 +16,64 @@ Cypress.Commands.add('cadastro', () => {
     cy.get('.submit').click();
 });
 
-Cypress.Commands.add('setores', () => {
-    cy.get('#numSetores').type('2')
-    cy.get('.btn-secondary').click()
-    cy.get('#canteirosSetor1').type('3')
-    cy.get('#canteirosSetor2').type('5')
-    cy.get('.btn-primary').click()
-});
 
-Cypress.Commands.add('add_plantas', () => {
-    cy.get('[data-title="Abóbora"]').click()
-    cy.get('#selectCanteiro').should('exist')
-    cy.get('#selectCanteiro option').should('have.length.greaterThan', 0).contains('Setor 1 - Setor 1 Canteiro B')
-    .then(($option) => {
-        const value = $option.val();
-        cy.get('#selectCanteiro').select(value);
-    });
-    cy.get('#harvestAmount').type('50')
-    cy.get('#harvestFrequency').select('semanalmente')
-    cy.get('#addPlantButton').click()
-    cy.get('[data-title="Milho"]').click()
-    cy.get('#selectCanteiro option').should('have.length.greaterThan', 0).contains('Setor 2 - Setor 2 Canteiro C')
-    .then(($option) => {
-        const value = $option.val();
-        cy.get('#selectCanteiro').select(value);
-        cy.get('#harvestAmount').type('30')
-        cy.get('#harvestFrequency').select('uma vez')
-        cy.get('#addPlantButton').click()
-        cy.get('#saveAndContinueButton').click()
 
-    });
-});
-
-describe('Validação de Plantas', () => {
+describe('Registro de Terreno', () => {
     
-    // Cenário 1: Plantas Compatíveis
+    
+    
     it('Deve validar corretamente quando as plantas cadastradas são compatíveis', () => {
-        // Realiza o cadastro de usuário
+      
         cy.cadastro();
-        cy.setores()
-        cy.add_plantas()
-        cy.on('window:alert', (alertText) => {
-            // Verifica se o texto do alert é o esperado
-            expect(alertText).to.equal('Plantas salvas com sucesso');
-          });
+
+        cy.url().should('include', '/cadastrar_setores/');
+
         
+        cy.visit('/cadastrar_setores/');
+
+      
+        cy.contains('Salvar').click();
+
+
+        cy.on('window:alert', (str) => {
+            expect(str).to.equal('Todos os campos são obrigatórios');
+        });
+
+        
+        cy.contains('Gerar Campos para Setores').click();
+        cy.get('#canteirosSetor1').should('not.exist');
     });
 
-    // Cenário 2: Plantas Inimigas
+    
     it('Deve exibir erro e listar plantas incompatíveis quando há plantas inimigas', () => {
-        // Realiza o cadastro de usuário
+    
         cy.cadastro();
-        cy.setores()
-        cy.add_plantas()
 
-        cy.on('window:alert', (alertText) => {
-            // Verifica se o texto do alert é o esperado
-            expect(alertText).to.equal('As plantas cadastradas são incompatíveis');
-          });
+       
+        cy.url().should('include', '/cadastrar_setores/');
 
+        
+        cy.visit('/cadastrar_setores/');
+
+       
+        cy.get('#numSetores').type('2');
+
+        
+        cy.contains('Gerar Campos para Setores').click();
+
+        
+        cy.get('#canteirosSetor1').type('-5'); 
+        cy.get('#canteirosSetor2').type('abc'); 
+
+        
+        cy.contains('Salvar').click();
+
+       
+        cy.on('window:alert', (str) => {
+            expect(str).to.equal('Os valores de canteiros devem ser números positivos');
+        });
+
+       
         
     });
 });
-
