@@ -1,19 +1,19 @@
 Cypress.Commands.add('deleteAllUsers', () => {
-    cy.exec('python delete_users.py', { failOnNonZeroExit: false });
+    cy.exec('python delete_users.py', { failOnNonZeroExit: false })
 });
 
 Cypress.Commands.add('cadastro', () => {
-    cy.deleteAllUsers();
-    cy.visit('/');
-    cy.get('.button').click();
-    cy.get('.register-link > a').click();
-    cy.get('#nome').type('Ana');
-    cy.get('#celular').type('987654321');
-    cy.get('#email').type('aa@gmail.com');
-    cy.get('#confirmar_email').type('aa@gmail.com');
-    cy.get('#password').type('123');
-    cy.get('#confirmar_senha').type('123');
-    cy.get('.submit').click();
+    cy.deleteAllUsers()
+    cy.visit('/')
+    cy.get('.button').click()
+    cy.get('.register-link > a').click()
+    cy.get('#nome').type("Monkey D. Luffy")
+    cy.get('#celular').type('987654321')
+    cy.get('#email').type('reidospiratas@gmail.com')
+    cy.get('#confirmar_email').type('reidospiratas@gmail.com')
+    cy.get('#password').type('carne')
+    cy.get('#confirmar_senha').type('carne')
+    cy.get('.submit').click()
 });
 
 Cypress.Commands.add('setores', () => {
@@ -40,12 +40,12 @@ Cypress.Commands.add('add_plantas', () => {
     .then(($option) => {
         const value = $option.val();
         cy.get('#selectCanteiro').select(value);
-        cy.get('#harvestAmount').type('30')
-        cy.get('#harvestFrequency').select('uma vez')
-        cy.get('#addPlantButton').click()
-        cy.get('#saveAndContinueButton').click()
-
+        
     });
+    cy.get('#harvestAmount').type('30')
+    cy.get('#harvestFrequency').select('uma vez')
+    cy.get('#addPlantButton').click()
+    cy.get('#saveAndContinueButton').click()
 });
 
 describe('Validação de Plantas', () => {
