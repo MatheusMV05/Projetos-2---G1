@@ -54,7 +54,6 @@ Cypress.Commands.add('abrirChat', () => {
     cy.get('#gemini-chat-modal').should('be.visible'); // Verifica que o modal está visível
 });
 
-<<<<<<< Updated upstream
 describe('assistente_virtual', () => {
     it('responder perguntas', () => {
         //steps do cenario1
@@ -72,7 +71,8 @@ describe('assistente_virtual', () => {
 
 
     })
-=======
+
+})
 Cypress.Commands.add('enviarPergunta', (pergunta, respostaEsperada) => {
     cy.get('#chat-input').type(pergunta); // Digita a pergunta no campo de input
     cy.contains('Enviar').click(); // Clica no botão enviar
@@ -124,6 +124,4 @@ describe('Assistente Virtual Bento', () => {
         cy.enviarPergunta('Qual a melhor época para plantar milho?', 'O assistente está indisponível no momento. Tente novamente mais tarde.');
     });
 });
->>>>>>> Stashed changes
 
-})
