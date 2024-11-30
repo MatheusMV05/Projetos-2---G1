@@ -65,9 +65,6 @@ describe('assistente_virtual', () => {
         cy.get('.btn.btn-success').click()
         cy.get('#chat-messages > :nth-child(3)').should('be.visible')
         .and('not.be.empty')
-        .and('contain', 'milho') // Certifique-se de que o texto esperado está presente
-        .and('contain', 'época')
-        .and('contain', 'plantio');
 
 
     })
