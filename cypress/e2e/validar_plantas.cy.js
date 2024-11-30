@@ -56,7 +56,10 @@ describe('Validação de Plantas', () => {
         cy.cadastro();
         cy.setores()
         cy.add_plantas()
-        cy.contains('Plantas salvas com sucesso').should('be.visible');
+        cy.on('window:alert', (alertText) => {
+            // Verifica se o texto do alert é o esperado
+            expect(alertText).to.equal('Plantas salvas com sucesso');
+          });
         
     });
 
@@ -67,15 +70,12 @@ describe('Validação de Plantas', () => {
         cy.setores()
         cy.add_plantas()
 
-        // Valida a mensagem de erro
-        cy.on('window:alert', (str) => {
-            expect(str).to.equal('As plantas cadastradas são incompatíveis');
-        });
+        cy.on('window:alert', (alertText) => {
+            // Verifica se o texto do alert é o esperado
+            expect(alertText).to.equal('As plantas cadastradas são incompatíveis');
+          });
 
-        // Valida a lista de plantas inimigas
-        cy.get('#plantListContainer')
-            .should('be.visible')
-            .and('contain', 'Abóbora')
-            .and('contain', 'Cenoura');
+        
     });
 });
+

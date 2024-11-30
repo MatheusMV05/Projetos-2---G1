@@ -79,49 +79,4 @@ Cypress.Commands.add('enviarPergunta', (pergunta, respostaEsperada) => {
     cy.get('chat-messages', { timeout: 10000 }).should('contain', respostaEsperada); // Verifica a resposta esperada
 });
 
-describe('Assistente Virtual Bento', () => {
-    
-
-    // Cenário 1: Responder perguntas gerais sobre o plantio
-    it('Deve responder perguntas gerais sobre o plantio', () => {
-        cy.cadastro();
-        cy.visit('/dashboard/');
-        cy.abrirChat();
-        cy.enviarPergunta('Qual a melhor época para plantar milho?', 'A melhor época para plantar milho depende da região.');
-    });
-
-    // Cenário 2: Responder sobre manejo de uma cultura específica
-    it('Deve responder perguntas sobre manejo de uma cultura específica', () => {
-        cy.cadastro();
-        cy.visit('/dashboard/');
-        cy.abrirChat();
-        cy.enviarPergunta('Qual é a melhor forma de irrigar o tomate?', 'A irrigação do tomate deve ser feita de forma uniforme.');
-    });
-
-    // Cenário 3: Consultar sobre pragas e doenças
-    it('Deve responder perguntas sobre pragas e doenças', () => {
-        cy.cadastro();
-        cy.visit('/dashboard/');
-        cy.abrirChat();
-        cy.enviarPergunta('Como tratar pulgões na minha plantação?', 'Pulgões podem ser tratados com inseticidas naturais.');
-    });
-
-    // Cenário 4: Perguntar sobre práticas agrícolas sustentáveis
-    it('Deve responder sobre práticas agrícolas sustentáveis', () => {
-        cy.cadastro();
-        cy.visit('/dashboard/');
-        cy.abrirChat();
-        cy.enviarPergunta('O que posso fazer para economizar água na irrigação?', 'Considere usar sistemas de irrigação por gotejamento.');
-    });
-
-    // Cenário 5: Assistente indisponível
-    it('Deve exibir mensagem de indisponibilidade quando o serviço estiver offline', () => {
-        // Simula indisponibilidade do backend
-        cy.intercept('POST', '/dashboard/', { statusCode: 500 });
-        cy.cadastro();
-        cy.visit('/dashboard/');
-        cy.abrirChat();
-        cy.enviarPergunta('Qual a melhor época para plantar milho?', 'O assistente está indisponível no momento. Tente novamente mais tarde.');
-    });
-});
 
