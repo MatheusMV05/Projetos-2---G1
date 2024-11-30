@@ -156,7 +156,7 @@
   <img src="https://img.shields.io/badge/CI/CD com Build e Deployment Automatizado-006400?style=for-the-badge&logo=youtube&logoColor=white" height="35px"/>
 </a>
 
-<a href="https://www.youtube.com/watch?v=_pb-SQozwTI">
+<a href="https://www.youtube.com/watch?v=V4qnUbEtYMY">
   <img src="https://img.shields.io/badge/screencast dos testes-C4A000?style=for-the-badge&logo=youtube&logoColor=black" height="35px"/>
 </a>
 
