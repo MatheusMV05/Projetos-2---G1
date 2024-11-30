@@ -141,6 +141,21 @@
 				/* Reduz o padding */
 			}
 		}
+				.card {
+			border-radius: 12px;
+			overflow: hidden;
+		}
+
+		.card-title {
+			color: #1b4a3f;
+			font-weight: bold;
+		}
+
+		.card-text {
+			font-size: 14px;
+			color: #555;
+		}
+
 	</style>
 </head>
 
@@ -258,28 +273,25 @@
 
 
 	<br>
-	<h2>Meu plantio</h2>
-	<br>
-	<div class="modal-body">
-		<!-- Lista de Plantas já Cadastradas -->
-		<h6>Plantas já cadastradas:</h6>
-		{% if canteiro.plantas %}
-		<ul class="list-group">
-			{% for planta in canteiro.plantas %}
-			<li class="list-group-item d-flex justify-content-between align-items-center">
-				{{ planta.nome }}
-				<form method="POST" action="{% url 'remover_planta' planta.id %}"
-					onsubmit="return confirm('Tem certeza que deseja remover esta planta?');">
-					{% csrf_token %}
-					<button class="btn btn-danger btn-sm">Remover</button>
-				</form>
-			</li>
-			{% endfor %}
-		</ul>
-		{% else %}
-		<p>Nenhuma planta cadastrada neste canteiro.</p>
-		{% endif %}
-	</div>
+	<h2>Meu Plantio</h2>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% if dados_plantio %}
+        {% for item in dados_plantio %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.planta_nome }}</h5>
+                        <p class="card-text">
+                            <strong>Canteiro:</strong> {{ item.canteiro_nome }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">Você ainda não cadastrou nenhuma planta.</p>
+    {% endif %}
+</div>
 	<h2>Meu celeiro</h2>
 	<br>
 	<br>

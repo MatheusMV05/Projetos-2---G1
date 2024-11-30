@@ -563,12 +563,12 @@ def demandas_comerciais(request):
 
 
 
+@login_required
 def dashboard(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
 
-            # Mensagem inicial do chatbot
             if data.get("is_initial", False):
                 reply = (
                     "Olá! Eu sou Bento, um especialista em agricultura. "
@@ -576,14 +576,12 @@ def dashboard(request):
                 )
                 return JsonResponse({"reply": reply}, status=200)
 
-            # Lógica para clima
             if "latitude" in data and "longitude" in data:
                 latitude = data.get("latitude")
                 longitude = data.get("longitude")
                 clima = get_climate_data(latitude, longitude)
                 return JsonResponse(clima, status=200)
 
-            # Lógica para chatbot
             elif "chat_message" in data:
                 chat_message = data.get("chat_message")
                 reply = get_chat_response(chat_message)
@@ -593,10 +591,22 @@ def dashboard(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 
-    # Renderiza a página inicial
+    # Dados para exibição no dashboard
     tarefas_do_dia = get_tarefas_do_dia(request)
-    return render(request, 'dashboard.html', {'tarefas_do_dia': tarefas_do_dia})
+    plantas_canteiros = Planta.objects.filter(user=request.user).select_related("canteiro")
 
+    dados_plantio = [
+        {
+            "planta_nome": planta.nome,
+            "canteiro_nome": planta.canteiro.nome if planta.canteiro else "Sem canteiro",
+        }
+        for planta in plantas_canteiros
+    ]
+
+    return render(request, 'dashboard.html', {
+        'tarefas_do_dia': tarefas_do_dia,
+        'dados_plantio': dados_plantio,
+    })
 @login_required
 def meu_plantio_view(request):
     # Lista fixa de plantas suportadas no sistema
