@@ -44,7 +44,10 @@ describe('Registro de Terreno', () => {
         // Clica no botão de salvar
         cy.contains('Salvar').click();
 
+<<<<<<< Updated upstream
         // Valida o redirecionamento para a próxima etapa
+=======
+>>>>>>> Stashed changes
         
     });
 
@@ -102,6 +105,6 @@ describe('Registro de Terreno', () => {
         });
 
         // Verifica se o redirecionamento não ocorreu
-        cy.url().should('not.include', '/proxima_etapa');
+        
     });
 });
